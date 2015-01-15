@@ -1,0 +1,6 @@
+/target
+/bin
+/src/main/java/META-INF/MANIFEST.MF
+/.externalToolBuilders/
+/.settings/
+.classpath
