@@ -11,4 +11,26 @@
 	<context:annotation-config/>	
 	<context:component-scan base-package="org.geppetto.persistence" />
 		
+	<bean id="pmf" class="com.geppetto.persistence.OSGiLocalPersistenceManagerFactoryBean">
+    <property name="jdoProperties">
+        <props>
+            <prop key="javax.jdo.PersistenceManagerFactoryClass">org.datanucleus.api.jdo.JDOPersistenceManagerFactory</prop>
+			<!-- PostgreSQL DB connection settings -->
+			<!-- Add '?loglevel=2' to Connection URL for JDBC Connection debugging. -->
+            <prop key="javax.jdo.option.ConnectionURL">jdbc:mysql://localhost/geppetto</prop>
+            <prop key="javax.jdo.option.ConnectionDriverName">com.mysql.jdbc.Driver</prop>
+            <prop key="javax.jdo.option.ConnectionUserName">geppettouser</prop>
+            <prop key="javax.jdo.option.ConnectionPassword">pinocchio</prop>
+
+            <prop key="datanucleus.storeManagerType">rdbms</prop>
+            <prop key="datanucleus.autoCreateSchema">true</prop>
+            <prop key="datanucleus.validateTables">true</prop>
+            <prop key="datanucleus.validateColumns">true</prop>
+            <prop key="datanucleus.validateConstraints">true</prop>
+            <prop key="datanucleus.rdbms.CheckExistTablesOrViews">true</prop>
+
+            <prop key="datanucleus.plugin.pluginRegistryClassName">org.datanucleus.plugin.OSGiPluginRegistry</prop>
+        </props>
+    </property>
+</bean>
 </beans>

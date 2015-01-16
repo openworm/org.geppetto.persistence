@@ -11,4 +11,23 @@
        						http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 
 
+<osgi:service ref="pmf" interface="javax.jdo.PersistenceManagerFactory" />
+
+<tx:advice id="txAdvice" transaction-manager="txManager">
+    <tx:attributes>	
+	<tx:method name="get*" read-only="true" />		
+	<tx:method name="*" />
+    </tx:attributes>
+</tx:advice>
+
+<aop:pointcut id="fooServices" expression="execution(* org.geppetto.persistence.*.*(..))" />
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="fooServices" />
+		
+    <!-- Ensures the class loader of this bundle is used to invoke public methods in the service layer of this bundle. -->
+    <aop:aspect id="bundleLoaderAspect" ref="bundleLoaderAspectBean">
+	<aop:around pointcut-ref="fooServices" method="setClassLoader"/>		
+    </aop:aspect>
+</aop:config>
+
+
 </beans>
