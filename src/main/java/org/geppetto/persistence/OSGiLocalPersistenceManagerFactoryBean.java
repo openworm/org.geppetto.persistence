@@ -12,8 +12,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean;
 
-public class OSGiLocalPersistenceManagerFactoryBean extends
-		LocalPersistenceManagerFactoryBean implements BundleContextAware {
+public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceManagerFactoryBean implements
+		BundleContextAware {
 
 	private BundleContext bundleContext;
 	private DataSource dataSource;
@@ -24,6 +24,7 @@ public class OSGiLocalPersistenceManagerFactoryBean extends
 	@Override
 	protected PersistenceManagerFactory newPersistenceManagerFactory(String name) {
 		return JDOHelper.getPersistenceManagerFactory(name, getClassLoader());
+//		return JDOHelper.getPersistenceManagerFactory(name, OSGiLocalPersistenceManagerFactoryBean.class.getClassLoader());
 	}
 
 	@Override
@@ -32,8 +33,7 @@ public class OSGiLocalPersistenceManagerFactoryBean extends
 
 		props.put("datanucleus.primaryClassLoader", classLoader);
 
-		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(
-				props, classLoader);
+		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props, classLoader);
 
 		return pmf;
 	}
@@ -43,13 +43,11 @@ public class OSGiLocalPersistenceManagerFactoryBean extends
 		Bundle[] bundles = bundleContext.getBundles();
 
 		for (int x = 0; x < bundles.length; x++) {
-
-			if ("org.datanucleus.store.rdbms".equals(bundles[x]
-					.getSymbolicName())) {
+//			if ("org.datanucleus.store.rdbms".equals(bundles[x].getSymbolicName())) {
+				if ("org.datanucleus.api.jdo".equals(bundles[x].getSymbolicName())) {
 				try {
-					classloader = bundles[x].loadClass(
-							"org.datanucleus.JDOClassLoaderResolver")
-							.getClassLoader();
+					classloader = bundles[x].loadClass("org.datanucleus.api.jdo.JDOPersistenceManagerFactory").getClassLoader();
+//					classloader = bundles[x].loadClass("org.datanucleus.JDOClassLoaderResolver").getClassLoader();
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
