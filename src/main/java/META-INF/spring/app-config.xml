@@ -12,12 +12,24 @@
 	<context:annotation-config />
 	<context:component-scan base-package="org.geppetto.persistence" />
 
+	<bean id="bundleLoaderAspectBean" class="org.geppetto.persistence.BundleClassLoaderAspect"></bean>
+
+	<!-- persistence manager factory proxy -->
+	<bean id="persistenceManagerFactoryProxy"
+		class="org.springframework.orm.jdo.TransactionAwarePersistenceManagerFactoryProxy">
+		<property name="targetPersistenceManagerFactory" ref="pmf" />
+	</bean>
+
+	<!-- transactions -->
+	<bean id="txManager" class="org.springframework.orm.jdo.JdoTransactionManager">
+		<property name="persistenceManagerFactory" ref="persistenceManagerFactoryProxy" />
+	</bean>
+
 	<bean id="pmf"
 		class="org.geppetto.persistence.OSGiLocalPersistenceManagerFactoryBean">
 		<property name="jdoProperties">
 			<props>
-				<prop key="javax.jdo.PersistenceManagerFactoryClass">org.datanucleus.api.jdo.JDOPersistenceManagerFactory
-				</prop>
+				<prop key="javax.jdo.PersistenceManagerFactoryClass">org.datanucleus.api.jdo.JDOPersistenceManagerFactory</prop>
 				<!-- MySQL DB connection settings -->
 				<!-- Add '?loglevel=2' to Connection URL for JDBC Connection debugging. -->
 				<prop key="javax.jdo.option.ConnectionURL">jdbc:mysql://localhost/geppetto</prop>
@@ -37,6 +49,6 @@
 			</props>
 		</property>
 	</bean>
-	
-	
+
+
 </beans>

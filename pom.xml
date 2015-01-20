@@ -122,17 +122,17 @@
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-core</artifactId>
-			<version>3.0.2</version>
+			<version>4.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-api-jdo</artifactId>
-			<version>3.0.2</version>
+			<version>4.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-rdbms</artifactId>
-			<version>3.0.2</version>
+			<version>4.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.jdo</groupId>
@@ -216,43 +216,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.jvnet.jaxb2.maven2</groupId>
-				<artifactId>maven-jaxb2-plugin</artifactId>
-				<version>0.8.2</version>
-				<executions>
-					<execution>
-						<id>Simulation</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<bindingDirectory>src/main/resources/schema/simulation/bindings/</bindingDirectory>
-							<bindingIncludes>
-								<include>simulationSchema.xjb</include>
-							</bindingIncludes>
-							<forceRegenerate>true</forceRegenerate>
-							<schemaDirectory>src/main/resources/schema/simulation</schemaDirectory>
-							<generateDirectory>${project.build.directory}/generated-sources/simulationSchema</generateDirectory>
-							<schemaIncludes>
-								<include>simulationSchema.xsd</include>
-							</schemaIncludes>
-							<args>
-								<arg>-Xvisitor</arg>
-								<arg>-Xvisitor-package:com.massfords.humantask</arg>
-							</args>
-
-							<plugins>
-								<plugin>
-									<groupId>com.massfords</groupId>
-									<artifactId>jaxb-visitor</artifactId>
-									<version>1.13</version>
-								</plugin>
-							</plugins>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -283,6 +246,22 @@
 							{maven-resources},META-INF/spring=src/main/java/META-INF/spring
 						</Include-Resource>
 						<Import-Package>
+							org.osgi.framework,
+                            org.w3c.dom,
+                            org.xml.sax,
+                            javax.jdo,
+                            javax.jdo.annotations;version="3.1-rc1",
+                            javax.jdo.datastore;version="3.1-rc1",
+                            javax.jdo.identity;version="3.1-rc1",
+                            javax.jdo.listener;version="3.1-rc1",
+                            javax.jdo.metadata;version="3.1-rc1",
+                            javax.jdo.spi;version="3.1-rc1",
+                            org.datanucleus.util;version="4.0.4",
+                            org.datanucleus.identity;version="4.0.4",
+                            org.datanucleus.state;version="4.0.4",
+                            org.datanucleus.enhancer;version="4.0.4",
+                            org.datanucleus;version="4.0.4",
+                            org.datanucleus.api.jdo;version="4.0.4",
 							org.aopalliance.aop,org.springframework.aop,,org.springframework.aop.scope,org.springframework.aop.framework,*
 						</Import-Package>
 					</instructions>
