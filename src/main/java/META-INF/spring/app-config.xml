@@ -37,14 +37,14 @@
 				<prop key="javax.jdo.option.ConnectionUserName">geppettouser</prop>
 				<prop key="javax.jdo.option.ConnectionPassword">pinocchio</prop>
 
-				<prop key="datanucleus.storeManagerType">rdbms</prop>
 				<prop key="datanucleus.autoCreateSchema">true</prop>
-				<prop key="datanucleus.validateTables">true</prop>
-				<prop key="datanucleus.validateColumns">true</prop>
-				<prop key="datanucleus.validateConstraints">true</prop>
-				<prop key="datanucleus.rdbms.CheckExistTablesOrViews">true</prop>
-				<prop key="datanucleus.connection.resourceType">RESOURCE_LOCAL</prop>
+				<prop key="datanucleus.autoCreateColumns">true</prop>
 
+				<prop key="datanucleus.storeManagerType">rdbms</prop>
+				<prop key="datanucleus.validateTables">true</prop>
+				<prop key="datanucleus.connection.resourceType">RESOURCE_LOCAL</prop>
+				<prop key="datanucleus.connection2.resourceType">RESOURCE_LOCAL</prop>
+			
 				<prop key="datanucleus.plugin.pluginRegistryClassName">org.datanucleus.plugin.OSGiPluginRegistry</prop>
 			</props>
 		</property>

@@ -144,13 +144,8 @@
 			<artifactId>com.springsource.com.mysql.jdbc</artifactId>
 			<version>5.1.6</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.naming</groupId>
-			<artifactId>jndi</artifactId>
-			<version>1.2.1</version>
-		</dependency>
-		
 	</dependencies>
+
 	<repositories>
 		<repository>
 			<id>com.springsource.repository.bundles.release</id>
@@ -249,7 +244,7 @@
 							org.osgi.framework,
                             org.w3c.dom,
                             org.xml.sax,
-                            javax.jdo,
+                            javax.jdo;version="3.1-rc1",
                             javax.jdo.annotations;version="3.1-rc1",
                             javax.jdo.datastore;version="3.1-rc1",
                             javax.jdo.identity;version="3.1-rc1",
@@ -262,11 +257,35 @@
                             org.datanucleus.enhancer;version="4.0.4",
                             org.datanucleus;version="4.0.4",
                             org.datanucleus.api.jdo;version="4.0.4",
+                            org.datanucleus.store.rdbms;version="4.0.4",
 							org.aopalliance.aop,org.springframework.aop,,org.springframework.aop.scope,org.springframework.aop.framework,*
 						</Import-Package>
+						<!-- Bundle-Activator>org.geppetto.persistence.Activator</Bundle-Activator-->
 					</instructions>
 				</configuration>
 			</plugin>
+			
+			
+			<!-- plugin>
+                <groupId>org.datanucleus</groupId>
+                <artifactId>datanucleus-maven-plugin</artifactId>
+                <version>4.0.4</version>
+                <configuration>
+                    <api>JDO</api>
+                    <persistenceUnitName>PU</persistenceUnitName>
+                    <fork>false</fork>
+                    <verbose>false</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin-->
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
