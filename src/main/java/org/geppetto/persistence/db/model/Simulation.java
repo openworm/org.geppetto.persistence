@@ -3,31 +3,29 @@ package org.geppetto.persistence.db.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import javax.jdo.annotations.Sequence;
 
 @PersistenceCapable
-@DatastoreIdentity(strategy=IdGeneratorStrategy.SEQUENCE)
 public class Simulation implements Serializable {
 	private static final long serialVersionUID = -6683657819521508894L;
 
 	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
 	private String name;
 
 	private Date launchedTimestamp;
-	
+
 	private String url;
 
 	private String status;
 
-	public Simulation(int id, String name, Date timestamp, String url, String status) {
+	public Simulation(String name, Date timestamp, String url, String status) {
 		super();
-		this.id = id;
 		this.name = name;
 		launchedTimestamp = timestamp;
 		this.url = url;
@@ -38,9 +36,9 @@ public class Simulation implements Serializable {
 		return id;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
+//	public void setId(long id) {
+//		this.id = id;
+//	}
 
 	public String getName() {
 		return name;
@@ -65,7 +63,7 @@ public class Simulation implements Serializable {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	public String getStatus() {
 		return status;
 	}
@@ -73,7 +71,5 @@ public class Simulation implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-
 
 }

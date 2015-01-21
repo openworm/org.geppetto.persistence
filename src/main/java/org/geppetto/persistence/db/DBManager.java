@@ -73,7 +73,7 @@ public class DBManager {
 		try {
 			tx.begin();
 			for (int i = 0; i < 2; i++) {
-				Simulation p = new Simulation(i, "Name  " + i, new Date(), "url " + i, "status " + i);
+				Simulation p = new Simulation("Name  " + i, new Date(), "url " + i, "status " + i);
 				pm.makePersistent(p);
 			}
 			tx.commit();
