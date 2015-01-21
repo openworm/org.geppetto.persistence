@@ -31,8 +31,58 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  *******************************************************************************/
 
-package org.geppetto.persistence;
+package org.geppetto.persistence.db;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Transaction;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.geppetto.persistence.db.model.Person;
 
 public class DBManager {
 
+	private PersistenceManagerFactory pmf;
+
+	private static Log _logger = LogFactory.getLog(DBManager.class);
+
+	public DBManager() {
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+				doSomeDBWork();
+			}
+		}).start();
+	}
+
+	public void setPersistenceManagerFactory(PersistenceManagerFactory pmf) {
+		this.pmf = pmf;
+	}
+
+	private void doSomeDBWork() {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		
+		Transaction tx = pm.currentTransaction();
+		try {
+			tx.begin();
+			for (int i = 0; i < 2; i++) {
+				Person p = new Person("Name  " + i, "Address  " + i, 30 + i);
+				pm.makePersistent(p);
+			}
+			tx.commit();
+		} catch (Exception e) {
+			_logger.warn("Could not store data", e);
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			pm.close();
+		}
+
+	}
 }

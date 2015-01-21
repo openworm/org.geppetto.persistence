@@ -241,6 +241,7 @@
 							{maven-resources},META-INF/spring=src/main/java/META-INF/spring
 						</Include-Resource>
 						<Import-Package>
+							org.apache.commons.logging,
 							org.osgi.framework,
                             org.w3c.dom,
                             org.xml.sax,
@@ -260,19 +261,16 @@
                             org.datanucleus.store.rdbms;version="4.0.4",
 							org.aopalliance.aop,org.springframework.aop,,org.springframework.aop.scope,org.springframework.aop.framework,*
 						</Import-Package>
-						<!-- Bundle-Activator>org.geppetto.persistence.Activator</Bundle-Activator-->
 					</instructions>
 				</configuration>
 			</plugin>
 			
-			
-			<!-- plugin>
+			<plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>datanucleus-maven-plugin</artifactId>
-                <version>4.0.4</version>
+                <version>4.0.0-release</version>
                 <configuration>
                     <api>JDO</api>
-                    <persistenceUnitName>PU</persistenceUnitName>
                     <fork>false</fork>
                     <verbose>false</verbose>
                 </configuration>
@@ -284,7 +282,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin-->
+            </plugin>
 			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
