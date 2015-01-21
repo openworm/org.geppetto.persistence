@@ -33,13 +33,15 @@
 
 package org.geppetto.persistence.db;
 
+import java.util.Date;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geppetto.persistence.db.model.Person;
+import org.geppetto.persistence.db.model.Simulation;
 
 public class DBManager {
 
@@ -71,7 +73,7 @@ public class DBManager {
 		try {
 			tx.begin();
 			for (int i = 0; i < 2; i++) {
-				Person p = new Person("Name  " + i, "Address  " + i, 30 + i);
+				Simulation p = new Simulation(i, "Name  " + i, new Date(), "url " + i, "status " + i);
 				pm.makePersistent(p);
 			}
 			tx.commit();
