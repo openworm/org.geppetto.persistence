@@ -33,10 +33,13 @@
 
 package org.geppetto.persistence.db;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
@@ -66,15 +69,30 @@ public class DBManager {
 		this.pmf = pmf;
 	}
 
-	private void doSomeDBWork() {
+	public void storeSimulation(Simulation simulation) {
 		PersistenceManager pm = pmf.getPersistenceManager();
-		
 		Transaction tx = pm.currentTransaction();
 		try {
 			tx.begin();
-			for (int i = 0; i < 2; i++) {
-				Simulation p = new Simulation("Name  " + i, new Date(), "url " + i, "status " + i);
-				pm.makePersistent(p);
+			pm.makePersistent(simulation);
+			tx.commit();
+		} catch (Exception e) {
+			_logger.warn("Could not store data", e);
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			pm.close();
+		}
+	}
+
+	public void storeSimulations(List<Simulation> simulations) {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try {
+			tx.begin();
+			for (Simulation simulation : simulations) {
+				pm.makePersistent(simulation);
 			}
 			tx.commit();
 		} catch (Exception e) {
@@ -85,6 +103,77 @@ public class DBManager {
 			}
 			pm.close();
 		}
-
 	}
+
+	public List<Simulation> findSimulationsByName(String name) {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try {
+			Query query = pm.newQuery(Simulation.class);
+			query.setFilter("name == searchedName");
+			query.declareParameters("String searchedName");
+			return (List<Simulation>) query.execute(name);
+		} finally {
+			pm.close();
+		}
+	}
+
+	public List<Simulation> getAllSimulations() {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try {
+			Query query = pm.newQuery(Simulation.class);
+			return (List<Simulation>) query.execute();
+		} finally {
+			pm.close();
+		}
+	}
+	
+	public void updateSimulation(String name, String newName) {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try {
+			Query query = pm.newQuery(Simulation.class);
+			query.setFilter("name == searchedName");
+			query.declareParameters("String searchedName");
+			List<Simulation> simulations = (List<Simulation>) query.execute(name);
+			for (Simulation simulation : simulations) {
+				simulation.setName(newName);
+			}
+		} finally {
+			pm.close();
+		}
+	}
+	
+	public void deleteAllSimulations() {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try {
+			tx.begin();
+			Query query = pm.newQuery(Simulation.class);
+			List<Simulation> simulations = (List<Simulation>) query.execute();
+			pm.deletePersistentAll(simulations);
+			tx.commit();
+		} catch (Exception e) {
+			_logger.warn("Could not store data", e);
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			pm.close();
+		}
+	}
+
+	private void doSomeDBWork() {
+		deleteAllSimulations();
+
+		List<Simulation> simulations = new ArrayList<Simulation>();
+		for (int i = 0; i < 2; i++) {
+			simulations.add(new Simulation("Name  " + i, new Date(), "url " + i, "status " + i));
+		}
+		storeSimulations(simulations);
+		storeSimulation(new Simulation("Another simulation", new Date(), "http://simulation", ""));
+
+		findSimulationsByName("Name  0");
+		updateSimulation("Name  0", "New simulation name");
+	}
+
+
 }
