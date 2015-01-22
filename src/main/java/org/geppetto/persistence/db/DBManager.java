@@ -53,6 +53,7 @@ public class DBManager {
 	private static Log _logger = LogFactory.getLog(DBManager.class);
 
 	public DBManager() {
+		// TODO: this will be removed once we have real DB usage
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -126,7 +127,7 @@ public class DBManager {
 			pm.close();
 		}
 	}
-	
+
 	public void updateSimulation(String name, String newName) {
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try {
@@ -141,7 +142,7 @@ public class DBManager {
 			pm.close();
 		}
 	}
-	
+
 	public void deleteAllSimulations() {
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
@@ -161,6 +162,7 @@ public class DBManager {
 		}
 	}
 
+	// TODO: this will be removed once we have real DB usage
 	private void doSomeDBWork() {
 		deleteAllSimulations();
 
@@ -174,6 +176,5 @@ public class DBManager {
 		findSimulationsByName("Name  0");
 		updateSimulation("Name  0", "New simulation name");
 	}
-
 
 }
