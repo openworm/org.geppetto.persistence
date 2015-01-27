@@ -10,7 +10,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
 public class Simulation implements Serializable {
-	private static final long serialVersionUID = -6683657819521508894L;
+	private static final long serialVersionUID = 1L;
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

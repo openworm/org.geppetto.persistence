@@ -1,0 +1,49 @@
+package org.geppetto.persistence.db.model;
+
+import java.io.Serializable;
+
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
+
+@PersistenceCapable
+public class PersistedData implements Serializable {
+	private static final long serialVersionUID = 1;
+
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private long id;
+
+	private String url;
+	
+	private PersistedDataType type;
+
+	public PersistedData(String url, PersistedDataType type) {
+		super();
+		this.url = url;
+		this.type = type;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public PersistedDataType getType() {
+		return type;
+	}
+
+	public void setType(PersistedDataType type) {
+		this.type = type;
+	}
+
+	
+}

@@ -44,7 +44,13 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geppetto.persistence.db.model.GeppettoProject;
+import org.geppetto.persistence.db.model.PersistedData;
+import org.geppetto.persistence.db.model.PersistedDataType;
 import org.geppetto.persistence.db.model.Simulation;
+import org.geppetto.persistence.db.model.SimulationRun;
+import org.geppetto.persistence.db.model.SimulationStatus;
+import org.geppetto.persistence.db.model.User;
 
 public class DBManager {
 
@@ -52,6 +58,7 @@ public class DBManager {
 
 	private static Log _logger = LogFactory.getLog(DBManager.class);
 
+	// TODO: try upgrading to the latest versions of Gemini, javax.jdo and mySQL connector bundles
 	public DBManager() {
 		// TODO: this will be removed once we have real DB usage
 		new Thread(new Runnable() {
@@ -61,7 +68,8 @@ public class DBManager {
 				} catch (InterruptedException e) {
 					// ignore
 				}
-				doSomeDBWork();
+				doSomeRealModelDBWork();
+//				doSomeSimulationDBWork();
 			}
 		}).start();
 	}
@@ -76,6 +84,23 @@ public class DBManager {
 		try {
 			tx.begin();
 			pm.makePersistent(simulation);
+			tx.commit();
+		} catch (Exception e) {
+			_logger.warn("Could not store data", e);
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			pm.close();
+		}
+	}
+
+	public void storeUser(User user) {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try {
+			tx.begin();
+			pm.makePersistent(user);
 			tx.commit();
 		} catch (Exception e) {
 			_logger.warn("Could not store data", e);
@@ -163,7 +188,7 @@ public class DBManager {
 	}
 
 	// TODO: this will be removed once we have real DB usage
-	private void doSomeDBWork() {
+	private void doSomeSimulationDBWork() {
 		deleteAllSimulations();
 
 		List<Simulation> simulations = new ArrayList<Simulation>();
@@ -175,6 +200,21 @@ public class DBManager {
 
 		findSimulationsByName("Name  0");
 		updateSimulation("Name  0", "New simulation name");
+	}
+	
+	private void doSomeRealModelDBWork() {
+		PersistedData persistedData = new PersistedData("some url", PersistedDataType.GEPPETTO_PROJECT);
+		SimulationRun simulationRun = new SimulationRun(SimulationStatus.RUNNING);
+		SimulationRun simulationRun2 = new SimulationRun(SimulationStatus.COMPLETED);
+		List<SimulationRun> simulationRuns = new ArrayList<SimulationRun>();
+		simulationRuns.add(simulationRun);
+		simulationRuns.add(simulationRun2);
+
+		GeppettoProject project = new GeppettoProject("project 1", persistedData, simulationRuns);
+		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
+		projects.add(project);
+		User user = new User("user1", "Some user", projects);
+		storeUser(user);
 	}
 
 }
