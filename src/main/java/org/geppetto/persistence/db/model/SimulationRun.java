@@ -1,9 +1,6 @@
 package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
