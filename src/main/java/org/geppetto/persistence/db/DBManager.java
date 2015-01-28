@@ -35,8 +35,11 @@ package org.geppetto.persistence.db;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.jdo.FetchGroup;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -69,7 +72,7 @@ public class DBManager {
 					// ignore
 				}
 				doSomeRealModelDBWork();
-//				doSomeSimulationDBWork();
+				// doSomeSimulationDBWork();
 			}
 		}).start();
 	}
@@ -153,6 +156,44 @@ public class DBManager {
 		}
 	}
 
+	public List<User> getAllUsers() {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try {
+			pm.getFetchPlan().setGroup(FetchGroup.ALL);
+			pm.getFetchPlan().setMaxFetchDepth(5);
+			// pm.getFetchPlan().setFetchSize(1000);
+			Query query = pm.newQuery(User.class);
+			List<User> users = (List<User>) query.execute();
+			return users;
+		} finally {
+			pm.close();
+		}
+	}
+
+	public List<GeppettoProject> getAllGeppettoProjects() {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try {
+			pm.getFetchPlan().setGroup(FetchGroup.ALL);
+			Query query = pm.newQuery(GeppettoProject.class);
+			List<GeppettoProject> projects = (List<GeppettoProject>) query.execute();
+			pm.retrieveAll(projects);
+			return projects;
+		} finally {
+			pm.close();
+		}
+	}
+
+	public List<SimulationRun> getAllSimulationRuns() {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try {
+			pm.getFetchPlan().setGroup(FetchGroup.ALL);
+			Query query = pm.newQuery(SimulationRun.class);
+			return (List<SimulationRun>) query.execute();
+		} finally {
+			pm.close();
+		}
+	}
+
 	public void updateSimulation(String name, String newName) {
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try {
@@ -201,11 +242,22 @@ public class DBManager {
 		findSimulationsByName("Name  0");
 		updateSimulation("Name  0", "New simulation name");
 	}
-	
+
 	private void doSomeRealModelDBWork() {
+		List<SimulationRun> savedSimulationRuns = getAllSimulationRuns();
+		Map<String, String> parameters = savedSimulationRuns.get(0).getParameters();
+		List<GeppettoProject> savedProjects = getAllGeppettoProjects();
+		parameters = savedProjects.get(0).getSimulationRuns().get(0).getParameters();
+		List<User> users = getAllUsers();
+		// TODO: this is not working as it seems like the fetch depth is 1 rather than the value we set
+		// parameters = users.get(0).getGeppettoProjects().get(0).getSimulationRuns().get(0).getParameters();
+
 		PersistedData persistedData = new PersistedData("some url", PersistedDataType.GEPPETTO_PROJECT);
-		SimulationRun simulationRun = new SimulationRun(SimulationStatus.RUNNING);
-		SimulationRun simulationRun2 = new SimulationRun(SimulationStatus.COMPLETED);
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		params.put("param1", "value1");
+		params.put("param2", "value2");
+		SimulationRun simulationRun = new SimulationRun(SimulationStatus.RUNNING, params);
+		SimulationRun simulationRun2 = new SimulationRun(SimulationStatus.COMPLETED, params);
 		List<SimulationRun> simulationRuns = new ArrayList<SimulationRun>();
 		simulationRuns.add(simulationRun);
 		simulationRuns.add(simulationRun2);
@@ -213,7 +265,8 @@ public class DBManager {
 		GeppettoProject project = new GeppettoProject("project 1", persistedData, simulationRuns);
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
 		projects.add(project);
-		User user = new User("user1", "Some user", projects);
+		long value = 1000l * 1000 * 1000;
+		User user = new User("user1", "Some user", projects, value, 2 * value);
 		storeUser(user);
 	}
 
