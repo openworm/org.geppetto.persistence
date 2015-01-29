@@ -3,9 +3,7 @@ package org.geppetto.persistence.db.model;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.jdo.FetchGroup;
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.FetchPlan;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
@@ -13,7 +11,8 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
-@FetchPlan(name="mainPlan", maxFetchDepth=5, fetchSize=1000, fetchGroups={FetchGroup.ALL, FetchGroup.DEFAULT})
+//@FetchPlan(name="mainPlan", maxFetchDepth=5, fetchSize=1000, fetchGroups={FetchGroup.ALL, FetchGroup.DEFAULT})
+//@FetchGroup(name="mainGroup", members={@Persistent(name="simulationRuns")})
 public class GeppettoProject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -24,9 +23,11 @@ public class GeppettoProject implements Serializable {
 	private String name;
 
 	@Column(name="persisteddata_id")
+	@Persistent(dependent="true")
 	private PersistedData geppettoModel;
 
 	@Join
+	@Persistent(dependentElement="true")
 	private List<SimulationRun> simulationRuns;
 
 	public GeppettoProject(String name, PersistedData geppettoModel, List<SimulationRun> simulationRuns) {

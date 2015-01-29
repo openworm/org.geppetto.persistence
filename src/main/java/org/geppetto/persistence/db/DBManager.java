@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jdo.FetchGroup;
+import javax.jdo.FetchPlan;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -61,7 +62,6 @@ public class DBManager {
 
 	private static Log _logger = LogFactory.getLog(DBManager.class);
 
-	// TODO: try upgrading to the latest versions of Gemini, javax.jdo and mySQL connector bundles
 	public DBManager() {
 		// TODO: this will be removed once we have real DB usage
 		new Thread(new Runnable() {
@@ -160,8 +160,8 @@ public class DBManager {
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try {
 			pm.getFetchPlan().setGroup(FetchGroup.ALL);
+			pm.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_GREEDY);
 			pm.getFetchPlan().setMaxFetchDepth(5);
-			// pm.getFetchPlan().setFetchSize(1000);
 			Query query = pm.newQuery(User.class);
 			List<User> users = (List<User>) query.execute();
 			return users;
@@ -228,6 +228,25 @@ public class DBManager {
 		}
 	}
 
+	public void deleteAllUsers() {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try {
+			tx.begin();
+			Query query = pm.newQuery(User.class);
+			List<User> users = (List<User>) query.execute();
+			pm.deletePersistentAll(users);
+			tx.commit();
+		} catch (Exception e) {
+			_logger.warn("Could not store data", e);
+		} finally {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			pm.close();
+		}
+	}
+
 	// TODO: this will be removed once we have real DB usage
 	private void doSomeSimulationDBWork() {
 		deleteAllSimulations();
@@ -250,7 +269,9 @@ public class DBManager {
 		parameters = savedProjects.get(0).getSimulationRuns().get(0).getParameters();
 		List<User> users = getAllUsers();
 		// TODO: this is not working as it seems like the fetch depth is 1 rather than the value we set
-		// parameters = users.get(0).getGeppettoProjects().get(0).getSimulationRuns().get(0).getParameters();
+		// Map<String, String> parameters = users.get(0).getGeppettoProjects().get(0).getSimulationRuns().get(0).getParameters();
+		deleteAllUsers();
+		users = getAllUsers();
 
 		PersistedData persistedData = new PersistedData("some url", PersistedDataType.GEPPETTO_PROJECT);
 		Map<String, String> params = new LinkedHashMap<String, String>();

@@ -3,8 +3,6 @@ package org.geppetto.persistence.db.model;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.jdo.FetchGroup;
-import javax.jdo.annotations.FetchPlan;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
@@ -12,7 +10,8 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
-@FetchPlan(name="mainPlan", maxFetchDepth=5, fetchSize=1000, fetchGroups={FetchGroup.ALL, FetchGroup.DEFAULT})
+//@FetchPlan(name="mainPlan", maxFetchDepth=5, fetchSize=1000, fetchGroups={FetchGroup.ALL, FetchGroup.DEFAULT})
+//@FetchGroup(name="mainGroup", members={@Persistent(name="geppettoProjects")})
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -30,6 +29,7 @@ public class User implements Serializable {
 	private long simulationTimeAllowance;
 	
 	@Join
+	@Persistent(dependentElement="true")
 	private List<GeppettoProject> geppettoProjects;
 	
 	// TODO: do we store an encrypted password here?
