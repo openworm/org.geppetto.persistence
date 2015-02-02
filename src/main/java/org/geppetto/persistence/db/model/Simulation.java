@@ -1,3 +1,36 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2011 - 2015 OpenWorm.
+ * http://openworm.org
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the MIT License
+ * which accompanies this distribution, and is available at
+ * http://opensource.org/licenses/MIT
+ *
+ * Contributors:
+ *     	OpenWorm - http://openworm.org/people.html
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+ * USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *******************************************************************************/
+
 package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
@@ -9,7 +42,8 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
-public class Simulation implements Serializable {
+public class Simulation implements Serializable
+{
 	private static final long serialVersionUID = 1L;
 
 	@PrimaryKey
@@ -24,7 +58,8 @@ public class Simulation implements Serializable {
 
 	private String status;
 
-	public Simulation(String name, Date timestamp, String url, String status) {
+	public Simulation(String name, Date timestamp, String url, String status)
+	{
 		super();
 		this.name = name;
 		launchedTimestamp = timestamp;
@@ -32,43 +67,52 @@ public class Simulation implements Serializable {
 		this.status = status;
 	}
 
-	public long getId() {
+	public long getId()
+	{
 		return id;
 	}
 
-//	public void setId(long id) {
-//		this.id = id;
-//	}
+	// public void setId(long id) {
+	// this.id = id;
+	// }
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public Date getLaunchedTimestamp() {
+	public Date getLaunchedTimestamp()
+	{
 		return launchedTimestamp;
 	}
 
-	public void setLaunchedTimestamp(Date timestamp) {
+	public void setLaunchedTimestamp(Date timestamp)
+	{
 		this.launchedTimestamp = timestamp;
 	}
 
-	public String getUrl() {
+	public String getUrl()
+	{
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public void setUrl(String url)
+	{
 		this.url = url;
 	}
 
-	public String getStatus() {
+	public String getStatus()
+	{
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(String status)
+	{
 		this.status = status;
 	}
 

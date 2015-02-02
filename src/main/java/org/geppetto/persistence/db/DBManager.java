@@ -1,7 +1,7 @@
 /*******************************************************************************
  * The MIT License (MIT)
  *
- * Copyright (c) 2011, 2013 OpenWorm.
+ * Copyright (c) 2011 - 2015 OpenWorm.
  * http://openworm.org
  *
  * All rights reserved. This program and the accompanying materials
@@ -56,19 +56,26 @@ import org.geppetto.persistence.db.model.SimulationRun;
 import org.geppetto.persistence.db.model.SimulationStatus;
 import org.geppetto.persistence.db.model.User;
 
-public class DBManager {
+public class DBManager
+{
 
 	private PersistenceManagerFactory pmf;
 
 	private static Log _logger = LogFactory.getLog(DBManager.class);
 
-	public DBManager() {
+	public DBManager()
+	{
 		// TODO: this will be removed once we have real DB usage
-		new Thread(new Runnable() {
-			public void run() {
-				try {
+		new Thread(new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
 					Thread.sleep(5000);
-				} catch (InterruptedException e) {
+				}
+				catch(InterruptedException e)
+				{
 					// ignore
 				}
 				doSomeRealModelDBWork();
@@ -77,170 +84,232 @@ public class DBManager {
 		}).start();
 	}
 
-	public void setPersistenceManagerFactory(PersistenceManagerFactory pmf) {
+	public void setPersistenceManagerFactory(PersistenceManagerFactory pmf)
+	{
 		this.pmf = pmf;
 	}
 
-	public void storeSimulation(Simulation simulation) {
+	public void storeSimulation(Simulation simulation)
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		try {
+		try
+		{
 			tx.begin();
 			pm.makePersistent(simulation);
 			tx.commit();
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			_logger.warn("Could not store data", e);
-		} finally {
-			if (tx.isActive()) {
+		}
+		finally
+		{
+			if(tx.isActive())
+			{
 				tx.rollback();
 			}
 			pm.close();
 		}
 	}
 
-	public void storeUser(User user) {
+	public void storeUser(User user)
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		try {
+		try
+		{
 			tx.begin();
 			pm.makePersistent(user);
 			tx.commit();
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			_logger.warn("Could not store data", e);
-		} finally {
-			if (tx.isActive()) {
+		}
+		finally
+		{
+			if(tx.isActive())
+			{
 				tx.rollback();
 			}
 			pm.close();
 		}
 	}
 
-	public void storeSimulations(List<Simulation> simulations) {
+	public void storeSimulations(List<Simulation> simulations)
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		try {
+		try
+		{
 			tx.begin();
-			for (Simulation simulation : simulations) {
+			for(Simulation simulation : simulations)
+			{
 				pm.makePersistent(simulation);
 			}
 			tx.commit();
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			_logger.warn("Could not store data", e);
-		} finally {
-			if (tx.isActive()) {
+		}
+		finally
+		{
+			if(tx.isActive())
+			{
 				tx.rollback();
 			}
 			pm.close();
 		}
 	}
 
-	public List<Simulation> findSimulationsByName(String name) {
+	public List<Simulation> findSimulationsByName(String name)
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
-		try {
+		try
+		{
 			Query query = pm.newQuery(Simulation.class);
 			query.setFilter("name == searchedName");
 			query.declareParameters("String searchedName");
 			return (List<Simulation>) query.execute(name);
-		} finally {
+		}
+		finally
+		{
 			pm.close();
 		}
 	}
 
-	public List<Simulation> getAllSimulations() {
+	public List<Simulation> getAllSimulations()
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
-		try {
+		try
+		{
 			Query query = pm.newQuery(Simulation.class);
 			return (List<Simulation>) query.execute();
-		} finally {
+		}
+		finally
+		{
 			pm.close();
 		}
 	}
 
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers()
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
-		try {
+		try
+		{
 			pm.getFetchPlan().setGroup(FetchGroup.ALL);
 			pm.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_GREEDY);
 			pm.getFetchPlan().setMaxFetchDepth(5);
 			Query query = pm.newQuery(User.class);
 			List<User> users = (List<User>) query.execute();
 			return users;
-		} finally {
+		}
+		finally
+		{
 			pm.close();
 		}
 	}
 
-	public List<GeppettoProject> getAllGeppettoProjects() {
+	public List<GeppettoProject> getAllGeppettoProjects()
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
-		try {
+		try
+		{
 			pm.getFetchPlan().setGroup(FetchGroup.ALL);
 			Query query = pm.newQuery(GeppettoProject.class);
 			List<GeppettoProject> projects = (List<GeppettoProject>) query.execute();
 			pm.retrieveAll(projects);
 			return projects;
-		} finally {
+		}
+		finally
+		{
 			pm.close();
 		}
 	}
 
-	public List<SimulationRun> getAllSimulationRuns() {
+	public List<SimulationRun> getAllSimulationRuns()
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
-		try {
+		try
+		{
 			pm.getFetchPlan().setGroup(FetchGroup.ALL);
 			Query query = pm.newQuery(SimulationRun.class);
 			return (List<SimulationRun>) query.execute();
-		} finally {
+		}
+		finally
+		{
 			pm.close();
 		}
 	}
 
-	public void updateSimulation(String name, String newName) {
+	public void updateSimulation(String name, String newName)
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
-		try {
+		try
+		{
 			Query query = pm.newQuery(Simulation.class);
 			query.setFilter("name == searchedName");
 			query.declareParameters("String searchedName");
 			List<Simulation> simulations = (List<Simulation>) query.execute(name);
-			for (Simulation simulation : simulations) {
+			for(Simulation simulation : simulations)
+			{
 				simulation.setName(newName);
 			}
-		} finally {
+		}
+		finally
+		{
 			pm.close();
 		}
 	}
 
-	public void deleteAllSimulations() {
+	public void deleteAllSimulations()
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		try {
+		try
+		{
 			tx.begin();
 			Query query = pm.newQuery(Simulation.class);
 			List<Simulation> simulations = (List<Simulation>) query.execute();
 			pm.deletePersistentAll(simulations);
 			tx.commit();
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			_logger.warn("Could not store data", e);
-		} finally {
-			if (tx.isActive()) {
+		}
+		finally
+		{
+			if(tx.isActive())
+			{
 				tx.rollback();
 			}
 			pm.close();
 		}
 	}
 
-	public void deleteAllUsers() {
+	public void deleteAllUsers()
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
-		try {
+		try
+		{
 			tx.begin();
 			Query query = pm.newQuery(User.class);
 			List<User> users = (List<User>) query.execute();
 			pm.deletePersistentAll(users);
 			tx.commit();
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			_logger.warn("Could not store data", e);
-		} finally {
-			if (tx.isActive()) {
+		}
+		finally
+		{
+			if(tx.isActive())
+			{
 				tx.rollback();
 			}
 			pm.close();
@@ -248,11 +317,13 @@ public class DBManager {
 	}
 
 	// TODO: this will be removed once we have real DB usage
-	private void doSomeSimulationDBWork() {
+	private void doSomeSimulationDBWork()
+	{
 		deleteAllSimulations();
 
 		List<Simulation> simulations = new ArrayList<Simulation>();
-		for (int i = 0; i < 2; i++) {
+		for(int i = 0; i < 2; i++)
+		{
 			simulations.add(new Simulation("Name  " + i, new Date(), "url " + i, "status " + i));
 		}
 		storeSimulations(simulations);
@@ -262,7 +333,8 @@ public class DBManager {
 		updateSimulation("Name  0", "New simulation name");
 	}
 
-	private void doSomeRealModelDBWork() {
+	private void doSomeRealModelDBWork()
+	{
 		List<SimulationRun> savedSimulationRuns = getAllSimulationRuns();
 		Map<String, String> parameters = savedSimulationRuns.get(0).getParameters();
 		List<GeppettoProject> savedProjects = getAllGeppettoProjects();
@@ -270,7 +342,7 @@ public class DBManager {
 		List<User> users = getAllUsers();
 		// TODO: this is not working as it seems like the fetch depth is 1 rather than the value we set
 		// Map<String, String> parameters = users.get(0).getGeppettoProjects().get(0).getSimulationRuns().get(0).getParameters();
-		deleteAllUsers();
+		// deleteAllUsers();
 		users = getAllUsers();
 
 		PersistedData persistedData = new PersistedData("some url", PersistedDataType.GEPPETTO_PROJECT);

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * The MIT License (MIT)
  *
- * Copyright (c) 2011, 2013 OpenWorm.
+ * Copyright (c) 2011 - 2015 OpenWorm.
  * http://openworm.org
  *
  * All rights reserved. This program and the accompanying materials
@@ -44,24 +44,27 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean;
 
-public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceManagerFactoryBean implements
-		BundleContextAware {
+public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceManagerFactoryBean implements BundleContextAware
+{
 
 	private BundleContext bundleContext;
 	private DataSource dataSource;
 
-	public OSGiLocalPersistenceManagerFactoryBean() {
+	public OSGiLocalPersistenceManagerFactoryBean()
+	{
 	}
 
 	@Override
-	protected PersistenceManagerFactory newPersistenceManagerFactory(String name) {
+	protected PersistenceManagerFactory newPersistenceManagerFactory(String name)
+	{
 		return JDOHelper.getPersistenceManagerFactory(name, getClassLoader());
 		// return JDOHelper.getPersistenceManagerFactory(name,
 		// OSGiLocalPersistenceManagerFactoryBean.class.getClassLoader());
 	}
 
 	@Override
-	protected PersistenceManagerFactory newPersistenceManagerFactory(Map props) {
+	protected PersistenceManagerFactory newPersistenceManagerFactory(Map props)
+	{
 		ClassLoader classLoader = getClassLoader();
 
 		props.put("datanucleus.primaryClassLoader", classLoader);
@@ -71,18 +74,23 @@ public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceMana
 		return pmf;
 	}
 
-	private ClassLoader getClassLoader() {
+	private ClassLoader getClassLoader()
+	{
 		ClassLoader classloader = null;
 		Bundle[] bundles = bundleContext.getBundles();
 
-		for (int x = 0; x < bundles.length; x++) {
+		for(int x = 0; x < bundles.length; x++)
+		{
 			// if ("org.datanucleus.store.rdbms".equals(bundles[x].getSymbolicName())) {
-			if ("org.datanucleus.api.jdo".equals(bundles[x].getSymbolicName())) {
-				try {
-					classloader = bundles[x].loadClass("org.datanucleus.api.jdo.JDOPersistenceManagerFactory")
-							.getClassLoader();
+			if("org.datanucleus.api.jdo".equals(bundles[x].getSymbolicName()))
+			{
+				try
+				{
+					classloader = bundles[x].loadClass("org.datanucleus.api.jdo.JDOPersistenceManagerFactory").getClassLoader();
 					// classloader = bundles[x].loadClass("org.datanucleus.JDOClassLoaderResolver").getClassLoader();
-				} catch (ClassNotFoundException e) {
+				}
+				catch(ClassNotFoundException e)
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -94,7 +102,8 @@ public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceMana
 	}
 
 	@Override
-	public void setBundleContext(BundleContext bundleContext) {
+	public void setBundleContext(BundleContext bundleContext)
+	{
 		this.bundleContext = bundleContext;
 	}
 }

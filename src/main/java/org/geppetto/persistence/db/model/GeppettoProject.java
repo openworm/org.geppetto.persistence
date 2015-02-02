@@ -1,3 +1,36 @@
+/*******************************************************************************
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2011 - 2015 OpenWorm.
+ * http://openworm.org
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the MIT License
+ * which accompanies this distribution, and is available at
+ * http://opensource.org/licenses/MIT
+ *
+ * Contributors:
+ *     	OpenWorm - http://openworm.org/people.html
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+ * USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *******************************************************************************/
+
 package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
@@ -11,9 +44,10 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
-//@FetchPlan(name="mainPlan", maxFetchDepth=5, fetchSize=1000, fetchGroups={FetchGroup.ALL, FetchGroup.DEFAULT})
-//@FetchGroup(name="mainGroup", members={@Persistent(name="simulationRuns")})
-public class GeppettoProject implements Serializable {
+// @FetchPlan(name="mainPlan", maxFetchDepth=5, fetchSize=1000, fetchGroups={FetchGroup.ALL, FetchGroup.DEFAULT})
+// @FetchGroup(name="mainGroup", members={@Persistent(name="simulationRuns")})
+public class GeppettoProject implements Serializable
+{
 	private static final long serialVersionUID = 1L;
 
 	@PrimaryKey
@@ -22,56 +56,66 @@ public class GeppettoProject implements Serializable {
 
 	private String name;
 
-	@Column(name="persisteddata_id")
-	@Persistent(dependent="true")
+	@Column(name = "persisteddata_id")
+	@Persistent(dependent = "true")
 	private PersistedData geppettoModel;
 
 	@Join
-	@Persistent(dependentElement="true")
+	@Persistent(dependentElement = "true")
 	private List<SimulationRun> simulationRuns;
 
-	public GeppettoProject(String name, PersistedData geppettoModel, List<SimulationRun> simulationRuns) {
+	public GeppettoProject(String name, PersistedData geppettoModel, List<SimulationRun> simulationRuns)
+	{
 		super();
 		this.name = name;
 		this.geppettoModel = geppettoModel;
 		this.simulationRuns = simulationRuns;
 	}
 
-	public long getId() {
+	public long getId()
+	{
 		return id;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public PersistedData getGeppettoModel() {
+	public PersistedData getGeppettoModel()
+	{
 		return geppettoModel;
 	}
 
-	public void setGeppettoModel(PersistedData geppettoModel) {
+	public void setGeppettoModel(PersistedData geppettoModel)
+	{
 		this.geppettoModel = geppettoModel;
 	}
-	
-	public List<SimulationRun> getSimulationRuns() {
+
+	public List<SimulationRun> getSimulationRuns()
+	{
 		return simulationRuns;
 	}
 
-	public void setSimulationRuns(List<SimulationRun> simulationRuns) {
+	public void setSimulationRuns(List<SimulationRun> simulationRuns)
+	{
 		this.simulationRuns = simulationRuns;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		return id == ((GeppettoProject) obj).id;
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		return name.hashCode();
 	}
 }
