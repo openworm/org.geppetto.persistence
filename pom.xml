@@ -40,7 +40,7 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>org.springframework.aop</artifactId>
@@ -118,7 +118,7 @@
 			<artifactId>org.eclipse.gemini.blueprint.io</artifactId>
 			<version>1.0.2.RELEASE</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-core</artifactId>
@@ -144,6 +144,35 @@
 			<artifactId>com.springsource.com.mysql.jdbc</artifactId>
 			<version>5.1.6</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.aws-java-sdk</artifactId>
+			<version>1.8.3_2</version>
+		</dependency>
+		
+		<!--dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-osgi</artifactId>
+			<version>1.9.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.jaxp-ri</artifactId>
+			<version>1.4.5_1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore-osgi</artifactId>
+			<version>4.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-osgi</artifactId>
+			<version>4.3.6</version>
+		</dependency-->
+		
+
 	</dependencies>
 
 	<repositories>
@@ -243,47 +272,67 @@
 						<Import-Package>
 							org.apache.commons.logging,
 							org.osgi.framework,
-                            org.w3c.dom,
-                            org.xml.sax,
-                            javax.jdo;version="3.1-rc1",
-                            javax.jdo.annotations;version="3.1-rc1",
-                            javax.jdo.datastore;version="3.1-rc1",
-                            javax.jdo.identity;version="3.1-rc1",
-                            javax.jdo.listener;version="3.1-rc1",
-                            javax.jdo.metadata;version="3.1-rc1",
-                            javax.jdo.spi;version="3.1-rc1",
-                            org.datanucleus.util;version="4.0.4",
-                            org.datanucleus.identity;version="4.0.4",
-                            org.datanucleus.state;version="4.0.4",
-                            org.datanucleus.enhancer;version="4.0.4",
-                            org.datanucleus;version="4.0.4",
-                            org.datanucleus.api.jdo;version="4.0.4",
-                            org.datanucleus.store.rdbms;version="4.0.4",
+							org.w3c.dom,
+							org.xml.sax,
+							javax.jdo;version="3.1-rc1",
+							javax.jdo.annotations;version="3.1-rc1",
+							javax.jdo.datastore;version="3.1-rc1",
+							javax.jdo.identity;version="3.1-rc1",
+							javax.jdo.listener;version="3.1-rc1",
+							javax.jdo.metadata;version="3.1-rc1",
+							javax.jdo.spi;version="3.1-rc1",
+							org.datanucleus.util;version="4.0.4",
+							org.datanucleus.identity;version="4.0.4",
+							org.datanucleus.state;version="4.0.4",
+							org.datanucleus.enhancer;version="4.0.4",
+							org.datanucleus;version="4.0.4",
+							org.datanucleus.api.jdo;version="4.0.4",
+							org.datanucleus.store.rdbms;version="4.0.4",
+							
+							org.apache.http,
+							org.apache.http.auth,
+							org.apache.http.client,
+							org.apache.http.client.methods,
+							org.apache.http.client.utils,
+							org.apache.http.conn,
+							org.apache.http.conn.scheme,
+							org.apache.http.conn.ssl,
+							org.apache.http.entity,
+							org.apache.http.impl.auth,
+							org.apache.http.impl.client,
+							org.apache.http.impl.conn,
+							org.apache.http.message,
+							org.apache.http.params,
+							org.apache.http.protocol,
 							org.aopalliance.aop,org.springframework.aop,,org.springframework.aop.scope,org.springframework.aop.framework,*
 						</Import-Package>
+						<DynamicImport-Package>
+							com.amazonaws.http.conn,
+							org.apache.http.conn.routing
+						</DynamicImport-Package>
 					</instructions>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
-                <groupId>org.datanucleus</groupId>
-                <artifactId>datanucleus-maven-plugin</artifactId>
-                <version>4.0.0-release</version>
-                <configuration>
-                    <api>JDO</api>
-                    <fork>false</fork>
-                    <verbose>false</verbose>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>enhance</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-			
+				<groupId>org.datanucleus</groupId>
+				<artifactId>datanucleus-maven-plugin</artifactId>
+				<version>4.0.0-release</version>
+				<configuration>
+					<api>JDO</api>
+					<fork>false</fork>
+					<verbose>false</verbose>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>enhance</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
