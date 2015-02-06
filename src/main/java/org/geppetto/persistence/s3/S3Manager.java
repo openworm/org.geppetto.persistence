@@ -37,6 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +46,8 @@ import org.apache.commons.logging.LogFactory;
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 public class S3Manager
 {
@@ -56,7 +60,7 @@ public class S3Manager
 
 	public S3Manager()
 	{
-		// TODO: this will be removed once we have real DB usage
+		// TODO: this will be removed once we have real S3 usage
 		new Thread(new Runnable()
 		{
 			public void run()
@@ -104,6 +108,25 @@ public class S3Manager
 		Files.write(file.toPath(), text.getBytes(), StandardOpenOption.APPEND);
 		saveFileToS3(file, path);
 	}
+	
+	public List<S3ObjectSummary> retrievePathsFromS3(String prefix) {
+		ObjectListing listing = getS3Connection().listObjects(BUCKET_NAME, prefix);
+		List<S3ObjectSummary> allSummaries = new ArrayList<>();
+		List<S3ObjectSummary> summaries = listing.getObjectSummaries();
+		while (!summaries.isEmpty()) {
+			allSummaries.addAll(summaries);
+			summaries.clear();
+			if (listing.isTruncated()) {
+				summaries = listing.getObjectSummaries();
+			}
+		}
+		return allSummaries;
+	}
+	
+	
+	public void deleteFromS3(String path) {
+		getS3Connection().deleteObject(BUCKET_NAME, path);
+	}
 
 	private void doSomeRealModelS3Work()
 	{
@@ -115,6 +138,12 @@ public class S3Manager
 		{
 			_logger.warn("Could not save to S3", e);
 		}
+		List<S3ObjectSummary> persistedSummaries = retrievePathsFromS3("test");
+		if (persistedSummaries.size() > 1) {
+			deleteFromS3(persistedSummaries.get(0).getKey());
+			deleteFromS3(persistedSummaries.get(1).getKey());
+		}
+		
 	}
 
 }
