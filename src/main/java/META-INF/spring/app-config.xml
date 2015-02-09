@@ -33,15 +33,6 @@
 		class="org.geppetto.persistence.db.OSGiLocalPersistenceManagerFactoryBean">
 		<property name="jdoProperties">
 			<props>
-				<prop key="javax.jdo.PersistenceManagerFactoryClass">org.datanucleus.api.jdo.JDOPersistenceManagerFactory
-				</prop>
-				<!-- MySQL DB connection settings -->
-				<!-- Add '?loglevel=2' to Connection URL for JDBC Connection debugging. -->
-				<prop key="javax.jdo.option.ConnectionURL">jdbc:mysql://localhost/geppetto</prop>
-				<prop key="javax.jdo.option.ConnectionDriverName">com.mysql.jdbc.Driver</prop>
-				<prop key="javax.jdo.option.ConnectionUserName">geppettouser</prop>
-				<prop key="javax.jdo.option.ConnectionPassword">pinocchio</prop>
-
 				<prop key="datanucleus.autoCreateSchema">true</prop>
 				<prop key="datanucleus.autoCreateColumns">true</prop>
 

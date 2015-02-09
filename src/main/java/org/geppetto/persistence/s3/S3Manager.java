@@ -42,6 +42,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geppetto.persistence.util.PersistenceHelper;
 
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -55,8 +56,6 @@ public class S3Manager
 	private AmazonS3 _s3Connection;
 
 	private static Log _logger = LogFactory.getLog(S3Manager.class);
-
-	private static final String BUCKET_NAME = "org.geppetto.bucket";
 
 	public S3Manager()
 	{
@@ -82,8 +81,7 @@ public class S3Manager
 	{
 		if(_s3Connection == null)
 		{
-			// TODO: figure this path out
-			File credentialsFile = new File("d:/eclipse/aws.credentials");
+			File credentialsFile = new File(PersistenceHelper.SETTINGS_DIR + "/aws.credentials");
 			try
 			{
 				_s3Connection = new AmazonS3Client(new PropertiesCredentials(credentialsFile));
@@ -99,7 +97,7 @@ public class S3Manager
 	public void saveFileToS3(File file, String path)
 	{
 		AmazonS3 s3 = getS3Connection();
-		s3.putObject(BUCKET_NAME, path, file);
+		s3.putObject(PersistenceHelper.BUCKET_NAME, path, file);
 	}
 
 	public void saveTextToS3(String text, String path) throws IOException
@@ -108,24 +106,27 @@ public class S3Manager
 		Files.write(file.toPath(), text.getBytes(), StandardOpenOption.APPEND);
 		saveFileToS3(file, path);
 	}
-	
-	public List<S3ObjectSummary> retrievePathsFromS3(String prefix) {
-		ObjectListing listing = getS3Connection().listObjects(BUCKET_NAME, prefix);
+
+	public List<S3ObjectSummary> retrievePathsFromS3(String prefix)
+	{
+		ObjectListing listing = getS3Connection().listObjects(PersistenceHelper.BUCKET_NAME, prefix);
 		List<S3ObjectSummary> allSummaries = new ArrayList<>();
 		List<S3ObjectSummary> summaries = listing.getObjectSummaries();
-		while (!summaries.isEmpty()) {
+		while(!summaries.isEmpty())
+		{
 			allSummaries.addAll(summaries);
 			summaries.clear();
-			if (listing.isTruncated()) {
+			if(listing.isTruncated())
+			{
 				summaries = listing.getObjectSummaries();
 			}
 		}
 		return allSummaries;
 	}
-	
-	
-	public void deleteFromS3(String path) {
-		getS3Connection().deleteObject(BUCKET_NAME, path);
+
+	public void deleteFromS3(String path)
+	{
+		getS3Connection().deleteObject(PersistenceHelper.BUCKET_NAME, path);
 	}
 
 	private void doSomeRealModelS3Work()
@@ -139,11 +140,11 @@ public class S3Manager
 			_logger.warn("Could not save to S3", e);
 		}
 		List<S3ObjectSummary> persistedSummaries = retrievePathsFromS3("test");
-		if (persistedSummaries.size() > 1) {
+		if(persistedSummaries.size() > 0)
+		{
 			deleteFromS3(persistedSummaries.get(0).getKey());
-			deleteFromS3(persistedSummaries.get(1).getKey());
 		}
-		
+
 	}
 
 }

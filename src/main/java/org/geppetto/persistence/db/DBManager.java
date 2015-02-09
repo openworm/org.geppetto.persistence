@@ -78,8 +78,7 @@ public class DBManager
 				{
 					// ignore
 				}
-//				doSomeRealModelDBWork();
-				// doSomeSimulationDBWork();
+				doSomeRealModelDBWork();
 			}
 		}).start();
 	}
@@ -336,13 +335,17 @@ public class DBManager
 	private void doSomeRealModelDBWork()
 	{
 		List<SimulationRun> savedSimulationRuns = getAllSimulationRuns();
-		Map<String, String> parameters = savedSimulationRuns.get(0).getParameters();
+		if (savedSimulationRuns.size() > 0) {
+			Map<String, String> parameters = savedSimulationRuns.get(0).getParameters();
+		}
 		List<GeppettoProject> savedProjects = getAllGeppettoProjects();
-		parameters = savedProjects.get(0).getSimulationRuns().get(0).getParameters();
+		if (savedSimulationRuns.size() > 0) {
+			Map<String, String> parameters = savedProjects.get(0).getSimulationRuns().get(0).getParameters();
+		}
 		List<User> users = getAllUsers();
 		// TODO: this is not working as it seems like the fetch depth is 1 rather than the value we set
 		// Map<String, String> parameters = users.get(0).getGeppettoProjects().get(0).getSimulationRuns().get(0).getParameters();
-		// deleteAllUsers();
+		deleteAllUsers();
 		users = getAllUsers();
 
 		PersistedData persistedData = new PersistedData("some url", PersistedDataType.GEPPETTO_PROJECT);
