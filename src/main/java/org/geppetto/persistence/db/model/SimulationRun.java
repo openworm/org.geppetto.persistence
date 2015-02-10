@@ -34,16 +34,17 @@
 package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Date;
+import java.util.List;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
-// @FetchPlan(name="mainPlan", maxFetchDepth=5, fetchSize=1000, fetchGroups={FetchGroup.ALL, FetchGroup.DEFAULT})
 public class SimulationRun implements Serializable
 {
 	private static final long serialVersionUID = 1;
@@ -54,14 +55,26 @@ public class SimulationRun implements Serializable
 
 	private SimulationStatus status;
 
-	private Map<String, String> parameters = new LinkedHashMap<String, String>();
+	@Column(name = "results_id")
+	@Persistent(dependent = "true")
+	private PersistedData results;
 
-	// TODO: add the preferredViews once we have a View object
-	public SimulationRun(SimulationStatus status, Map<String, String> parameters)
+	@Join
+	@Persistent(dependentElement = "true")
+	private List<Parameter> simulationParameters;
+
+	private Date startDate;
+
+	private Date endDate;
+
+	public SimulationRun(SimulationStatus status, List<Parameter> simulationParameters, PersistedData results, Date startDate, Date endDate)
 	{
 		super();
 		this.status = status;
-		this.parameters = parameters;
+		this.simulationParameters = simulationParameters;
+		this.results = results;
+		this.startDate = startDate;
+		this.endDate = endDate;
 	}
 
 	public long getId()
@@ -79,14 +92,44 @@ public class SimulationRun implements Serializable
 		this.status = status;
 	}
 
-	public Map<String, String> getParameters()
+	public PersistedData getResults()
 	{
-		return parameters;
+		return results;
 	}
 
-	public void setParameters(Map<String, String> parameters)
+	public void setResults(PersistedData results)
 	{
-		this.parameters = parameters;
+		this.results = results;
+	}
+
+	public List<Parameter> getSimulationParameters()
+	{
+		return simulationParameters;
+	}
+
+	public void setSimulationParameters(List<Parameter> simulationParameters)
+	{
+		this.simulationParameters = simulationParameters;
+	}
+
+	public Date getStartDate()
+	{
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate)
+	{
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate()
+	{
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate)
+	{
+		this.endDate = endDate;
 	}
 
 	@Override

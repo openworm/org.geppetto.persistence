@@ -34,6 +34,7 @@
 package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -43,51 +44,44 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
-public class User implements Serializable
+public class Experiment implements Serializable
 {
-
 	private static final long serialVersionUID = 1L;
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
-	private String login;
-
 	private String name;
 
-	private long spaceAllowance;
+	private String description;
 
-	private long simulationTimeAllowance;
+	private Date creationDate;
+
+	private Date lastModified;
 
 	@Join
 	@Persistent(dependentElement = "true")
-	private List<GeppettoProject> geppettoProjects;
+	private List<Parameter> modelParameters;
 
-	// TODO: do we store an encrypted password here?
-	public User(String login, String name, List<GeppettoProject> geppettoProjects, long spaceAllowance, long simulationTimeAllowance)
+	@Join
+	@Persistent(dependentElement = "true")
+	private List<SimulationRun> simulationRuns;
+
+	public Experiment(String name, String description, Date creationDate, Date lastModified, List<Parameter> modelParameters, List<SimulationRun> simulationRuns)
 	{
 		super();
-		this.login = login;
 		this.name = name;
-		this.geppettoProjects = geppettoProjects;
-		this.spaceAllowance = spaceAllowance;
-		this.simulationTimeAllowance = simulationTimeAllowance;
+		this.description = description;
+		this.creationDate = creationDate;
+		this.lastModified = lastModified;
+		this.modelParameters = modelParameters;
+		this.simulationRuns = simulationRuns;
 	}
 
 	public long getId()
 	{
 		return id;
-	}
-
-	public String getLogin()
-	{
-		return login;
-	}
-
-	public void setLogin(String login)
-	{
-		this.login = login;
 	}
 
 	public String getName()
@@ -100,34 +94,54 @@ public class User implements Serializable
 		this.name = name;
 	}
 
-	public List<GeppettoProject> getGeppettoProjects()
+	public String getDescription()
 	{
-		return geppettoProjects;
+		return description;
 	}
 
-	public void setGeppettoProjects(List<GeppettoProject> geppettoProjects)
+	public void setDescription(String description)
 	{
-		this.geppettoProjects = geppettoProjects;
+		this.description = description;
 	}
 
-	public long getSpaceAllowance()
+	public Date getCreationDate()
 	{
-		return spaceAllowance;
+		return creationDate;
 	}
 
-	public void setSpaceAllowance(long spaceAllowance)
+	public void setCreationDate(Date creationDate)
 	{
-		this.spaceAllowance = spaceAllowance;
+		this.creationDate = creationDate;
 	}
 
-	public long getSimulationTimeAllowance()
+	public Date getLastModified()
 	{
-		return simulationTimeAllowance;
+		return lastModified;
 	}
 
-	public void setSimulationTimeAllowance(long simulationTimeAllowance)
+	public void setLastModified(Date lastModified)
 	{
-		this.simulationTimeAllowance = simulationTimeAllowance;
+		this.lastModified = lastModified;
+	}
+
+	public List<Parameter> getModelParameters()
+	{
+		return modelParameters;
+	}
+
+	public void setModelParameters(List<Parameter> modelParameters)
+	{
+		this.modelParameters = modelParameters;
+	}
+
+	public List<SimulationRun> getSimulationRuns()
+	{
+		return simulationRuns;
+	}
+
+	public void setSimulationRuns(List<SimulationRun> simulationRuns)
+	{
+		this.simulationRuns = simulationRuns;
 	}
 
 }

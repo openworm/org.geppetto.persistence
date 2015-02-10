@@ -49,6 +49,7 @@ import javax.jdo.Transaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.persistence.db.model.GeppettoProject;
+import org.geppetto.persistence.db.model.Parameter;
 import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.PersistedDataType;
 import org.geppetto.persistence.db.model.Simulation;
@@ -78,7 +79,7 @@ public class DBManager
 				{
 					// ignore
 				}
-				doSomeRealModelDBWork();
+//				doSomeRealModelDBWork();
 			}
 		}).start();
 	}
@@ -336,31 +337,28 @@ public class DBManager
 	{
 		List<SimulationRun> savedSimulationRuns = getAllSimulationRuns();
 		if (savedSimulationRuns.size() > 0) {
-			Map<String, String> parameters = savedSimulationRuns.get(0).getParameters();
+			List<Parameter> parameters = savedSimulationRuns.get(0).getSimulationParameters();
 		}
 		List<GeppettoProject> savedProjects = getAllGeppettoProjects();
 		if (savedSimulationRuns.size() > 0) {
-			Map<String, String> parameters = savedProjects.get(0).getSimulationRuns().get(0).getParameters();
+			List<Parameter> parameters = savedProjects.get(0).getActiveSimulation().getSimulationParameters();
 		}
 		List<User> users = getAllUsers();
-		// TODO: this is not working as it seems like the fetch depth is 1 rather than the value we set
-		// Map<String, String> parameters = users.get(0).getGeppettoProjects().get(0).getSimulationRuns().get(0).getParameters();
 		deleteAllUsers();
 		users = getAllUsers();
 
+		
 		PersistedData persistedData = new PersistedData("some url", PersistedDataType.GEPPETTO_PROJECT);
-		Map<String, String> params = new LinkedHashMap<String, String>();
-		params.put("param1", "value1");
-		params.put("param2", "value2");
-		SimulationRun simulationRun = new SimulationRun(SimulationStatus.RUNNING, params);
-		SimulationRun simulationRun2 = new SimulationRun(SimulationStatus.COMPLETED, params);
-		List<SimulationRun> simulationRuns = new ArrayList<SimulationRun>();
-		simulationRuns.add(simulationRun);
-		simulationRuns.add(simulationRun2);
+		List<Parameter> params = new ArrayList<Parameter>();
+//		SimulationRun simulationRun = new SimulationRun(SimulationStatus.RUNNING, params);
+//		SimulationRun simulationRun2 = new SimulationRun(SimulationStatus.COMPLETED, params);
+//		List<SimulationRun> simulationRuns = new ArrayList<SimulationRun>();
+//		simulationRuns.add(simulationRun);
+//		simulationRuns.add(simulationRun2);
 
-		GeppettoProject project = new GeppettoProject("project 1", persistedData, simulationRuns);
+//		GeppettoProject project = new GeppettoProject("project 1", persistedData, simulationRuns);
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
-		projects.add(project);
+//		projects.add(project);
 		long value = 1000l * 1000 * 1000;
 		User user = new User("user1", "Some user", projects, value, 2 * value);
 		storeUser(user);

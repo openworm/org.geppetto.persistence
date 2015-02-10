@@ -34,11 +34,9 @@
 package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -60,16 +58,16 @@ public class GeppettoProject implements Serializable
 	@Persistent(dependent = "true")
 	private PersistedData geppettoModel;
 
-	@Join
-	@Persistent(dependentElement = "true")
-	private List<SimulationRun> simulationRuns;
+	@Column(name = "activesimulation_id")
+	@Persistent(dependent = "true")
+	private SimulationRun activeSimulation;
 
-	public GeppettoProject(String name, PersistedData geppettoModel, List<SimulationRun> simulationRuns)
+	public GeppettoProject(String name, PersistedData geppettoModel, SimulationRun activeSimulation)
 	{
 		super();
 		this.name = name;
 		this.geppettoModel = geppettoModel;
-		this.simulationRuns = simulationRuns;
+		this.activeSimulation = activeSimulation;
 	}
 
 	public long getId()
@@ -97,14 +95,14 @@ public class GeppettoProject implements Serializable
 		this.geppettoModel = geppettoModel;
 	}
 
-	public List<SimulationRun> getSimulationRuns()
+	public SimulationRun getActiveSimulation()
 	{
-		return simulationRuns;
+		return activeSimulation;
 	}
 
-	public void setSimulationRuns(List<SimulationRun> simulationRuns)
+	public void setActiveSimulation(SimulationRun activeSimulation)
 	{
-		this.simulationRuns = simulationRuns;
+		this.activeSimulation = activeSimulation;
 	}
 
 	@Override
