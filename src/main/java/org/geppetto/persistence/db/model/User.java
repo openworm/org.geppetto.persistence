@@ -61,7 +61,7 @@ public class User implements Serializable
 	private long simulationTimeAllowance;
 
 	@Join
-	@Persistent(dependentElement = "true")
+	@Persistent//(dependentElement = "true")
 	private List<GeppettoProject> geppettoProjects;
 
 	// TODO: do we store an encrypted password here?

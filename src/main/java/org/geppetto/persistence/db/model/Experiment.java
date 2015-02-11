@@ -61,11 +61,11 @@ public class Experiment implements Serializable
 	private Date lastModified;
 
 	@Join
-	@Persistent(dependentElement = "true")
+	@Persistent//(dependentElement = "true")
 	private List<Parameter> modelParameters;
 
 	@Join
-	@Persistent(dependentElement = "true")
+	@Persistent//(dependentElement = "true")
 	private List<SimulationRun> simulationRuns;
 
 	// TODO: add this when a View class will be available

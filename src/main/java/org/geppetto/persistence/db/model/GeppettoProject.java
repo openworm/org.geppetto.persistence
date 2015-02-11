@@ -66,11 +66,11 @@ public class GeppettoProject implements Serializable
 	// private List<View> views;
 
 	@Column(name = "persisteddata_id")
-	@Persistent(dependent = "true")
+	@Persistent//(dependent = "true")
 	private PersistedData geppettoModel;
 
 	@Column(name = "activesimulation_id")
-	@Persistent(dependent = "true")
+	@Persistent//(dependent = "true")
 	private SimulationRun activeSimulation;
 
 	public GeppettoProject(String name, List<Experiment> experiments, PersistedData geppettoModel, SimulationRun activeSimulation)
