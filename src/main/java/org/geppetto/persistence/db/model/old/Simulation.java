@@ -31,7 +31,7 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  *******************************************************************************/
 
-package org.geppetto.persistence.db.model;
+package org.geppetto.persistence.db.model.old;
 
 import java.io.Serializable;
 import java.util.Date;
