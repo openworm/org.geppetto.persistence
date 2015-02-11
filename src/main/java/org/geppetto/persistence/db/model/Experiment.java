@@ -68,6 +68,11 @@ public class Experiment implements Serializable
 	@Persistent(dependentElement = "true")
 	private List<SimulationRun> simulationRuns;
 
+	// TODO: add this when a View class will be available
+	// @Join
+	// @Persistent(dependentElement = "true")
+	// private List<View> associatedViews;
+
 	public Experiment(String name, String description, Date creationDate, Date lastModified, List<Parameter> modelParameters, List<SimulationRun> simulationRuns)
 	{
 		super();

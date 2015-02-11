@@ -34,9 +34,11 @@
 package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -54,6 +56,15 @@ public class GeppettoProject implements Serializable
 
 	private String name;
 
+	@Join
+	@Persistent(dependentElement = "true")
+	private List<Experiment> experiments;
+
+	// TODO: add this when a View class will be available
+	// @Join
+	// @Persistent(dependentElement = "true")
+	// private List<View> views;
+
 	@Column(name = "persisteddata_id")
 	@Persistent(dependent = "true")
 	private PersistedData geppettoModel;
@@ -62,10 +73,11 @@ public class GeppettoProject implements Serializable
 	@Persistent(dependent = "true")
 	private SimulationRun activeSimulation;
 
-	public GeppettoProject(String name, PersistedData geppettoModel, SimulationRun activeSimulation)
+	public GeppettoProject(String name, List<Experiment> experiments, PersistedData geppettoModel, SimulationRun activeSimulation)
 	{
 		super();
 		this.name = name;
+		this.experiments = experiments;
 		this.geppettoModel = geppettoModel;
 		this.activeSimulation = activeSimulation;
 	}
@@ -83,6 +95,16 @@ public class GeppettoProject implements Serializable
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public List<Experiment> getExperiments()
+	{
+		return experiments;
+	}
+
+	public void setExperiments(List<Experiment> experiments)
+	{
+		this.experiments = experiments;
 	}
 
 	public PersistedData getGeppettoModel()
