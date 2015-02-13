@@ -151,27 +151,26 @@
 			<version>1.8.3_2</version>
 		</dependency>
 		
-		<!--dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-osgi</artifactId>
-			<version>1.9.17</version>
-		</dependency>
 		<dependency>
-			<groupId>org.apache.servicemix.bundles</groupId>
-			<artifactId>org.apache.servicemix.bundles.jaxp-ri</artifactId>
-			<version>1.4.5_1</version>
-		</dependency>
+			<groupId>org.restlet.osgi</groupId>
+			<artifactId>org.restlet</artifactId>
+			<version>2.2.3</version>
+		</dependency>		
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore-osgi</artifactId>
-			<version>4.3.3</version>
-		</dependency>
+			<groupId>org.restlet.osgi</groupId>
+			<artifactId>org.restlet.ext.json</artifactId>
+			<version>2.2.3</version>
+		</dependency>		
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient-osgi</artifactId>
-			<version>4.3.6</version>
-		</dependency-->
-		
+			<groupId>org.restlet.osgi</groupId>
+			<artifactId>org.restlet.ext.servlet</artifactId>
+			<version>2.2.3</version>
+		</dependency>		
+		<dependency>
+			<groupId>de.twentyeleven.skysail</groupId>
+			<artifactId>org.json-osgi</artifactId>
+			<version>20080701</version>
+		</dependency>
 
 	</dependencies>
 
@@ -203,6 +202,11 @@
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>maven-restlet</id>
+			<name>Restlet maven repository</name>
+			<url>http://maven.restlet.com</url>
 		</repository>
 	</repositories>
 	<distributionManagement>

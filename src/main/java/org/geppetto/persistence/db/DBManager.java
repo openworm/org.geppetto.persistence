@@ -197,6 +197,7 @@ public class DBManager
 		long value = 1000l * 1000 * 1000;
 		User user = new User("user1", "Some user", projects, value, 2 * value);
 		storeEntity(user);
+		System.out.println();
 	}
 
 }
