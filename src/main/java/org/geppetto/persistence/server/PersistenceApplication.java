@@ -33,6 +33,7 @@
 package org.geppetto.persistence.server;
 
 import org.geppetto.persistence.db.DBManager;
+import org.geppetto.persistence.server.resource.SimulationRunsResource;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
