@@ -30,37 +30,19 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  *******************************************************************************/
-package org.geppetto.persistence.server;
+package org.geppetto.persistence;
 
-import org.geppetto.persistence.db.DBManager;
-import org.geppetto.persistence.server.resource.SimulationRunsResource;
-import org.restlet.Application;
-import org.restlet.Restlet;
-import org.restlet.routing.Router;
+import org.geppetto.core.data.IGeppettoDataManager;
 
-public class PersistenceApplication extends Application
+public class DBDataManager implements IGeppettoDataManager
 {
-
-	private DBManager dbManager;
-
-	public DBManager getDbManager()
+	public String getName()
 	{
-		return dbManager;
+		return "DB data manager";
 	}
 
-	public void setDbManager(DBManager manager)
+	public boolean isDefault()
 	{
-		dbManager = manager;
+		return false;
 	}
-
-	@Override
-	public Restlet createInboundRoot()
-	{
-		Router router = new Router(getContext());
-
-		router.attach("/persistence/simulationruns", SimulationRunsResource.class);
-
-		return router;
-	}
-
 }
