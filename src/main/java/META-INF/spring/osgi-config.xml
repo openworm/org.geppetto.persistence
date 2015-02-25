@@ -33,13 +33,11 @@
     </aop:aspect>
 </aop:config-->
  
-<osgi:service id="DBDataManager" ref="dbDataManagerService"
+<osgi:service id="DBDataManager" ref="dbDataManagerService" 
 	interface="org.geppetto.core.data.IGeppettoDataManager">
-	<osgi:service-properties>
-		<entry key="discoverableID" value="dataManager" />
-	</osgi:service-properties>
 </osgi:service>
 <bean id="dbDataManagerService" scope="thread" class="org.geppetto.persistence.DBDataManager">
 	<aop:scoped-proxy proxy-target-class="false"/>
+	<property name="dbManager" ref="dbManager"></property>
 </bean>
 </beans>

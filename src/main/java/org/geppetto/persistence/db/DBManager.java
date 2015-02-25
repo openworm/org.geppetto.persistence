@@ -55,6 +55,7 @@ import org.geppetto.persistence.db.model.Parameter;
 import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationRun;
 import org.geppetto.persistence.db.model.User;
+import org.geppetto.persistence.db.model.old.Simulation;
 
 public class DBManager
 {
@@ -78,7 +79,7 @@ public class DBManager
 				{
 					// ignore
 				}
-//				 doSomeRealModelDBWork();
+				// doSomeRealModelDBWork();
 			}
 		}).start();
 	}
@@ -155,6 +156,30 @@ public class DBManager
 		}
 	}
 
+	public User findUserByLogin(String login)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try
+		{
+			pm.getFetchPlan().setGroup(FetchGroup.ALL);
+			pm.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_GREEDY);
+			pm.getFetchPlan().setMaxFetchDepth(5);
+			Query query = pm.newQuery(User.class);
+			query.setFilter("login == searchedLogin");
+			query.declareParameters("String searchedLogin");
+			List<User> users = (List<User>) query.execute(login);
+			if(users.size() > 0)
+			{
+				return users.get(0);
+			}
+			return null;
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
+
 	private void doSomeRealModelDBWork()
 	{
 		List<SimulationRun> savedSimulationRuns = getAllEntities(SimulationRun.class);
@@ -189,8 +214,8 @@ public class DBManager
 		simulationRuns.add(simulationRun2);
 
 		List<Experiment> experiments = new ArrayList<Experiment>();
-//		Experiment experiment = new Experiment("experiment", "experiment description", new Date(), new Date(), params, simulationRuns);
-//		experiments.add(experiment);
+		// Experiment experiment = new Experiment("experiment", "experiment description", new Date(), new Date(), params, simulationRuns);
+		// experiments.add(experiment);
 		GeppettoProject project = new GeppettoProject("project 1", experiments, persistedData, simulationRun);
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
 		projects.add(project);

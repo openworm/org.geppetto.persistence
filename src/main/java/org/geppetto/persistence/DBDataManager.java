@@ -32,10 +32,29 @@
  *******************************************************************************/
 package org.geppetto.persistence;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.geppetto.core.data.IGeppettoDataManager;
+import org.geppetto.core.data.model.ParameterType;
+import org.geppetto.persistence.db.DBManager;
+import org.geppetto.persistence.db.model.Experiment;
+import org.geppetto.persistence.db.model.GeppettoProject;
+import org.geppetto.persistence.db.model.Parameter;
+import org.geppetto.persistence.db.model.SimulationRun;
+import org.geppetto.persistence.db.model.User;
 
 public class DBDataManager implements IGeppettoDataManager
 {
+
+	private DBManager dbManager;
+
+	public void setDbManager(DBManager manager)
+	{
+		dbManager = manager;
+	}
+
 	public String getName()
 	{
 		return "DB data manager";
@@ -45,4 +64,35 @@ public class DBDataManager implements IGeppettoDataManager
 	{
 		return false;
 	}
+
+	public List<GeppettoProject> getAllGeppettoProjects()
+	{
+		return dbManager.getAllEntities(GeppettoProject.class);
+	}
+
+	public List<GeppettoProject> getGeppettoProjectsForUser(String login)
+	{
+		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
+		User user = dbManager.findUserByLogin(login);
+		if(user != null && user.getGeppettoProjects() != null)
+		{
+			projects.addAll(user.getGeppettoProjects());
+		}
+		return projects;
+	}
+
+	public void createParameter(String name, String value)
+	{
+		Parameter parameter = new Parameter(ParameterType.MODEL_PARAMETER, value, name);
+		dbManager.storeEntity(parameter);
+	}
+
+	public void createExperiment(String name, String description, Date creationDate, Date lastModified)
+	{
+		List<Parameter> modelParameters = new ArrayList<>();
+		List<SimulationRun> simulationRuns = new ArrayList<>();
+		Experiment experiment = new Experiment(name, description, creationDate, lastModified, modelParameters, simulationRuns);
+		dbManager.storeEntity(experiment);
+	}
+
 }
