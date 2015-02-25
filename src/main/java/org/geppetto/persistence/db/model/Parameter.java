@@ -40,8 +40,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.geppetto.core.data.model.IParameter;
+import org.geppetto.core.data.model.ParameterType;
+
 @PersistenceCapable
-public class Parameter implements Serializable
+public class Parameter implements Serializable, IParameter
 {
 	private static final long serialVersionUID = 1;
 
@@ -63,11 +66,13 @@ public class Parameter implements Serializable
 		this.instancePath = instancePath;
 	}
 
+	@Override
 	public long getId()
 	{
 		return id;
 	}
 
+	@Override
 	public ParameterType getType()
 	{
 		return type;
@@ -78,6 +83,7 @@ public class Parameter implements Serializable
 		this.type = type;
 	}
 
+	@Override
 	public String getValue()
 	{
 		return value;
@@ -88,6 +94,7 @@ public class Parameter implements Serializable
 		this.value = value;
 	}
 
+	@Override
 	public String getInstancePath()
 	{
 		return instancePath;

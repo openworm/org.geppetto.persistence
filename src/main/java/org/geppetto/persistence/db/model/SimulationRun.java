@@ -44,8 +44,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.geppetto.core.data.model.ISimulationRun;
+import org.geppetto.core.data.model.SimulationStatus;
+
 @PersistenceCapable
-public class SimulationRun implements Serializable
+public class SimulationRun implements Serializable, ISimulationRun
 {
 	private static final long serialVersionUID = 1;
 
@@ -56,11 +59,13 @@ public class SimulationRun implements Serializable
 	private SimulationStatus status;
 
 	@Column(name = "results_id")
-	@Persistent//(dependent = "true")
+	@Persistent
+	// (dependent = "true")
 	private PersistedData results;
 
 	@Join
-	@Persistent//(dependentElement = "true")
+	@Persistent
+	// (dependentElement = "true")
 	private List<Parameter> simulationParameters;
 
 	private Date startDate;
@@ -77,11 +82,13 @@ public class SimulationRun implements Serializable
 		this.endDate = endDate;
 	}
 
+	@Override
 	public long getId()
 	{
 		return id;
 	}
 
+	@Override
 	public SimulationStatus getStatus()
 	{
 		return status;
@@ -92,6 +99,7 @@ public class SimulationRun implements Serializable
 		this.status = status;
 	}
 
+	@Override
 	public PersistedData getResults()
 	{
 		return results;
@@ -102,6 +110,7 @@ public class SimulationRun implements Serializable
 		this.results = results;
 	}
 
+	@Override
 	public List<Parameter> getSimulationParameters()
 	{
 		return simulationParameters;
@@ -112,6 +121,7 @@ public class SimulationRun implements Serializable
 		this.simulationParameters = simulationParameters;
 	}
 
+	@Override
 	public Date getStartDate()
 	{
 		return startDate;
@@ -122,6 +132,7 @@ public class SimulationRun implements Serializable
 		this.startDate = startDate;
 	}
 
+	@Override
 	public Date getEndDate()
 	{
 		return endDate;

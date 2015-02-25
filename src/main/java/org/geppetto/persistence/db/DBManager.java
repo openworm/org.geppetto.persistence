@@ -46,14 +46,14 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geppetto.core.data.model.ParameterType;
+import org.geppetto.core.data.model.PersistedDataType;
+import org.geppetto.core.data.model.SimulationStatus;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.Parameter;
-import org.geppetto.persistence.db.model.ParameterType;
 import org.geppetto.persistence.db.model.PersistedData;
-import org.geppetto.persistence.db.model.PersistedDataType;
 import org.geppetto.persistence.db.model.SimulationRun;
-import org.geppetto.persistence.db.model.SimulationStatus;
 import org.geppetto.persistence.db.model.User;
 
 public class DBManager
@@ -189,8 +189,8 @@ public class DBManager
 		simulationRuns.add(simulationRun2);
 
 		List<Experiment> experiments = new ArrayList<Experiment>();
-		Experiment experiment = new Experiment("experiment", "experiment description", new Date(), new Date(), params, simulationRuns);
-		experiments.add(experiment);
+//		Experiment experiment = new Experiment("experiment", "experiment description", new Date(), new Date(), params, simulationRuns);
+//		experiments.add(experiment);
 		GeppettoProject project = new GeppettoProject("project 1", experiments, persistedData, simulationRun);
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
 		projects.add(project);

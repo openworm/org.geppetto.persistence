@@ -43,8 +43,10 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.geppetto.core.data.model.IExperiment;
+
 @PersistenceCapable
-public class Experiment implements Serializable
+public class Experiment implements Serializable, IExperiment
 {
 	private static final long serialVersionUID = 1L;
 
@@ -61,11 +63,13 @@ public class Experiment implements Serializable
 	private Date lastModified;
 
 	@Join
-	@Persistent//(dependentElement = "true")
+	@Persistent
+	// (dependentElement = "true")
 	private List<Parameter> modelParameters;
 
 	@Join
-	@Persistent//(dependentElement = "true")
+	@Persistent
+	// (dependentElement = "true")
 	private List<SimulationRun> simulationRuns;
 
 	// TODO: add this when a View class will be available
@@ -84,11 +88,13 @@ public class Experiment implements Serializable
 		this.simulationRuns = simulationRuns;
 	}
 
+	@Override
 	public long getId()
 	{
 		return id;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
@@ -99,6 +105,7 @@ public class Experiment implements Serializable
 		this.name = name;
 	}
 
+	@Override
 	public String getDescription()
 	{
 		return description;
@@ -109,6 +116,7 @@ public class Experiment implements Serializable
 		this.description = description;
 	}
 
+	@Override
 	public Date getCreationDate()
 	{
 		return creationDate;
@@ -119,6 +127,7 @@ public class Experiment implements Serializable
 		this.creationDate = creationDate;
 	}
 
+	@Override
 	public Date getLastModified()
 	{
 		return lastModified;
@@ -129,6 +138,7 @@ public class Experiment implements Serializable
 		this.lastModified = lastModified;
 	}
 
+	@Override
 	public List<Parameter> getModelParameters()
 	{
 		return modelParameters;
@@ -139,6 +149,7 @@ public class Experiment implements Serializable
 		this.modelParameters = modelParameters;
 	}
 
+	@Override
 	public List<SimulationRun> getSimulationRuns()
 	{
 		return simulationRuns;

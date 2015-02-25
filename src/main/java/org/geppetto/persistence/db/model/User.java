@@ -42,8 +42,10 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.geppetto.core.data.model.IUser;
+
 @PersistenceCapable
-public class User implements Serializable
+public class User implements Serializable, IUser
 {
 
 	private static final long serialVersionUID = 1L;
@@ -61,7 +63,8 @@ public class User implements Serializable
 	private long simulationTimeAllowance;
 
 	@Join
-	@Persistent//(dependentElement = "true")
+	@Persistent
+	// (dependentElement = "true")
 	private List<GeppettoProject> geppettoProjects;
 
 	// TODO: do we store an encrypted password here?
@@ -75,11 +78,13 @@ public class User implements Serializable
 		this.simulationTimeAllowance = simulationTimeAllowance;
 	}
 
+	@Override
 	public long getId()
 	{
 		return id;
 	}
 
+	@Override
 	public String getLogin()
 	{
 		return login;
@@ -90,6 +95,7 @@ public class User implements Serializable
 		this.login = login;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
@@ -100,6 +106,7 @@ public class User implements Serializable
 		this.name = name;
 	}
 
+	@Override
 	public List<GeppettoProject> getGeppettoProjects()
 	{
 		return geppettoProjects;
@@ -110,6 +117,7 @@ public class User implements Serializable
 		this.geppettoProjects = geppettoProjects;
 	}
 
+	@Override
 	public long getSpaceAllowance()
 	{
 		return spaceAllowance;
@@ -120,6 +128,7 @@ public class User implements Serializable
 		this.spaceAllowance = spaceAllowance;
 	}
 
+	@Override
 	public long getSimulationTimeAllowance()
 	{
 		return simulationTimeAllowance;
