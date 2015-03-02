@@ -257,6 +257,7 @@
 							{maven-resources},META-INF/spring=src/main/java/META-INF/spring
 						</Include-Resource>
 						<Import-Package>
+							org.geppetto.core.auth,
 							org.apache.commons.logging,
 							org.osgi.framework,
 							org.w3c.dom,
