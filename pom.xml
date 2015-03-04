@@ -186,11 +186,6 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
-		<repository>
-			<id>maven-restlet</id>
-			<name>Restlet maven repository</name>
-			<url>http://maven.restlet.com</url>
-		</repository>
 	</repositories>
 	<distributionManagement>
 		<repository>

@@ -46,5 +46,6 @@
 </osgi:service>
 <bean id="dbAuthService" scope="thread" class="org.geppetto.persistence.auth.GeppettoAuthentication">
 	<aop:scoped-proxy proxy-target-class="false"/>
+	<property name="dbManager" ref="dbManager"></property>
 </bean>
 </beans>

@@ -70,6 +70,11 @@ public class DBDataManager implements IGeppettoDataManager
 		return dbManager.getAllEntities(GeppettoProject.class);
 	}
 
+	public User getUserByLogin(String login)
+	{
+		return dbManager.findUserByLogin(login);
+	}
+
 	public List<GeppettoProject> getGeppettoProjectsForUser(String login)
 	{
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();

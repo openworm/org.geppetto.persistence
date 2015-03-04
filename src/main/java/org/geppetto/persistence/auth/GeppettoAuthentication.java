@@ -33,18 +33,27 @@
 
 package org.geppetto.persistence.auth;
 
+import org.geppetto.core.auth.AuthManager;
 import org.geppetto.core.auth.IAuthService;
+import org.geppetto.persistence.db.DBManager;
+import org.geppetto.persistence.db.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GeppettoAuthentication implements IAuthService
 {
+	private DBManager dbManager;
+	
+	public void setDbManager(DBManager manager) {
+		dbManager = manager;
+	}
 
 	@Override
 	public Boolean isAuthenticated()
 	{
-		// TODO Auto-generated method stub
-		return true;
+		String userName = AuthManager.getCurrentUser();
+		User user = dbManager.findUserByLogin(userName);
+		return user != null || userName.equals("guest");
 	}
 
 	@Override
