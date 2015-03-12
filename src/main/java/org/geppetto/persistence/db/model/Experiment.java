@@ -64,12 +64,10 @@ public class Experiment implements Serializable, IExperiment
 
 	@Join
 	@Persistent
-	// (dependentElement = "true")
 	private List<Parameter> modelParameters;
 
 	@Join
 	@Persistent
-	// (dependentElement = "true")
 	private List<SimulationRun> simulationRuns;
 
 	// TODO: add this when a View class will be available

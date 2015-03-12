@@ -64,7 +64,6 @@ public class User implements Serializable, IUser
 
 	@Join
 	@Persistent
-	// (dependentElement = "true")
 	private List<GeppettoProject> geppettoProjects;
 
 	// TODO: do we store an encrypted password here?

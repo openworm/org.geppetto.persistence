@@ -55,7 +55,6 @@ import org.geppetto.persistence.db.model.Parameter;
 import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationRun;
 import org.geppetto.persistence.db.model.User;
-import org.geppetto.persistence.db.model.old.Simulation;
 
 public class DBManager
 {
@@ -79,7 +78,7 @@ public class DBManager
 				{
 					// ignore
 				}
-				//doSomeRealModelDBWork();
+//				doSomeRealModelDBWork();
 			}
 		}).start();
 	}
@@ -217,9 +216,15 @@ public class DBManager
 		List<Experiment> experiments = new ArrayList<Experiment>();
 		Experiment experiment = new Experiment("experiment" + suffix, "experiment description", new Date(), new Date(), params, simulationRuns);
 		experiments.add(experiment);
-		GeppettoProject project = new GeppettoProject("project ", experiments, persistedData, simulationRun);
+		GeppettoProject project = new GeppettoProject("project " + suffix, experiments, persistedData, simulationRun);
+		GeppettoProject project2 = new GeppettoProject("project2 " + suffix, experiments, persistedData, simulationRun);
+		GeppettoProject project3 = new GeppettoProject("project3 " + suffix, experiments, persistedData, simulationRun);
+		GeppettoProject project4 = new GeppettoProject("project4 " + suffix, experiments, persistedData, simulationRun);
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
 		projects.add(project);
+		projects.add(project2);
+		projects.add(project3);
+		projects.add(project4);
 		long value = 1000l * 1000 * 1000;
 		User user = new User("guest", "Guest user", projects, value, 2 * value);
 		storeEntity(user);

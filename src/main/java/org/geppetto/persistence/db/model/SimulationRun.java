@@ -60,12 +60,10 @@ public class SimulationRun implements Serializable, ISimulationRun
 
 	@Column(name = "results_id")
 	@Persistent
-	// (dependent = "true")
 	private PersistedData results;
 
 	@Join
 	@Persistent
-	// (dependentElement = "true")
 	private List<Parameter> simulationParameters;
 
 	private Date startDate;

@@ -46,8 +46,6 @@ import javax.jdo.annotations.PrimaryKey;
 import org.geppetto.core.data.model.IGeppettoProject;
 
 @PersistenceCapable
-// @FetchPlan(name="mainPlan", maxFetchDepth=5, fetchSize=1000, fetchGroups={FetchGroup.ALL, FetchGroup.DEFAULT})
-// @FetchGroup(name="mainGroup", members={@Persistent(name="simulationRuns")})
 public class GeppettoProject implements Serializable, IGeppettoProject
 {
 	private static final long serialVersionUID = 1L;
@@ -69,12 +67,10 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 
 	@Column(name = "persisteddata_id")
 	@Persistent
-	// (dependent = "true")
 	private PersistedData geppettoModel;
 
 	@Column(name = "activesimulation_id")
 	@Persistent
-	// (dependent = "true")
 	private SimulationRun activeSimulation;
 
 	public GeppettoProject(String name, List<Experiment> experiments, PersistedData geppettoModel, SimulationRun activeSimulation)
@@ -85,7 +81,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.geppettoModel = geppettoModel;
 		this.activeSimulation = activeSimulation;
 	}
-
+	
 	public long getId()
 	{
 		return id;
