@@ -88,13 +88,11 @@ public class Experiment implements Serializable, IExperiment
 		this.simulationRuns = simulationRuns;
 	}
 
-	@Override
 	public long getId()
 	{
 		return id;
 	}
 
-	@Override
 	public String getName()
 	{
 		return name;
@@ -105,7 +103,6 @@ public class Experiment implements Serializable, IExperiment
 		this.name = name;
 	}
 
-	@Override
 	public String getDescription()
 	{
 		return description;
@@ -116,7 +113,6 @@ public class Experiment implements Serializable, IExperiment
 		this.description = description;
 	}
 
-	@Override
 	public Date getCreationDate()
 	{
 		return creationDate;
@@ -127,7 +123,6 @@ public class Experiment implements Serializable, IExperiment
 		this.creationDate = creationDate;
 	}
 
-	@Override
 	public Date getLastModified()
 	{
 		return lastModified;
@@ -138,7 +133,6 @@ public class Experiment implements Serializable, IExperiment
 		this.lastModified = lastModified;
 	}
 
-	@Override
 	public List<Parameter> getModelParameters()
 	{
 		return modelParameters;
@@ -149,7 +143,6 @@ public class Experiment implements Serializable, IExperiment
 		this.modelParameters = modelParameters;
 	}
 
-	@Override
 	public List<SimulationRun> getSimulationRuns()
 	{
 		return simulationRuns;

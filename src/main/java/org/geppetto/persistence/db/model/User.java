@@ -78,13 +78,11 @@ public class User implements Serializable, IUser
 		this.simulationTimeAllowance = simulationTimeAllowance;
 	}
 
-	@Override
 	public long getId()
 	{
 		return id;
 	}
 
-	@Override
 	public String getLogin()
 	{
 		return login;
@@ -95,7 +93,6 @@ public class User implements Serializable, IUser
 		this.login = login;
 	}
 
-	@Override
 	public String getName()
 	{
 		return name;
@@ -106,7 +103,6 @@ public class User implements Serializable, IUser
 		this.name = name;
 	}
 
-	@Override
 	public List<GeppettoProject> getGeppettoProjects()
 	{
 		return geppettoProjects;
@@ -117,7 +113,6 @@ public class User implements Serializable, IUser
 		this.geppettoProjects = geppettoProjects;
 	}
 
-	@Override
 	public long getSpaceAllowance()
 	{
 		return spaceAllowance;
@@ -128,7 +123,6 @@ public class User implements Serializable, IUser
 		this.spaceAllowance = spaceAllowance;
 	}
 
-	@Override
 	public long getSimulationTimeAllowance()
 	{
 		return simulationTimeAllowance;

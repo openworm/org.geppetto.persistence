@@ -82,13 +82,11 @@ public class SimulationRun implements Serializable, ISimulationRun
 		this.endDate = endDate;
 	}
 
-	@Override
 	public long getId()
 	{
 		return id;
 	}
 
-	@Override
 	public SimulationStatus getStatus()
 	{
 		return status;
@@ -99,7 +97,6 @@ public class SimulationRun implements Serializable, ISimulationRun
 		this.status = status;
 	}
 
-	@Override
 	public PersistedData getResults()
 	{
 		return results;
@@ -110,7 +107,6 @@ public class SimulationRun implements Serializable, ISimulationRun
 		this.results = results;
 	}
 
-	@Override
 	public List<Parameter> getSimulationParameters()
 	{
 		return simulationParameters;
@@ -121,7 +117,6 @@ public class SimulationRun implements Serializable, ISimulationRun
 		this.simulationParameters = simulationParameters;
 	}
 
-	@Override
 	public Date getStartDate()
 	{
 		return startDate;
@@ -132,7 +127,6 @@ public class SimulationRun implements Serializable, ISimulationRun
 		this.startDate = startDate;
 	}
 
-	@Override
 	public Date getEndDate()
 	{
 		return endDate;
@@ -143,13 +137,11 @@ public class SimulationRun implements Serializable, ISimulationRun
 		this.endDate = endDate;
 	}
 
-	@Override
 	public boolean equals(Object obj)
 	{
 		return id == ((SimulationRun) obj).id;
 	}
 
-	@Override
 	public int hashCode()
 	{
 		return status.hashCode();

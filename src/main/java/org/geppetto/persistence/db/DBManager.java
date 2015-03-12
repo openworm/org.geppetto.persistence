@@ -79,7 +79,7 @@ public class DBManager
 				{
 					// ignore
 				}
-				// doSomeRealModelDBWork();
+				//doSomeRealModelDBWork();
 			}
 		}).start();
 	}
@@ -182,16 +182,16 @@ public class DBManager
 
 	private void doSomeRealModelDBWork()
 	{
-		List<SimulationRun> savedSimulationRuns = getAllEntities(SimulationRun.class);
-		if(savedSimulationRuns.size() > 0)
-		{
-			List<Parameter> parameters = savedSimulationRuns.get(0).getSimulationParameters();
-		}
-		List<GeppettoProject> savedProjects = getAllEntities(GeppettoProject.class);
-		if(savedSimulationRuns.size() > 0)
-		{
-			List<Parameter> parameters = savedProjects.get(0).getActiveSimulation().getSimulationParameters();
-		}
+		// List<SimulationRun> savedSimulationRuns = getAllEntities(SimulationRun.class);
+		// if(savedSimulationRuns.size() > 0)
+		// {
+		// List<Parameter> parameters = savedSimulationRuns.get(0).getSimulationParameters();
+		// }
+		// List<GeppettoProject> savedProjects = getAllEntities(GeppettoProject.class);
+		// if(savedSimulationRuns.size() > 0)
+		// {
+		// List<Parameter> parameters = savedProjects.get(0).getActiveSimulation().getSimulationParameters();
+		// }
 		List<User> users = getAllEntities(User.class);
 		deleteAllEntities(User.class);
 		deleteAllEntities(GeppettoProject.class);
@@ -201,10 +201,11 @@ public class DBManager
 		deleteAllEntities(PersistedData.class);
 		users = getAllEntities(User.class);
 
+		long suffix = System.currentTimeMillis() % 1000;
 		PersistedData persistedData = new PersistedData("some url", PersistedDataType.GEPPETTO_PROJECT);
 		List<Parameter> params = new ArrayList<Parameter>();
-		Parameter param1 = new Parameter(ParameterType.SIMULATOR, "10", "instancePath");
-		Parameter param2 = new Parameter(ParameterType.SIMULATOR_TYPE, "type", "instancePath new");
+		Parameter param1 = new Parameter(ParameterType.SIMULATOR, "10", "instancePath" + suffix);
+		Parameter param2 = new Parameter(ParameterType.SIMULATOR_TYPE, "type", "instancePath new" + suffix);
 		params.add(param1);
 		params.add(param2);
 		SimulationRun simulationRun = new SimulationRun(SimulationStatus.RUNNING, params, persistedData, new Date(), new Date());
@@ -214,13 +215,13 @@ public class DBManager
 		simulationRuns.add(simulationRun2);
 
 		List<Experiment> experiments = new ArrayList<Experiment>();
-		// Experiment experiment = new Experiment("experiment", "experiment description", new Date(), new Date(), params, simulationRuns);
-		// experiments.add(experiment);
-		GeppettoProject project = new GeppettoProject("project 1", experiments, persistedData, simulationRun);
+		Experiment experiment = new Experiment("experiment" + suffix, "experiment description", new Date(), new Date(), params, simulationRuns);
+		experiments.add(experiment);
+		GeppettoProject project = new GeppettoProject("project ", experiments, persistedData, simulationRun);
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
 		projects.add(project);
 		long value = 1000l * 1000 * 1000;
-		User user = new User("user1", "Some user", projects, value, 2 * value);
+		User user = new User("guest", "Guest user", projects, value, 2 * value);
 		storeEntity(user);
 	}
 

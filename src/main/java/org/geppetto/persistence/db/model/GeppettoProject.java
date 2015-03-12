@@ -68,11 +68,13 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	// private List<View> views;
 
 	@Column(name = "persisteddata_id")
-	@Persistent//(dependent = "true")
+	@Persistent
+	// (dependent = "true")
 	private PersistedData geppettoModel;
 
 	@Column(name = "activesimulation_id")
-	@Persistent//(dependent = "true")
+	@Persistent
+	// (dependent = "true")
 	private SimulationRun activeSimulation;
 
 	public GeppettoProject(String name, List<Experiment> experiments, PersistedData geppettoModel, SimulationRun activeSimulation)
@@ -84,13 +86,11 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.activeSimulation = activeSimulation;
 	}
 
-	@Override
 	public long getId()
 	{
 		return id;
 	}
 
-	@Override
 	public String getName()
 	{
 		return name;
@@ -101,7 +101,6 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.name = name;
 	}
 
-	@Override
 	public List<Experiment> getExperiments()
 	{
 		return experiments;
@@ -112,7 +111,6 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.experiments = experiments;
 	}
 
-	@Override
 	public PersistedData getGeppettoModel()
 	{
 		return geppettoModel;
@@ -123,7 +121,6 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.geppettoModel = geppettoModel;
 	}
 
-	@Override
 	public SimulationRun getActiveSimulation()
 	{
 		return activeSimulation;
@@ -134,13 +131,11 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.activeSimulation = activeSimulation;
 	}
 
-	@Override
 	public boolean equals(Object obj)
 	{
 		return id == ((GeppettoProject) obj).id;
 	}
 
-	@Override
 	public int hashCode()
 	{
 		return name.hashCode();

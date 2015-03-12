@@ -63,13 +63,11 @@ public class PersistedData implements Serializable, IPersistedData
 		this.type = type;
 	}
 
-	@Override
 	public long getId()
 	{
 		return id;
 	}
 
-	@Override
 	public String getUrl()
 	{
 		return url;
@@ -80,7 +78,6 @@ public class PersistedData implements Serializable, IPersistedData
 		this.url = url;
 	}
 
-	@Override
 	public PersistedDataType getType()
 	{
 		return type;
