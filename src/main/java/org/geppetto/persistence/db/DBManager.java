@@ -155,6 +155,30 @@ public class DBManager
 		}
 	}
 
+	public <T> T findEntityById(Class<T> type, int id)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try
+		{
+			pm.getFetchPlan().setGroup(FetchGroup.ALL);
+			pm.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_GREEDY);
+			pm.getFetchPlan().setMaxFetchDepth(5);
+			Query query = pm.newQuery(type);
+			query.setFilter("id == searchedId");
+			query.declareParameters("int searchedId");
+			List<T> entities = (List<T>) query.execute(id);
+			if(entities.size() > 0)
+			{
+				return entities.get(0);
+			}
+			return null;
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
+
 	public User findUserByLogin(String login)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
