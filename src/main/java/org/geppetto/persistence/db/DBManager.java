@@ -155,7 +155,7 @@ public class DBManager
 		}
 	}
 
-	public <T> T findEntityById(Class<T> type, int id)
+	public <T> T findEntityById(Class<T> type, long id)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try

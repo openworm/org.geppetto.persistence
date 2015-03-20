@@ -59,7 +59,7 @@ public class SimulationRun implements Serializable, ISimulationRun
 	private SimulationStatus status;
 
 	@Column(name = "results_id")
-	@Persistent
+	@Persistent(dependent = "true")
 	private PersistedData results;
 
 	@Join
