@@ -33,16 +33,13 @@
 package org.geppetto.persistence;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.geppetto.core.data.IGeppettoDataManager;
-import org.geppetto.core.data.model.ParameterType;
 import org.geppetto.persistence.db.DBManager;
-import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
+import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
-import org.geppetto.persistence.db.model.SimulationRun;
 import org.geppetto.persistence.db.model.User;
 
 public class DBDataManager implements IGeppettoDataManager
@@ -98,16 +95,8 @@ public class DBDataManager implements IGeppettoDataManager
 
 	public void createParameter(String name, String value)
 	{
-		Parameter parameter = new Parameter(ParameterType.MODEL_PARAMETER, value, name);
+		Parameter parameter = new Parameter(new InstancePath(name, name, name), value);
 		dbManager.storeEntity(parameter);
-	}
-
-	public void createExperiment(String name, String description, Date creationDate, Date lastModified)
-	{
-		List<Parameter> modelParameters = new ArrayList<>();
-		List<SimulationRun> simulationRuns = new ArrayList<>();
-		Experiment experiment = new Experiment(name, description, creationDate, lastModified, modelParameters, simulationRuns);
-		dbManager.storeEntity(experiment);
 	}
 
 }

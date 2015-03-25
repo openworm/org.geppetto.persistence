@@ -35,13 +35,13 @@ package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IParameter;
-import org.geppetto.core.data.model.ParameterType;
 
 @PersistenceCapable
 public class Parameter implements Serializable, IParameter
@@ -52,18 +52,17 @@ public class Parameter implements Serializable, IParameter
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
-	private ParameterType type;
+	@Column(name = "vaiable_id")
+	@Persistent(dependent = "true")
+	private InstancePath variable;
 
 	private String value;
 
-	private String instancePath;
-
-	public Parameter(ParameterType type, String value, String instancePath)
+	public Parameter(InstancePath variable, String value)
 	{
 		super();
-		this.type = type;
+		this.variable = variable;
 		this.value = value;
-		this.instancePath = instancePath;
 	}
 
 	public long getId()
@@ -71,14 +70,14 @@ public class Parameter implements Serializable, IParameter
 		return id;
 	}
 
-	public ParameterType getType()
+	public InstancePath getVariable()
 	{
-		return type;
+		return variable;
 	}
 
-	public void setType(ParameterType type)
+	public void setVariable(InstancePath instancePath)
 	{
-		this.type = type;
+		this.variable = instancePath;
 	}
 
 	public String getValue()
@@ -89,16 +88,6 @@ public class Parameter implements Serializable, IParameter
 	public void setValue(String value)
 	{
 		this.value = value;
-	}
-
-	public String getInstancePath()
-	{
-		return instancePath;
-	}
-
-	public void setInstancePath(String instancePath)
-	{
-		this.instancePath = instancePath;
 	}
 
 }

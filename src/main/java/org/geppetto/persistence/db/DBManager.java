@@ -35,7 +35,9 @@ package org.geppetto.persistence.db;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.FetchGroup;
 import javax.jdo.FetchPlan;
@@ -46,14 +48,16 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geppetto.core.data.model.ParameterType;
+import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.PersistedDataType;
-import org.geppetto.core.data.model.SimulationStatus;
+import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
+import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
 import org.geppetto.persistence.db.model.PersistedData;
-import org.geppetto.persistence.db.model.SimulationRun;
+import org.geppetto.persistence.db.model.SimulationResult;
+import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
 
 public class DBManager
@@ -78,7 +82,7 @@ public class DBManager
 				{
 					// ignore
 				}
-//				doSomeRealModelDBWork();
+				doSomeRealModelDBWork();
 			}
 		}).start();
 	}
@@ -219,31 +223,47 @@ public class DBManager
 		deleteAllEntities(User.class);
 		deleteAllEntities(GeppettoProject.class);
 		deleteAllEntities(Experiment.class);
-		deleteAllEntities(SimulationRun.class);
 		deleteAllEntities(Parameter.class);
 		deleteAllEntities(PersistedData.class);
+		deleteAllEntities(AspectConfiguration.class);
+		deleteAllEntities(SimulationResult.class);
+		deleteAllEntities(SimulatorConfiguration.class);
+		deleteAllEntities(InstancePath.class);
 		users = getAllEntities(User.class);
 
 		long suffix = System.currentTimeMillis() % 1000;
 		PersistedData persistedData = new PersistedData("some url", PersistedDataType.GEPPETTO_PROJECT);
+		InstancePath instancePath = new InstancePath("entityInstancePath", "aspect", "localInstancePath");
+		InstancePath instancePath2 = new InstancePath("entityInstancePath2", "aspect2", "localInstancePath2");
+		List<InstancePath> instancePaths = new ArrayList<>();
+		instancePaths.add(instancePath);
+		instancePaths.add(instancePath2);
 		List<Parameter> params = new ArrayList<Parameter>();
-		Parameter param1 = new Parameter(ParameterType.SIMULATOR, "10", "instancePath" + suffix);
-		Parameter param2 = new Parameter(ParameterType.SIMULATOR_TYPE, "type", "instancePath new" + suffix);
+		Parameter param1 = new Parameter(instancePath, "value " + suffix);
+		Parameter param2 = new Parameter(instancePath2, "value2 " + suffix);
 		params.add(param1);
 		params.add(param2);
-		SimulationRun simulationRun = new SimulationRun(SimulationStatus.RUNNING, params, persistedData, new Date(), new Date());
-		SimulationRun simulationRun2 = new SimulationRun(SimulationStatus.COMPLETED, params, persistedData, new Date(), new Date());
-		List<SimulationRun> simulationRuns = new ArrayList<SimulationRun>();
-		simulationRuns.add(simulationRun);
-		simulationRuns.add(simulationRun2);
+
+		InstancePath aspect = new InstancePath("entityInstancePathAspect", "aspectAspect", "localInstancePathAspect");
+		Map<String, String> parameters = new LinkedHashMap<>();
+		parameters.put("key", "value");
+		SimulatorConfiguration simulatorConfiguration = new SimulatorConfiguration("simulatorId", "timestep", parameters);
+		List<AspectConfiguration> aspectConfigurations = new ArrayList<>();
+		AspectConfiguration aspectConfiguration = new AspectConfiguration(aspect, instancePaths, params, simulatorConfiguration);
+		aspectConfigurations.add(aspectConfiguration);
+		
+		List<SimulationResult> simulationResults = new ArrayList<>();
+		SimulationResult simulationResult = new SimulationResult(aspect, persistedData);
+		simulationResults.add(simulationResult);
 
 		List<Experiment> experiments = new ArrayList<Experiment>();
-		Experiment experiment = new Experiment("experiment" + suffix, "experiment description", new Date(), new Date(), params, simulationRuns);
+		Experiment experiment = new Experiment(aspectConfigurations, "experiment " + suffix, "experiment description", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults,
+				new Date(), new Date());
 		experiments.add(experiment);
-		GeppettoProject project = new GeppettoProject("project " + suffix, experiments, persistedData, simulationRun);
-		GeppettoProject project2 = new GeppettoProject("project2 " + suffix, experiments, persistedData, simulationRun);
-		GeppettoProject project3 = new GeppettoProject("project3 " + suffix, experiments, persistedData, simulationRun);
-		GeppettoProject project4 = new GeppettoProject("project4 " + suffix, experiments, persistedData, simulationRun);
+		GeppettoProject project = new GeppettoProject("project " + suffix, experiments, persistedData);
+		GeppettoProject project2 = new GeppettoProject("project2 " + suffix, experiments, persistedData);
+		GeppettoProject project3 = new GeppettoProject("project3 " + suffix, experiments, persistedData);
+		GeppettoProject project4 = new GeppettoProject("project4 " + suffix, experiments, persistedData);
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
 		projects.add(project);
 		projects.add(project2);

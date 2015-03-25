@@ -30,41 +30,49 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  *******************************************************************************/
+package org.geppetto.persistence.db.model;
 
-package org.geppetto.persistence.db.model.old;
+import java.util.List;
 
-import java.io.Serializable;
-import java.util.Date;
-
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-@PersistenceCapable
-public class Simulation implements Serializable
-{
-	private static final long serialVersionUID = 1L;
+import org.geppetto.core.data.model.IAspectConfiguration;
 
+@PersistenceCapable
+public class AspectConfiguration implements IAspectConfiguration
+{
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
-	private String name;
+	@Column(name = "aspect_id")
+	@Persistent(dependent = "true")
+	private InstancePath aspect;
 
-	private Date launchedTimestamp;
+	@Join
+	@Persistent
+	private List<InstancePath> watchedVariables;
 
-	private String url;
+	@Join
+	@Persistent
+	private List<Parameter> modelParameter;
 
-	private String status;
+	@Column(name = "simulatorconfiguration_id")
+	@Persistent(dependent = "true")
+	private SimulatorConfiguration simulatorConfiguration;
 
-	public Simulation(String name, Date timestamp, String url, String status)
+	public AspectConfiguration(InstancePath aspect, List<InstancePath> watchedVariables, List<Parameter> modelParameter, SimulatorConfiguration simulatorConfiguration)
 	{
 		super();
-		this.name = name;
-		launchedTimestamp = timestamp;
-		this.url = url;
-		this.status = status;
+		this.aspect = aspect;
+		this.watchedVariables = watchedVariables;
+		this.modelParameter = modelParameter;
+		this.simulatorConfiguration = simulatorConfiguration;
 	}
 
 	public long getId()
@@ -72,48 +80,24 @@ public class Simulation implements Serializable
 		return id;
 	}
 
-	// public void setId(long id) {
-	// this.id = id;
-	// }
-
-	public String getName()
+	public InstancePath getAspect()
 	{
-		return name;
+		return aspect;
 	}
 
-	public void setName(String name)
+	public List<InstancePath> getWatchedVariables()
 	{
-		this.name = name;
+		return watchedVariables;
 	}
 
-	public Date getLaunchedTimestamp()
+	public List<Parameter> getModelParameter()
 	{
-		return launchedTimestamp;
+		return modelParameter;
 	}
 
-	public void setLaunchedTimestamp(Date timestamp)
+	public SimulatorConfiguration getSimulatorConfiguration()
 	{
-		this.launchedTimestamp = timestamp;
-	}
-
-	public String getUrl()
-	{
-		return url;
-	}
-
-	public void setUrl(String url)
-	{
-		this.url = url;
-	}
-
-	public String getStatus()
-	{
-		return status;
-	}
-
-	public void setStatus(String status)
-	{
-		this.status = status;
+		return simulatorConfiguration;
 	}
 
 }

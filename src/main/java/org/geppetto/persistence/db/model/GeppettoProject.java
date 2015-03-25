@@ -66,22 +66,17 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	// private List<View> views;
 
 	@Column(name = "persisteddata_id")
-	@Persistent(dependent="true")
+	@Persistent(dependent = "true")
 	private PersistedData geppettoModel;
 
-	@Column(name = "activesimulation_id")
-	@Persistent(dependent="true")
-	private SimulationRun activeSimulation;
-
-	public GeppettoProject(String name, List<Experiment> experiments, PersistedData geppettoModel, SimulationRun activeSimulation)
+	public GeppettoProject(String name, List<Experiment> experiments, PersistedData geppettoModel)
 	{
 		super();
 		this.name = name;
 		this.experiments = experiments;
 		this.geppettoModel = geppettoModel;
-		this.activeSimulation = activeSimulation;
 	}
-	
+
 	public long getId()
 	{
 		return id;
@@ -115,16 +110,6 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	public void setGeppettoModel(PersistedData geppettoModel)
 	{
 		this.geppettoModel = geppettoModel;
-	}
-
-	public SimulationRun getActiveSimulation()
-	{
-		return activeSimulation;
-	}
-
-	public void setActiveSimulation(SimulationRun activeSimulation)
-	{
-		this.activeSimulation = activeSimulation;
 	}
 
 	public boolean equals(Object obj)

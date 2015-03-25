@@ -34,21 +34,17 @@
 package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import org.geppetto.core.data.model.ISimulationRun;
-import org.geppetto.core.data.model.SimulationStatus;
+import org.geppetto.core.data.model.ISimulationResult;
 
 @PersistenceCapable
-public class SimulationRun implements Serializable, ISimulationRun
+public class SimulationResult implements Serializable, ISimulationResult
 {
 	private static final long serialVersionUID = 1;
 
@@ -56,28 +52,19 @@ public class SimulationRun implements Serializable, ISimulationRun
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
-	private SimulationStatus status;
-
-	@Column(name = "results_id")
+	@Column(name = "aspect_id")
 	@Persistent(dependent = "true")
-	private PersistedData results;
+	private InstancePath aspect;
 
-	@Join
-	@Persistent
-	private List<Parameter> simulationParameters;
+	@Column(name = "result_id")
+	@Persistent(dependent = "true")
+	private PersistedData result;
 
-	private Date startDate;
-
-	private Date endDate;
-
-	public SimulationRun(SimulationStatus status, List<Parameter> simulationParameters, PersistedData results, Date startDate, Date endDate)
+	public SimulationResult(InstancePath aspect, PersistedData result)
 	{
 		super();
-		this.status = status;
-		this.simulationParameters = simulationParameters;
-		this.results = results;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.aspect = aspect;
+		this.result = result;
 	}
 
 	public long getId()
@@ -85,64 +72,24 @@ public class SimulationRun implements Serializable, ISimulationRun
 		return id;
 	}
 
-	public SimulationStatus getStatus()
+	public InstancePath getAspect()
 	{
-		return status;
+		return aspect;
 	}
 
-	public void setStatus(SimulationStatus status)
+	public void setAspect(InstancePath aspect)
 	{
-		this.status = status;
+		this.aspect = aspect;
 	}
 
-	public PersistedData getResults()
+	public PersistedData getResult()
 	{
-		return results;
+		return result;
 	}
 
-	public void setResults(PersistedData results)
+	public void setResult(PersistedData result)
 	{
-		this.results = results;
-	}
-
-	public List<Parameter> getSimulationParameters()
-	{
-		return simulationParameters;
-	}
-
-	public void setSimulationParameters(List<Parameter> simulationParameters)
-	{
-		this.simulationParameters = simulationParameters;
-	}
-
-	public Date getStartDate()
-	{
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate)
-	{
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate()
-	{
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate)
-	{
-		this.endDate = endDate;
-	}
-
-	public boolean equals(Object obj)
-	{
-		return id == ((SimulationRun) obj).id;
-	}
-
-	public int hashCode()
-	{
-		return status.hashCode();
+		this.result = result;
 	}
 
 }

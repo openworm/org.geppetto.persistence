@@ -43,6 +43,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IExperiment;
 
 @PersistenceCapable
@@ -54,6 +55,10 @@ public class Experiment implements Serializable, IExperiment
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
+	@Join
+	@Persistent
+	private List<AspectConfiguration> aspectConfigurations;
+
 	private String name;
 
 	private String description;
@@ -62,33 +67,44 @@ public class Experiment implements Serializable, IExperiment
 
 	private Date lastModified;
 
-	@Join
-	@Persistent
-	private List<Parameter> modelParameters;
+	private ExperimentStatus status;
 
 	@Join
 	@Persistent
-	private List<SimulationRun> simulationRuns;
+	private List<SimulationResult> simulationResults;
 
-	// TODO: add this when a View class will be available
-	// @Join
-	// @Persistent(dependentElement = "true")
-	// private List<View> associatedViews;
+	private Date startDate;
 
-	public Experiment(String name, String description, Date creationDate, Date lastModified, List<Parameter> modelParameters, List<SimulationRun> simulationRuns)
+	private Date endDate;
+
+	public Experiment(List<AspectConfiguration> aspectConfigurations, String name, String description, Date creationDate, Date lastModified, ExperimentStatus status,
+			List<SimulationResult> simulationResults, Date startDate, Date endDate)
 	{
 		super();
+		this.aspectConfigurations = aspectConfigurations;
 		this.name = name;
 		this.description = description;
 		this.creationDate = creationDate;
 		this.lastModified = lastModified;
-		this.modelParameters = modelParameters;
-		this.simulationRuns = simulationRuns;
+		this.status = status;
+		this.simulationResults = simulationResults;
+		this.startDate = startDate;
+		this.endDate = endDate;
 	}
 
 	public long getId()
 	{
 		return id;
+	}
+
+	public List<AspectConfiguration> getAspectConfigurations()
+	{
+		return aspectConfigurations;
+	}
+
+	public void setAspectConfigurations(List<AspectConfiguration> aspectConfigurations)
+	{
+		this.aspectConfigurations = aspectConfigurations;
 	}
 
 	public String getName()
@@ -131,24 +147,44 @@ public class Experiment implements Serializable, IExperiment
 		this.lastModified = lastModified;
 	}
 
-	public List<Parameter> getModelParameters()
+	public List<SimulationResult> getSimulationResults()
 	{
-		return modelParameters;
+		return simulationResults;
 	}
 
-	public void setModelParameters(List<Parameter> modelParameters)
+	public void setSimulationResults(List<SimulationResult> simulationResults)
 	{
-		this.modelParameters = modelParameters;
+		this.simulationResults = simulationResults;
 	}
 
-	public List<SimulationRun> getSimulationRuns()
+	public ExperimentStatus getStatus()
 	{
-		return simulationRuns;
+		return status;
 	}
 
-	public void setSimulationRuns(List<SimulationRun> simulationRuns)
+	public void setStatus(ExperimentStatus status)
 	{
-		this.simulationRuns = simulationRuns;
+		this.status = status;
+	}
+
+	public Date getStartDate()
+	{
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate)
+	{
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate()
+	{
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate)
+	{
+		this.endDate = endDate;
 	}
 
 }
