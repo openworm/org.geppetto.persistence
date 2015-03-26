@@ -36,11 +36,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geppetto.core.data.IGeppettoDataManager;
+import org.geppetto.core.data.JsonRequestException;
+import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
 import org.geppetto.persistence.db.model.User;
+import org.springframework.http.HttpStatus;
 
 public class DBDataManager implements IGeppettoDataManager
 {
@@ -97,6 +100,10 @@ public class DBDataManager implements IGeppettoDataManager
 	{
 		Parameter parameter = new Parameter(new InstancePath(name, name, name), value);
 		dbManager.storeEntity(parameter);
+	}
+	
+	public Object deleteGeppettoProject(IGeppettoProject project) {
+		return new JsonRequestException("Not implemented", HttpStatus.BAD_REQUEST);
 	}
 
 }

@@ -82,7 +82,7 @@ public class DBManager
 				{
 					// ignore
 				}
-				doSomeRealModelDBWork();
+//				doSomeRealModelDBWork();
 			}
 		}).start();
 	}
