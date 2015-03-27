@@ -101,8 +101,9 @@ public class DBDataManager implements IGeppettoDataManager
 		Parameter parameter = new Parameter(new InstancePath(name, name, name), value);
 		dbManager.storeEntity(parameter);
 	}
-	
-	public Object deleteGeppettoProject(IGeppettoProject project) {
+
+	public Object deleteGeppettoProject(IGeppettoProject project)
+	{
 		return new JsonRequestException("Not implemented", HttpStatus.BAD_REQUEST);
 	}
 
