@@ -40,6 +40,7 @@ import org.geppetto.core.data.IGeppettoDataManager;
 import org.geppetto.core.data.JsonRequestException;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.persistence.db.DBManager;
+import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
@@ -66,6 +67,11 @@ public class DBDataManager implements IGeppettoDataManager
 	public boolean isDefault()
 	{
 		return false;
+	}
+
+	public List<User> getAllUsers()
+	{
+		return dbManager.getAllEntities(User.class);
 	}
 
 	public List<GeppettoProject> getAllGeppettoProjects()
@@ -97,6 +103,17 @@ public class DBDataManager implements IGeppettoDataManager
 			projects.addAll(user.getGeppettoProjects());
 		}
 		return projects;
+	}
+
+	public List<Experiment> getExperimentsForProject(long projectId)
+	{
+		List<Experiment> experiments = new ArrayList<>();
+		GeppettoProject project = getGeppettoProjectById(projectId);
+		if(project != null && project.getExperiments() != null)
+		{
+			experiments.addAll(project.getExperiments());
+		}
+		return experiments;
 	}
 
 	public void createParameter(String name, String value)
