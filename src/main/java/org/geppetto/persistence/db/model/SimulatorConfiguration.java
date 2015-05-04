@@ -18,14 +18,17 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 
 	private String simulatorId;
 
+	private String conversionServiceId;
+
 	private String timestep;
 
 	private Map<String, String> parameters;
 
-	public SimulatorConfiguration(String simulatorId, String timestep, Map<String, String> parameters)
+	public SimulatorConfiguration(String simulatorId, String conversionServiceId, String timestep, Map<String, String> parameters)
 	{
 		super();
 		this.simulatorId = simulatorId;
+		this.conversionServiceId = conversionServiceId;
 		this.timestep = timestep;
 		this.parameters = parameters;
 	}
@@ -43,6 +46,16 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 	public void setSimulatorId(String simulatorId)
 	{
 		this.simulatorId = simulatorId;
+	}
+
+	public String getConversionServiceId()
+	{
+		return conversionServiceId;
+	}
+
+	public void setConversionServiceId(String conversionServiceId)
+	{
+		this.conversionServiceId = conversionServiceId;
 	}
 
 	public String getTimestep()

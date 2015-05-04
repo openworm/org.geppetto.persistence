@@ -82,7 +82,7 @@ public class DBManager
 				{
 					// ignore
 				}
-//				doSomeRealModelDBWork();
+				// doSomeRealModelDBWork();
 			}
 		}).start();
 	}
@@ -247,11 +247,11 @@ public class DBManager
 		InstancePath aspect = new InstancePath("entityInstancePathAspect", "aspectAspect", "localInstancePathAspect");
 		Map<String, String> parameters = new LinkedHashMap<>();
 		parameters.put("key", "value");
-		SimulatorConfiguration simulatorConfiguration = new SimulatorConfiguration("simulatorId", "timestep", parameters);
+		SimulatorConfiguration simulatorConfiguration = new SimulatorConfiguration("simulatorId", "conversionServiceId", "timestep", parameters);
 		List<AspectConfiguration> aspectConfigurations = new ArrayList<>();
 		AspectConfiguration aspectConfiguration = new AspectConfiguration(aspect, instancePaths, params, simulatorConfiguration);
 		aspectConfigurations.add(aspectConfiguration);
-		
+
 		List<SimulationResult> simulationResults = new ArrayList<>();
 		SimulationResult simulationResult = new SimulationResult(aspect, persistedData);
 		simulationResults.add(simulationResult);

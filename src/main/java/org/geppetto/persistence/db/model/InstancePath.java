@@ -63,4 +63,9 @@ public class InstancePath implements IInstancePath
 		this.localInstancePath = localInstancePath;
 	}
 
+	public String getInstancePath()
+	{
+		return entityInstancePath + "." + aspect + "." + localInstancePath;
+	}
+
 }
