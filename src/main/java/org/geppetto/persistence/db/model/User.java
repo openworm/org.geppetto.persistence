@@ -66,7 +66,6 @@ public class User implements Serializable, IUser
 	@Persistent
 	private List<GeppettoProject> geppettoProjects;
 
-	// TODO: do we store an encrypted password here?
 	public User(String login, String name, List<GeppettoProject> geppettoProjects, long spaceAllowance, long simulationTimeAllowance)
 	{
 		super();

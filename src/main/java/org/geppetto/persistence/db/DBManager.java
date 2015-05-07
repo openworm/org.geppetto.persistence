@@ -82,7 +82,7 @@ public class DBManager
 				{
 					// ignore
 				}
-				// doSomeRealModelDBWork();
+//				doSomeRealModelDBWork();
 			}
 		}).start();
 	}
@@ -209,16 +209,6 @@ public class DBManager
 
 	private void doSomeRealModelDBWork()
 	{
-		// List<SimulationRun> savedSimulationRuns = getAllEntities(SimulationRun.class);
-		// if(savedSimulationRuns.size() > 0)
-		// {
-		// List<Parameter> parameters = savedSimulationRuns.get(0).getSimulationParameters();
-		// }
-		// List<GeppettoProject> savedProjects = getAllEntities(GeppettoProject.class);
-		// if(savedSimulationRuns.size() > 0)
-		// {
-		// List<Parameter> parameters = savedProjects.get(0).getActiveSimulation().getSimulationParameters();
-		// }
 		List<User> users = getAllEntities(User.class);
 		deleteAllEntities(User.class);
 		deleteAllEntities(GeppettoProject.class);
@@ -240,6 +230,7 @@ public class DBManager
 		instancePaths.add(instancePath2);
 		List<Parameter> params = new ArrayList<Parameter>();
 		Parameter param1 = new Parameter(instancePath, "value " + suffix);
+		storeEntity(param1);
 		Parameter param2 = new Parameter(instancePath2, "value2 " + suffix);
 		params.add(param1);
 		params.add(param2);

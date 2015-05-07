@@ -52,7 +52,7 @@ public class Parameter implements Serializable, IParameter
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
-	@Column(name = "vaiable_id")
+	@Column(name = "variable_id")
 	@Persistent(dependent = "true")
 	private InstancePath variable;
 
