@@ -122,6 +122,11 @@ public class DBDataManager implements IGeppettoDataManager
 		dbManager.storeEntity(parameter);
 	}
 
+	public void addGeppettoProject(IGeppettoProject project)
+	{
+		dbManager.storeEntity(project);
+	}
+
 	public Object deleteGeppettoProject(IGeppettoProject project)
 	{
 		return new JsonRequestException("Not implemented", HttpStatus.BAD_REQUEST);
