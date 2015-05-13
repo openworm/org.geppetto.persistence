@@ -34,16 +34,20 @@ package org.geppetto.persistence;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.geppetto.core.data.IGeppettoDataManager;
+import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.persistence.db.DBManager;
+import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
+import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.User;
 
 import com.google.gson.Gson;
@@ -119,6 +123,14 @@ public class DBDataManager implements IGeppettoDataManager
 	{
 		Parameter parameter = new Parameter(new InstancePath(name, name, name), value);
 		dbManager.storeEntity(parameter);
+	}
+
+	public IExperiment newExperiment(String name, String description)
+	{
+		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
+				new Date());
+		dbManager.storeEntity(experiment);
+		return experiment;
 	}
 
 	public void addGeppettoProject(IGeppettoProject project)
