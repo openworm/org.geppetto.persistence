@@ -82,7 +82,7 @@ public class DBManager
 				{
 					// ignore
 				}
-//				doSomeRealModelDBWork();
+				// doSomeRealModelDBWork();
 			}
 		}).start();
 	}
@@ -143,6 +143,30 @@ public class DBManager
 			Query query = pm.newQuery(type);
 			List<T> entities = (List<T>) query.execute();
 			pm.deletePersistentAll(entities);
+			tx.commit();
+		}
+		catch(Exception e)
+		{
+			_logger.warn("Could not delete data", e);
+		}
+		finally
+		{
+			if(tx.isActive())
+			{
+				tx.rollback();
+			}
+			pm.close();
+		}
+	}
+
+	public <T> void deleteEntity(T entity)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try
+		{
+			tx.begin();
+			pm.deletePersistent(entity);
 			tx.commit();
 		}
 		catch(Exception e)

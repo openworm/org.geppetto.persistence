@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.geppetto.core.data.IGeppettoDataManager;
-import org.geppetto.core.data.JsonRequestException;
+import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.Experiment;
@@ -45,7 +45,6 @@ import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
 import org.geppetto.persistence.db.model.User;
-import org.springframework.http.HttpStatus;
 
 import com.google.gson.Gson;
 
@@ -129,7 +128,14 @@ public class DBDataManager implements IGeppettoDataManager
 
 	public Object deleteGeppettoProject(IGeppettoProject project)
 	{
-		return new JsonRequestException("Not implemented", HttpStatus.BAD_REQUEST);
+		dbManager.deleteEntity(project);
+		return true;
+	}
+
+	public Object deleteExperiment(IExperiment experiment)
+	{
+		dbManager.deleteEntity(experiment);
+		return true;
 	}
 
 	public IGeppettoProject getProjectFromJson(Gson gson, String json)
