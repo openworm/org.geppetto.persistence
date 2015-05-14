@@ -36,7 +36,7 @@
 <osgi:service id="DBDataManager" ref="dbDataManagerService" 
 	interface="org.geppetto.core.data.IGeppettoDataManager">
 </osgi:service>
-<bean id="dbDataManagerService" scope="thread" class="org.geppetto.persistence.DBDataManager">
+<bean id="dbDataManagerService" scope="singleton" class="org.geppetto.persistence.DBDataManager">
 	<aop:scoped-proxy proxy-target-class="false"/>
 	<property name="dbManager" ref="dbManager"></property>
 </bean>

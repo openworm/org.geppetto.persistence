@@ -41,6 +41,7 @@ import org.geppetto.core.data.IGeppettoDataManager;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
+import org.geppetto.core.data.model.IUser;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
@@ -131,6 +132,13 @@ public class DBDataManager implements IGeppettoDataManager
 				new Date());
 		dbManager.storeEntity(experiment);
 		return experiment;
+	}
+
+	public IUser newUser(String name)
+	{
+		User user = new User(name, name, new ArrayList<GeppettoProject>(), 0, 0);
+		dbManager.storeEntity(user);
+		return user;
 	}
 
 	public void addGeppettoProject(IGeppettoProject project)
