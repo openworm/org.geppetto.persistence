@@ -42,6 +42,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geppetto.core.data.IGeppettoS3Manager;
 import org.geppetto.persistence.util.PersistenceHelper;
 
 import com.amazonaws.auth.PropertiesCredentials;
@@ -50,7 +51,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
-public class S3Manager
+public class S3Manager implements IGeppettoS3Manager
 {
 
 	private AmazonS3 _s3Connection;
@@ -60,21 +61,21 @@ public class S3Manager
 	public S3Manager()
 	{
 		// TODO: this will be removed once we have real S3 usage
-		new Thread(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					Thread.sleep(5000);
-					doSomeRealModelS3Work();
-				}
-				catch(InterruptedException e)
-				{
-					// ignore
-				}
-			}
-		}).start();
+		// new Thread(new Runnable()
+		// {
+		// public void run()
+		// {
+		// try
+		// {
+		// Thread.sleep(5000);
+		// doSomeRealModelS3Work();
+		// }
+		// catch(InterruptedException e)
+		// {
+		// // ignore
+		// }
+		// }
+		// }).start();
 	}
 
 	private AmazonS3 getS3Connection()
