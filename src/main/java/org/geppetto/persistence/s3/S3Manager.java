@@ -130,22 +130,22 @@ public class S3Manager implements IGeppettoS3Manager
 		getS3Connection().deleteObject(PersistenceHelper.BUCKET_NAME, path);
 	}
 
-	private void doSomeRealModelS3Work()
-	{
-		try
-		{
-			saveTextToS3("some text to test the S3 stuff", "test/testfile" + System.currentTimeMillis() + ".txt");
-		}
-		catch(IOException e)
-		{
-			_logger.warn("Could not save to S3", e);
-		}
-		List<S3ObjectSummary> persistedSummaries = retrievePathsFromS3("test");
-		if(persistedSummaries.size() > 0)
-		{
-			deleteFromS3(persistedSummaries.get(0).getKey());
-		}
-
-	}
+	// private void doSomeRealModelS3Work()
+	// {
+	// try
+	// {
+	// saveTextToS3("some text to test the S3 stuff", "test/testfile" + System.currentTimeMillis() + ".txt");
+	// }
+	// catch(IOException e)
+	// {
+	// _logger.warn("Could not save to S3", e);
+	// }
+	// List<S3ObjectSummary> persistedSummaries = retrievePathsFromS3("test");
+	// if(persistedSummaries.size() > 0)
+	// {
+	// deleteFromS3(persistedSummaries.get(0).getKey());
+	// }
+	//
+	// }
 
 }
