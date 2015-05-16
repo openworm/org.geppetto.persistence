@@ -20,11 +20,11 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 
 	private String conversionServiceId;
 
-	private String timestep;
+	private float timestep;
 
 	private Map<String, String> parameters;
 
-	public SimulatorConfiguration(String simulatorId, String conversionServiceId, String timestep, Map<String, String> parameters)
+	public SimulatorConfiguration(String simulatorId, String conversionServiceId, float timestep, Map<String, String> parameters)
 	{
 		super();
 		this.simulatorId = simulatorId;
@@ -58,12 +58,12 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 		this.conversionServiceId = conversionServiceId;
 	}
 
-	public String getTimestep()
+	public float getTimestep()
 	{
 		return timestep;
 	}
 
-	public void setTimestep(String timestep)
+	public void setTimestep(float timestep)
 	{
 		this.timestep = timestep;
 	}

@@ -39,6 +39,7 @@ import java.util.List;
 
 import org.geppetto.core.data.IGeppettoDataManager;
 import org.geppetto.core.data.model.ExperimentStatus;
+import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.core.data.model.IUser;
@@ -63,41 +64,58 @@ public class DBDataManager implements IGeppettoDataManager
 		dbManager = manager;
 	}
 
+	@Override
 	public String getName()
 	{
 		return "DB data manager";
 	}
 
+	@Override
 	public boolean isDefault()
 	{
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#getAllUsers()
+	 */
+	@Override
 	public List<User> getAllUsers()
 	{
 		return dbManager.getAllEntities(User.class);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#getAllGeppettoProjects()
+	 */
+	@Override
 	public List<GeppettoProject> getAllGeppettoProjects()
 	{
 		return dbManager.getAllEntities(GeppettoProject.class);
 	}
 
-	public User getCurrentUser()
-	{
-		return getUserByLogin("guest");
-	}
-
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#getUserByLogin(java.lang.String)
+	 */
+	@Override
 	public User getUserByLogin(String login)
 	{
 		return dbManager.findUserByLogin(login);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#getGeppettoProjectById(long)
+	 */
+	@Override
 	public GeppettoProject getGeppettoProjectById(long id)
 	{
 		return dbManager.findEntityById(GeppettoProject.class, id);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#getGeppettoProjectsForUser(java.lang.String)
+	 */
+	@Override
 	public List<GeppettoProject> getGeppettoProjectsForUser(String login)
 	{
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
@@ -109,6 +127,10 @@ public class DBDataManager implements IGeppettoDataManager
 		return projects;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#getExperimentsForProject(long)
+	 */
+	@Override
 	public List<Experiment> getExperimentsForProject(long projectId)
 	{
 		List<Experiment> experiments = new ArrayList<>();
@@ -120,12 +142,20 @@ public class DBDataManager implements IGeppettoDataManager
 		return experiments;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#createParameter(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void createParameter(String name, String value)
 	{
 		Parameter parameter = new Parameter(new InstancePath(name, name, name), value);
 		dbManager.storeEntity(parameter);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#newExperiment(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public IExperiment newExperiment(String name, String description)
 	{
 		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
@@ -134,6 +164,10 @@ public class DBDataManager implements IGeppettoDataManager
 		return experiment;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#newUser(java.lang.String)
+	 */
+	@Override
 	public IUser newUser(String name)
 	{
 		User user = new User(name, name, new ArrayList<GeppettoProject>(), 0, 0);
@@ -141,31 +175,61 @@ public class DBDataManager implements IGeppettoDataManager
 		return user;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#addGeppettoProject(org.geppetto.core.data.model.IGeppettoProject)
+	 */
+	@Override
 	public void addGeppettoProject(IGeppettoProject project)
 	{
 		dbManager.storeEntity(project);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#deleteGeppettoProject(org.geppetto.core.data.model.IGeppettoProject)
+	 */
+	@Override
 	public Object deleteGeppettoProject(IGeppettoProject project)
 	{
 		dbManager.deleteEntity(project);
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#deleteExperiment(org.geppetto.core.data.model.IExperiment)
+	 */
+	@Override
 	public Object deleteExperiment(IExperiment experiment)
 	{
 		dbManager.deleteEntity(experiment);
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#getProjectFromJson(com.google.gson.Gson, java.lang.String)
+	 */
+	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, String json)
 	{
 		return gson.fromJson(json, GeppettoProject.class);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#getProjectFromJson(com.google.gson.Gson, java.io.Reader)
+	 */
+	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, Reader json)
 	{
 		return gson.fromJson(json, GeppettoProject.class);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#clearWatchedVariables(org.geppetto.core.data.model.IAspectConfiguration)
+	 */
+	@Override
+	public void clearWatchedVariables(IAspectConfiguration aspectConfig)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

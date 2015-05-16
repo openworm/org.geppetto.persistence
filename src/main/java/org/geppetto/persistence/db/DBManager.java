@@ -262,7 +262,7 @@ public class DBManager
 		InstancePath aspect = new InstancePath("entityInstancePathAspect", "aspectAspect", "localInstancePathAspect");
 		Map<String, String> parameters = new LinkedHashMap<>();
 		parameters.put("key", "value");
-		SimulatorConfiguration simulatorConfiguration = new SimulatorConfiguration("simulatorId", "conversionServiceId", "timestep", parameters);
+		SimulatorConfiguration simulatorConfiguration = new SimulatorConfiguration("simulatorId", "conversionServiceId", 0.1f, parameters);
 		List<AspectConfiguration> aspectConfigurations = new ArrayList<>();
 		AspectConfiguration aspectConfiguration = new AspectConfiguration(aspect, instancePaths, params, simulatorConfiguration);
 		aspectConfigurations.add(aspectConfiguration);
