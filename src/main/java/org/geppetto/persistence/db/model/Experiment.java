@@ -45,6 +45,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IExperiment;
+import org.geppetto.core.data.model.IGeppettoProject;
 
 @PersistenceCapable
 public class Experiment implements Serializable, IExperiment
@@ -77,8 +78,10 @@ public class Experiment implements Serializable, IExperiment
 
 	private Date endDate;
 
+	private transient IGeppettoProject project;
+
 	public Experiment(List<AspectConfiguration> aspectConfigurations, String name, String description, Date creationDate, Date lastModified, ExperimentStatus status,
-			List<SimulationResult> simulationResults, Date startDate, Date endDate)
+			List<SimulationResult> simulationResults, Date startDate, Date endDate, IGeppettoProject project)
 	{
 		super();
 		this.aspectConfigurations = aspectConfigurations;
@@ -90,6 +93,7 @@ public class Experiment implements Serializable, IExperiment
 		this.simulationResults = simulationResults;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.project = project;
 	}
 
 	public long getId()
@@ -185,6 +189,23 @@ public class Experiment implements Serializable, IExperiment
 	public void setEndDate(Date endDate)
 	{
 		this.endDate = endDate;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geppetto.core.data.model.IExperiment#getParentProject()
+	 */
+	@Override
+	public IGeppettoProject getParentProject()
+	{
+		return project;
+	}
+
+	@Override
+	public void setParentProject(IGeppettoProject project)
+	{
+		this.project = project;
 	}
 
 }

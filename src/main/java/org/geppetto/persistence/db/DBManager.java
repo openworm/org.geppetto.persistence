@@ -272,13 +272,19 @@ public class DBManager
 		simulationResults.add(simulationResult);
 
 		List<Experiment> experiments = new ArrayList<Experiment>();
+
+		GeppettoProject project = new GeppettoProject("project " + suffix, persistedData);
+		GeppettoProject project2 = new GeppettoProject("project2 " + suffix, persistedData);
+		GeppettoProject project3 = new GeppettoProject("project3 " + suffix, persistedData);
+		GeppettoProject project4 = new GeppettoProject("project4 " + suffix, persistedData);
+		
 		Experiment experiment = new Experiment(aspectConfigurations, "experiment " + suffix, "experiment description", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults,
-				new Date(), new Date());
+				new Date(), new Date(), project);
 		experiments.add(experiment);
-		GeppettoProject project = new GeppettoProject("project " + suffix, experiments, persistedData);
-		GeppettoProject project2 = new GeppettoProject("project2 " + suffix, experiments, persistedData);
-		GeppettoProject project3 = new GeppettoProject("project3 " + suffix, experiments, persistedData);
-		GeppettoProject project4 = new GeppettoProject("project4 " + suffix, experiments, persistedData);
+		project.setExperiments(experiments);
+		project2.setExperiments(experiments);
+		project3.setExperiments(experiments);
+		project4.setExperiments(experiments);
 		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
 		projects.add(project);
 		projects.add(project2);

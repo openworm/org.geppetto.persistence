@@ -156,10 +156,10 @@ public class DBDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#newExperiment(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IExperiment newExperiment(String name, String description)
+	public IExperiment newExperiment(String name, String description, IGeppettoProject project)
 	{
 		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
-				new Date());
+				new Date(), project);
 		dbManager.storeEntity(experiment);
 		return experiment;
 	}

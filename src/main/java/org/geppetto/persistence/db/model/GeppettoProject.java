@@ -69,11 +69,10 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	@Persistent(dependent = "true")
 	private PersistedData geppettoModel;
 
-	public GeppettoProject(String name, List<Experiment> experiments, PersistedData geppettoModel)
+	public GeppettoProject(String name, PersistedData geppettoModel)
 	{
 		super();
 		this.name = name;
-		this.experiments = experiments;
 		this.geppettoModel = geppettoModel;
 	}
 
