@@ -166,7 +166,7 @@ public class Experiment implements Serializable, IExperiment
 		return status;
 	}
 
-	public void setStatus(ExperimentStatus status)
+	public synchronized void setStatus(ExperimentStatus status)
 	{
 		this.status = status;
 	}
