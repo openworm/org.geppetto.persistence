@@ -46,6 +46,7 @@ import javax.jdo.annotations.PrimaryKey;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
+import org.geppetto.core.data.model.ISimulationResult;
 
 @PersistenceCapable
 public class Experiment implements Serializable, IExperiment
@@ -149,6 +150,14 @@ public class Experiment implements Serializable, IExperiment
 	public void setLastModified(Date lastModified)
 	{
 		this.lastModified = lastModified;
+	}
+
+	public void addSimulationResult(ISimulationResult result)
+	{
+		if(result instanceof SimulationResult)
+		{
+			simulationResults.add((SimulationResult) result);
+		}
 	}
 
 	public List<SimulationResult> getSimulationResults()

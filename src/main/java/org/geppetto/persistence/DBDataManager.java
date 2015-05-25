@@ -42,6 +42,7 @@ import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
+import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
@@ -76,7 +77,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getAllUsers()
 	 */
 	@Override
@@ -85,7 +88,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return dbManager.getAllEntities(User.class);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getAllGeppettoProjects()
 	 */
 	@Override
@@ -94,7 +99,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return dbManager.getAllEntities(GeppettoProject.class);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getUserByLogin(java.lang.String)
 	 */
 	@Override
@@ -103,7 +110,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return dbManager.findUserByLogin(login);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getGeppettoProjectById(long)
 	 */
 	@Override
@@ -112,7 +121,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return dbManager.findEntityById(GeppettoProject.class, id);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getGeppettoProjectsForUser(java.lang.String)
 	 */
 	@Override
@@ -127,7 +138,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return projects;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getExperimentsForProject(long)
 	 */
 	@Override
@@ -142,7 +155,16 @@ public class DBDataManager implements IGeppettoDataManager
 		return experiments;
 	}
 
-	/* (non-Javadoc)
+	public ISimulationResult newSimulationResult()
+	{
+		SimulationResult result = new SimulationResult(null, null);
+		dbManager.storeEntity(result);
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#createParameter(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -152,7 +174,9 @@ public class DBDataManager implements IGeppettoDataManager
 		dbManager.storeEntity(parameter);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#newExperiment(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -164,7 +188,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return experiment;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#newUser(java.lang.String)
 	 */
 	@Override
@@ -175,7 +201,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return user;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#addGeppettoProject(org.geppetto.core.data.model.IGeppettoProject)
 	 */
 	@Override
@@ -184,7 +212,9 @@ public class DBDataManager implements IGeppettoDataManager
 		dbManager.storeEntity(project);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#deleteGeppettoProject(org.geppetto.core.data.model.IGeppettoProject)
 	 */
 	@Override
@@ -194,7 +224,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#deleteExperiment(org.geppetto.core.data.model.IExperiment)
 	 */
 	@Override
@@ -204,7 +236,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getProjectFromJson(com.google.gson.Gson, java.lang.String)
 	 */
 	@Override
@@ -213,7 +247,9 @@ public class DBDataManager implements IGeppettoDataManager
 		return gson.fromJson(json, GeppettoProject.class);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getProjectFromJson(com.google.gson.Gson, java.io.Reader)
 	 */
 	@Override
@@ -222,14 +258,16 @@ public class DBDataManager implements IGeppettoDataManager
 		return gson.fromJson(json, GeppettoProject.class);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#clearWatchedVariables(org.geppetto.core.data.model.IAspectConfiguration)
 	 */
 	@Override
 	public void clearWatchedVariables(IAspectConfiguration aspectConfig)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
