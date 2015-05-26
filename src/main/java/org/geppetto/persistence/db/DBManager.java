@@ -35,9 +35,7 @@ package org.geppetto.persistence.db;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.jdo.FetchGroup;
 import javax.jdo.FetchPlan;
@@ -82,7 +80,7 @@ public class DBManager
 				{
 					// ignore
 				}
-				// doSomeRealModelDBWork();
+				buildDemoProject();
 			}
 		}).start();
 	}
@@ -231,68 +229,64 @@ public class DBManager
 		}
 	}
 
-	private void doSomeRealModelDBWork()
+	private void buildDemoProject()
 	{
-		List<User> users = getAllEntities(User.class);
-		deleteAllEntities(User.class);
-		deleteAllEntities(GeppettoProject.class);
-		deleteAllEntities(Experiment.class);
-		deleteAllEntities(Parameter.class);
-		deleteAllEntities(PersistedData.class);
-		deleteAllEntities(AspectConfiguration.class);
-		deleteAllEntities(SimulationResult.class);
-		deleteAllEntities(SimulatorConfiguration.class);
-		deleteAllEntities(InstancePath.class);
-		users = getAllEntities(User.class);
+		List<GeppettoProject> projects = getAllEntities(GeppettoProject.class);
+		if(projects.size() == 0)
+		{
+			PersistedData geppettoModel = new PersistedData("http://github.com/openworm/org.geppetto.core/blob/datamanager/src/main/resources/project/geppettoModels/SingleComponentHH/GEPPETTO.xml",
+					PersistedDataType.GEPPETTO_PROJECT);
+			GeppettoProject project = new GeppettoProject("LEMS Sample Hodgkin-Huxley Neuron", geppettoModel);
 
-		long suffix = System.currentTimeMillis() % 1000;
-		PersistedData persistedData = new PersistedData("some url", PersistedDataType.GEPPETTO_PROJECT);
-		InstancePath instancePath = new InstancePath("entityInstancePath", "aspect", "localInstancePath");
-		InstancePath instancePath2 = new InstancePath("entityInstancePath2", "aspect2", "localInstancePath2");
-		List<InstancePath> instancePaths = new ArrayList<>();
-		instancePaths.add(instancePath);
-		instancePaths.add(instancePath2);
-		List<Parameter> params = new ArrayList<Parameter>();
-		Parameter param1 = new Parameter(instancePath, "value " + suffix);
-		storeEntity(param1);
-		Parameter param2 = new Parameter(instancePath2, "value2 " + suffix);
-		params.add(param1);
-		params.add(param2);
+			List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
+			aspectConfigurations1.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), null, null, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0, null)));
+			Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
-		InstancePath aspect = new InstancePath("entityInstancePathAspect", "aspectAspect", "localInstancePathAspect");
-		Map<String, String> parameters = new LinkedHashMap<>();
-		parameters.put("key", "value");
-		SimulatorConfiguration simulatorConfiguration = new SimulatorConfiguration("simulatorId", "conversionServiceId", 0.1f, parameters);
-		List<AspectConfiguration> aspectConfigurations = new ArrayList<>();
-		AspectConfiguration aspectConfiguration = new AspectConfiguration(aspect, instancePaths, params, simulatorConfiguration);
-		aspectConfigurations.add(aspectConfiguration);
+			List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
+			List<InstancePath> watchedVariables2 = new ArrayList<>();
+			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].v"));
+			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
+			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
+			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+			aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables2, null, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0,
+					null)));
+			List<SimulationResult> simulationResults2 = new ArrayList<>();
+			simulationResults2.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(
+					"http://github.com/openworm/org.geppetto.core/blob/datamanager/src/main/resources/project/geppettoModels/SingleComponentHH/results.h5", PersistedDataType.RECORDING)));
+			Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project);
 
-		List<SimulationResult> simulationResults = new ArrayList<>();
-		SimulationResult simulationResult = new SimulationResult(aspect, persistedData);
-		simulationResults.add(simulationResult);
+			List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
+			List<InstancePath> watchedVariables3 = new ArrayList<>();
+			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].v"));
+			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
+			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
+			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+			List<Parameter> modelParameters3 = new ArrayList<>();
+			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"), "0"));
+			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"), "0"));
 
-		List<Experiment> experiments = new ArrayList<Experiment>();
+			aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables3, modelParameters3, new SimulatorConfiguration("neuronSimulator",
+					"lemsConversion", 0, null)));
+			List<SimulationResult> simulationResults3 = new ArrayList<>();
+			simulationResults3.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(
+					"http://github.com/openworm/org.geppetto.core/blob/datamanager/src/main/resources/project/geppettoModels/SingleComponentHH/results.h5", PersistedDataType.RECORDING)));
+			Experiment exp3 = new Experiment(aspectConfigurations3, "Experiment with parameters", "", new Date(), new Date(), ExperimentStatus.DESIGN, simulationResults3, new Date(), new Date(),
+					project);
 
-		GeppettoProject project = new GeppettoProject("project " + suffix, persistedData);
-		GeppettoProject project2 = new GeppettoProject("project2 " + suffix, persistedData);
-		GeppettoProject project3 = new GeppettoProject("project3 " + suffix, persistedData);
-		GeppettoProject project4 = new GeppettoProject("project4 " + suffix, persistedData);
-		
-		Experiment experiment = new Experiment(aspectConfigurations, "experiment " + suffix, "experiment description", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults,
-				new Date(), new Date(), project);
-		experiments.add(experiment);
-		project.setExperiments(experiments);
-		project2.setExperiments(experiments);
-		project3.setExperiments(experiments);
-		project4.setExperiments(experiments);
-		List<GeppettoProject> projects = new ArrayList<GeppettoProject>();
-		projects.add(project);
-		projects.add(project2);
-		projects.add(project3);
-		projects.add(project4);
-		long value = 1000l * 1000 * 1000;
-		User user = new User("guest", "Guest user", projects, value, 2 * value);
-		storeEntity(user);
+			List<Experiment> experiments = new ArrayList<>();
+			experiments.add(exp1);
+			experiments.add(exp2);
+			experiments.add(exp3);
+			project.setExperiments(experiments);
+			projects = new ArrayList<>();
+			projects.add(project);
+
+			long value = 1000l * 1000 * 1000;
+			projects = new ArrayList<>();
+			projects.add(project);
+			User user = new User("guest", "Guest user", projects, value, 2 * value);
+			storeEntity(user);
+		}
 	}
 
 }
