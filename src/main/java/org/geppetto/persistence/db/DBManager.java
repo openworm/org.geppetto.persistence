@@ -282,8 +282,6 @@ public class DBManager
 			projects.add(project);
 
 			long value = 1000l * 1000 * 1000;
-			projects = new ArrayList<>();
-			projects.add(project);
 			User user = new User("guest", "Guest user", projects, value, 2 * value);
 			storeEntity(user);
 		}
