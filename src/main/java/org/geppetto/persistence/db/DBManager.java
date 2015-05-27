@@ -33,8 +33,6 @@
 
 package org.geppetto.persistence.db;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.jdo.FetchGroup;
@@ -46,16 +44,6 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geppetto.core.data.model.ExperimentStatus;
-import org.geppetto.core.data.model.PersistedDataType;
-import org.geppetto.persistence.db.model.AspectConfiguration;
-import org.geppetto.persistence.db.model.Experiment;
-import org.geppetto.persistence.db.model.GeppettoProject;
-import org.geppetto.persistence.db.model.InstancePath;
-import org.geppetto.persistence.db.model.Parameter;
-import org.geppetto.persistence.db.model.PersistedData;
-import org.geppetto.persistence.db.model.SimulationResult;
-import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
 
 public class DBManager
@@ -64,26 +52,6 @@ public class DBManager
 	private PersistenceManagerFactory pmf;
 
 	private static Log _logger = LogFactory.getLog(DBManager.class);
-
-	public DBManager()
-	{
-		// TODO: this will be removed once we have real DB usage
-		new Thread(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					Thread.sleep(5000);
-				}
-				catch(InterruptedException e)
-				{
-					// ignore
-				}
-				buildDemoProject();
-			}
-		}).start();
-	}
 
 	public void setPersistenceManagerFactory(PersistenceManagerFactory pmf)
 	{
@@ -226,64 +194,6 @@ public class DBManager
 		finally
 		{
 			pm.close();
-		}
-	}
-
-	private void buildDemoProject()
-	{
-		List<GeppettoProject> projects = getAllEntities(GeppettoProject.class);
-		if(projects.size() == 0)
-		{
-			PersistedData geppettoModel = new PersistedData("http://github.com/openworm/org.geppetto.core/blob/datamanager/src/main/resources/project/geppettoModels/SingleComponentHH/GEPPETTO.xml",
-					PersistedDataType.GEPPETTO_PROJECT);
-			GeppettoProject project = new GeppettoProject("LEMS Sample Hodgkin-Huxley Neuron", geppettoModel);
-
-			List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
-			aspectConfigurations1.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), null, null, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0, null)));
-			Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
-
-			List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
-			List<InstancePath> watchedVariables2 = new ArrayList<>();
-			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].v"));
-			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
-			aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables2, null, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0,
-					null)));
-			List<SimulationResult> simulationResults2 = new ArrayList<>();
-			simulationResults2.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(
-					"http://github.com/openworm/org.geppetto.core/blob/datamanager/src/main/resources/project/geppettoModels/SingleComponentHH/results.h5", PersistedDataType.RECORDING)));
-			Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project);
-
-			List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
-			List<InstancePath> watchedVariables3 = new ArrayList<>();
-			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].v"));
-			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
-			List<Parameter> modelParameters3 = new ArrayList<>();
-			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"), "0"));
-			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"), "0"));
-
-			aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables3, modelParameters3, new SimulatorConfiguration("neuronSimulator",
-					"lemsConversion", 0, null)));
-			List<SimulationResult> simulationResults3 = new ArrayList<>();
-			simulationResults3.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(
-					"http://github.com/openworm/org.geppetto.core/blob/datamanager/src/main/resources/project/geppettoModels/SingleComponentHH/results.h5", PersistedDataType.RECORDING)));
-			Experiment exp3 = new Experiment(aspectConfigurations3, "Experiment with parameters", "", new Date(), new Date(), ExperimentStatus.DESIGN, simulationResults3, new Date(), new Date(),
-					project);
-
-			List<Experiment> experiments = new ArrayList<>();
-			experiments.add(exp1);
-			experiments.add(exp2);
-			experiments.add(exp3);
-			project.setExperiments(experiments);
-			projects = new ArrayList<>();
-			projects.add(project);
-
-			long value = 1000l * 1000 * 1000;
-			User user = new User("guest", "Guest user", projects, value, 2 * value);
-			storeEntity(user);
 		}
 	}
 

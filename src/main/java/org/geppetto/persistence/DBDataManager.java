@@ -133,7 +133,10 @@ public class DBDataManager implements IGeppettoDataManager
 		User user = dbManager.findUserByLogin(login);
 		if(user != null && user.getGeppettoProjects() != null)
 		{
-			projects.addAll(user.getGeppettoProjects());
+			for(GeppettoProject project : user.getGeppettoProjects())
+			{
+				projects.add(loadProjectData(project));
+			}
 		}
 		return projects;
 	}
@@ -268,6 +271,21 @@ public class DBDataManager implements IGeppettoDataManager
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	/**
+	 * Even though I set the fetch depth to 5 and to EAGER, it still retrieves data randomly, so we have to fill all the data with methods like this.
+	 * 
+	 * @param project
+	 */
+	private GeppettoProject loadProjectData(GeppettoProject project)
+	{
+		project = dbManager.findEntityById(project.getClass(), project.getId());
+		if(project.getGeppettoModel() != null)
+		{
+			project.setGeppettoModel(dbManager.findEntityById(project.getGeppettoModel().getClass(), project.getGeppettoModel().getId()));
+		}
+		return project;
 	}
 
 }

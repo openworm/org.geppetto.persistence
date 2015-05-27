@@ -43,7 +43,6 @@ import java.util.Map;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
-import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,7 +58,6 @@ public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceMana
 	private static Log _logger = LogFactory.getLog(OSGiLocalPersistenceManagerFactoryBean.class);
 
 	private BundleContext bundleContext;
-	private DataSource dataSource;
 
 	private Map<String, String> dbConnProperties = new HashMap<String, String>();
 
