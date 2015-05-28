@@ -95,6 +95,11 @@ public class AspectConfiguration implements IAspectConfiguration
 		return modelParameter;
 	}
 
+	public void setModelParameter(List<Parameter> parameters)
+	{
+		modelParameter = parameters;
+	}
+
 	public SimulatorConfiguration getSimulatorConfiguration()
 	{
 		return simulatorConfiguration;

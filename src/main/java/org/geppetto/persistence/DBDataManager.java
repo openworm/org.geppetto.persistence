@@ -118,7 +118,8 @@ public class DBDataManager implements IGeppettoDataManager
 	@Override
 	public GeppettoProject getGeppettoProjectById(long id)
 	{
-		return dbManager.findEntityById(GeppettoProject.class, id);
+		GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, id);
+		return loadProjectData(project);
 	}
 
 	/*
@@ -285,7 +286,54 @@ public class DBDataManager implements IGeppettoDataManager
 		{
 			project.setGeppettoModel(dbManager.findEntityById(project.getGeppettoModel().getClass(), project.getGeppettoModel().getId()));
 		}
+		List<Experiment> experiments = project.getExperiments();
+		if(experiments != null)
+		{
+			List<Experiment> fullExperiments = new ArrayList<>();
+			for(Experiment experiment : experiments)
+			{
+				fullExperiments.add(loadExperiment(experiment));
+			}
+			project.setExperiments(fullExperiments);
+		}
 		return project;
+	}
+
+	/**
+	 * Even though I set the fetch depth to 5 and to EAGER, it still retrieves data randomly, so we have to fill all the data with methods like this.
+	 * 
+	 * @param experiment
+	 */
+	private Experiment loadExperiment(Experiment experiment)
+	{
+		experiment = dbManager.findEntityById(experiment.getClass(), experiment.getId());
+		List<AspectConfiguration> configs = experiment.getAspectConfigurations();
+		if(configs != null)
+		{
+			List<AspectConfiguration> newConfigs = new ArrayList<>();
+			for(AspectConfiguration config : configs)
+			{
+				AspectConfiguration newConfig = dbManager.findEntityById(config.getClass(), config.getId());
+				List<Parameter> params = newConfig.getModelParameter();
+				if(params != null)
+				{
+					List<Parameter> newParams = new ArrayList<>();
+					for(Parameter param : params)
+					{
+						Parameter newParam = dbManager.findEntityById(param.getClass(), param.getId());
+						if (newParam.getVariable() != null) {
+							newParam.setVariable(dbManager.findEntityById(newParam.getVariable().getClass(), newParam.getVariable().getId()));
+						}
+						newParams.add(newParam);
+					}
+					newConfig.setModelParameter(newParams);
+				}
+				newConfigs.add(newConfig);
+			}
+			experiment.setAspectConfigurations(newConfigs);
+		}
+
+		return experiment;
 	}
 
 }
