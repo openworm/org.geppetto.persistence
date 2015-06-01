@@ -201,7 +201,7 @@ public class DBDataManager implements IGeppettoDataManager
 	public IUser newUser(String name)
 	{
 		User user = new User(name, name, new ArrayList<GeppettoProject>(), 0, 0);
-		dbManager.storeEntity(user);
+		// dbManager.storeEntity(user);
 		return user;
 	}
 
@@ -321,7 +321,8 @@ public class DBDataManager implements IGeppettoDataManager
 					for(Parameter param : params)
 					{
 						Parameter newParam = dbManager.findEntityById(param.getClass(), param.getId());
-						if (newParam.getVariable() != null) {
+						if(newParam.getVariable() != null)
+						{
 							newParam.setVariable(dbManager.findEntityById(newParam.getVariable().getClass(), newParam.getVariable().getId()));
 						}
 						newParams.add(newParam);
