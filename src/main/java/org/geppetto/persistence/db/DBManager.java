@@ -44,6 +44,9 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geppetto.core.data.model.IEntity;
+import org.geppetto.core.data.model.IUser;
+import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.User;
 
 public class DBManager
@@ -124,15 +127,63 @@ public class DBManager
 			pm.close();
 		}
 	}
+	
+	public void deleteProject(long id, IUser user) {
+		PersistenceManager pm = pmf.getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try
+		{
+			tx.begin();
+			// Had to do this query because otherwise the object is transient and transient instances cannot be deleted
+			Query query = pm.newQuery(GeppettoProject.class);
+			query.setFilter("id == searchedId");
+			query.declareParameters("int searchedId");
+			List<GeppettoProject> projects = (List<GeppettoProject>) query.execute(id);
+			if (projects.size() > 0) {
+				GeppettoProject project = projects.get(0);
+				query = pm.newQuery(User.class);
+				query.setFilter("login == searchedLogin");
+				query.declareParameters("String searchedLogin");
+				List<User> users = (List<User>) query.execute(user.getLogin());
+				if (users.size() > 0) {
+					user = users.get(0);
+					user.getGeppettoProjects().remove(project);
+					pm.makePersistent(user);
+					pm.deletePersistent(project);
+				}
+			}
+			tx.commit();
+		}
+		catch(Exception e)
+		{
+			_logger.warn("Could not delete data", e);
+		}
+		finally
+		{
+			if(tx.isActive())
+			{
+				tx.rollback();
+			}
+			pm.close();
+		}
+	}
 
-	public <T> void deleteEntity(T entity)
+	public void deleteEntity(IEntity entity)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		try
 		{
 			tx.begin();
-			pm.deletePersistent(entity);
+			// Had to do this query because otherwise the object is transient and transient instances cannot be deleted
+			Query query = pm.newQuery(entity.getClass());
+			query.setFilter("id == searchedId");
+			query.declareParameters("int searchedId");
+			List<IEntity> entities = (List<IEntity>) query.execute(entity.getId());
+			if (entities.size() > 0) {
+				entity = entities.get(0);
+				pm.deletePersistent(entity);
+			}
 			tx.commit();
 		}
 		catch(Exception e)

@@ -222,9 +222,9 @@ public class DBDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#deleteGeppettoProject(org.geppetto.core.data.model.IGeppettoProject)
 	 */
 	@Override
-	public Object deleteGeppettoProject(IGeppettoProject project)
+	public Object deleteGeppettoProject(long id, IUser user)
 	{
-		dbManager.deleteEntity(project);
+		dbManager.deleteProject(id, user);
 		return true;
 	}
 

@@ -152,7 +152,7 @@ public class DBTestData
 			projects.add(project);
 
 			long value = 1000l * 1000 * 1000;
-			User user = new User("guest", "Guest user", projects, value, 2 * value);
+			User user = new User("guest1", "Guest user", projects, value, 2 * value);
 			dbManager.storeEntity(user);
 		}
 	}
