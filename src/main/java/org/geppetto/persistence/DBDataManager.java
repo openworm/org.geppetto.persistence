@@ -42,6 +42,8 @@ import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
+import org.geppetto.core.data.model.IInstancePath;
+import org.geppetto.core.data.model.IParameter;
 import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.persistence.db.DBManager;
@@ -172,10 +174,22 @@ public class DBDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#createParameter(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void createParameter(String name, String value)
+	public IParameter newParameter(IInstancePath instancePath, String value)
 	{
-		Parameter parameter = new Parameter(new InstancePath(name, name, name), value);
+		Parameter parameter = new Parameter((InstancePath)instancePath, value);
 		dbManager.storeEntity(parameter);
+		return parameter;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#newInstancePath(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public IInstancePath newInstancePath(String entityPath, String aspectPath, String localPath)
+	{
+		InstancePath instancePath = new InstancePath(entityPath, aspectPath, localPath);
+		dbManager.storeEntity(instancePath);
+		return instancePath;
 	}
 
 	/*
@@ -336,5 +350,7 @@ public class DBDataManager implements IGeppettoDataManager
 
 		return experiment;
 	}
+
+
 
 }

@@ -42,6 +42,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IAspectConfiguration;
+import org.geppetto.core.data.model.IParameter;
 
 @PersistenceCapable
 public class AspectConfiguration implements IAspectConfiguration
@@ -60,7 +61,7 @@ public class AspectConfiguration implements IAspectConfiguration
 
 	@Join
 	@Persistent
-	private List<Parameter> modelParameter;
+	private List<Parameter> modelParameters;
 
 	@Column(name = "simulatorconfiguration_id")
 	@Persistent(dependent = "true")
@@ -71,7 +72,7 @@ public class AspectConfiguration implements IAspectConfiguration
 		super();
 		this.aspect = aspect;
 		this.watchedVariables = watchedVariables;
-		this.modelParameter = modelParameter;
+		this.modelParameters = modelParameter;
 		this.simulatorConfiguration = simulatorConfiguration;
 	}
 
@@ -92,17 +93,26 @@ public class AspectConfiguration implements IAspectConfiguration
 
 	public List<Parameter> getModelParameter()
 	{
-		return modelParameter;
+		return modelParameters;
 	}
 
 	public void setModelParameter(List<Parameter> parameters)
 	{
-		modelParameter = parameters;
+		modelParameters = parameters;
 	}
 
 	public SimulatorConfiguration getSimulatorConfiguration()
 	{
 		return simulatorConfiguration;
+	}
+
+	@Override
+	public void addModelParameter(IParameter modelParameter)
+	{
+		if(modelParameter instanceof Parameter)
+		{
+			modelParameters.add((Parameter) modelParameter);
+		}
 	}
 
 }
