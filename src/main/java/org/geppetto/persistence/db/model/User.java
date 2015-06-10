@@ -56,6 +56,8 @@ public class User implements Serializable, IUser
 
 	private String login;
 
+	private String password;
+
 	private String name;
 
 	private long spaceAllowance;
@@ -66,10 +68,11 @@ public class User implements Serializable, IUser
 	@Persistent
 	private List<GeppettoProject> geppettoProjects;
 
-	public User(String login, String name, List<GeppettoProject> geppettoProjects, long spaceAllowance, long simulationTimeAllowance)
+	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects, long spaceAllowance, long simulationTimeAllowance)
 	{
 		super();
 		this.login = login;
+		this.password = password;
 		this.name = name;
 		this.geppettoProjects = geppettoProjects;
 		this.spaceAllowance = spaceAllowance;
@@ -89,6 +92,16 @@ public class User implements Serializable, IUser
 	public void setLogin(String login)
 	{
 		this.login = login;
+	}
+
+	public String getPassword()
+	{
+		return password;
+	}
+
+	public void setPassword(String password)
+	{
+		this.password = password;
 	}
 
 	public String getName()

@@ -176,12 +176,14 @@ public class DBDataManager implements IGeppettoDataManager
 	@Override
 	public IParameter newParameter(IInstancePath instancePath, String value)
 	{
-		Parameter parameter = new Parameter((InstancePath)instancePath, value);
+		Parameter parameter = new Parameter((InstancePath) instancePath, value);
 		dbManager.storeEntity(parameter);
 		return parameter;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#newInstancePath(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -214,7 +216,7 @@ public class DBDataManager implements IGeppettoDataManager
 	@Override
 	public IUser newUser(String name)
 	{
-		User user = new User(name, name, new ArrayList<GeppettoProject>(), 0, 0);
+		User user = new User(name, name, name, new ArrayList<GeppettoProject>(), 0, 0);
 		// dbManager.storeEntity(user);
 		return user;
 	}
@@ -306,7 +308,9 @@ public class DBDataManager implements IGeppettoDataManager
 			List<Experiment> fullExperiments = new ArrayList<>();
 			for(Experiment experiment : experiments)
 			{
-				fullExperiments.add(loadExperiment(experiment));
+				Experiment loadedExperiment = loadExperiment(experiment);
+				loadedExperiment.setParentProject(project);
+				fullExperiments.add(loadedExperiment);
 			}
 			project.setExperiments(fullExperiments);
 		}
@@ -350,7 +354,5 @@ public class DBDataManager implements IGeppettoDataManager
 
 		return experiment;
 	}
-
-
 
 }
