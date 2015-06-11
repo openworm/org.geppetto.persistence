@@ -103,7 +103,7 @@ public class DBTestData
 
 	private void buildDemoProject()
 	{
-		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.core/datamanager/src/main/resources/project/geppettoModels/SingleComponentHH/";
+		String path = "http://org.geppetto.bucket.s3.amazonaws.com/projects/1/";
 		List<GeppettoProject> projects = dbManager.getAllEntities(GeppettoProject.class);
 		if(projects.size() == 0)
 		{
