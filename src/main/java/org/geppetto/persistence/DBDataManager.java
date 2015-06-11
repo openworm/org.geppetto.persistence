@@ -214,10 +214,13 @@ public class DBDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#newUser(java.lang.String)
 	 */
 	@Override
-	public IUser newUser(String name)
+	public IUser newUser(String name, String password, boolean persistent)
 	{
-		User user = new User(name, name, name, new ArrayList<GeppettoProject>(), 0, 0);
-		// dbManager.storeEntity(user);
+		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), 0, 0);
+		if(persistent)
+		{
+			dbManager.storeEntity(user);
+		}
 		return user;
 	}
 
