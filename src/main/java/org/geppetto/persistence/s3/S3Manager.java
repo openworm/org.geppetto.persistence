@@ -114,4 +114,11 @@ public class S3Manager implements IGeppettoS3Manager
 		getS3Connection().deleteObject(PersistenceHelper.BUCKET_NAME, path);
 	}
 
+	public static void main(String[] args)
+	{
+		List<S3ObjectSummary> paths = new S3Manager().retrievePathsFromS3("test");
+		for (S3ObjectSummary path : paths) {
+			System.out.println(path.getKey());
+		}
+	}
 }
