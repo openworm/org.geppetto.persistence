@@ -58,7 +58,7 @@ public class Experiment implements Serializable, IExperiment
 	private long id;
 
 	@Join
-	@Persistent
+	@Persistent(defaultFetchGroup = "true")
 	private List<AspectConfiguration> aspectConfigurations;
 
 	private String name;
@@ -72,7 +72,7 @@ public class Experiment implements Serializable, IExperiment
 	private ExperimentStatus status;
 
 	@Join
-	@Persistent
+	@Persistent(defaultFetchGroup = "true")
 	private List<SimulationResult> simulationResults;
 
 	private Date startDate;

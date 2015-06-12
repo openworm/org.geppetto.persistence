@@ -116,10 +116,10 @@ public class DBTestData
 
 			List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
 			List<InstancePath> watchedVariables2 = new ArrayList<>();
-			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].v"));
-			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-			watchedVariables2.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+			watchedVariables2.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].v"));
+			watchedVariables2.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
+			watchedVariables2.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
+			watchedVariables2.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
 			aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables2, null, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0,
 					null)));
 			List<SimulationResult> simulationResults2 = new ArrayList<>();
@@ -128,19 +128,17 @@ public class DBTestData
 
 			List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
 			List<InstancePath> watchedVariables3 = new ArrayList<>();
-			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].v"));
-			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-			watchedVariables3.add(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+			watchedVariables3.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].v"));
+			watchedVariables3.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
+			watchedVariables3.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
+			watchedVariables3.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
 			List<Parameter> modelParameters3 = new ArrayList<>();
-			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"), "0"));
-			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical", "SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"), "0"));
+			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"), "0"));
+			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"), "0"));
 
 			aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables3, modelParameters3, new SimulatorConfiguration("neuronSimulator",
 					"lemsConversion", 0, null)));
-			List<SimulationResult> simulationResults3 = new ArrayList<>();
-			simulationResults3.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(path + "results.h5", PersistedDataType.RECORDING)));
-			Experiment exp3 = new Experiment(aspectConfigurations3, "Experiment with parameters", "", new Date(), new Date(), ExperimentStatus.DESIGN, simulationResults3, new Date(), new Date(),
+			Experiment exp3 = new Experiment(aspectConfigurations3, "Experiment with parameters", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(),
 					project);
 
 			List<Experiment> experiments = new ArrayList<>();

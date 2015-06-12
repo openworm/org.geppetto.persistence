@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xmlns:osgi="http://www.springframework.org/schema/osgi"	
-		xmlns:aop="http://www.springframework.org/schema/aop"
-		xmlns:tx="http://www.springframework.org/schema/tx"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
 							http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 							http://www.springframework.org/schema/osgi
 							http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd
@@ -14,45 +12,39 @@
        						http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 
 
-<osgi:service ref="pmf" interface="javax.jdo.PersistenceManagerFactory" />
+	<osgi:service ref="pmf" interface="javax.jdo.PersistenceManagerFactory" />
 
-<tx:advice id="txAdvice" transaction-manager="txManager">
-    <tx:attributes>	
-	<tx:method name="get*" read-only="true" />		
-	<tx:method name="*" />
-    </tx:attributes>
-</tx:advice>
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
 
-<!-- Ensures the class loader of this bundle is used to invoke public methods in the service layer of this bundle. -->
-<!-- aop:config>
-	<aop:pointcut id="fooServices" expression="execution(* org.geppetto.persistence.*.*(..))" />
-    <aop:advisor advice-ref="txAdvice" pointcut-ref="fooServices" />
 
-    <aop:aspect id="bundleLoaderAspect" ref="bundleLoaderAspectBean">
-	<aop:around pointcut-ref="fooServices" method="setClassLoader"/>		
-    </aop:aspect>
-</aop:config-->
- 
-<osgi:service id="DBDataManager" ref="dbDataManagerService" 
-	interface="org.geppetto.core.data.IGeppettoDataManager">
-</osgi:service>
-<bean id="dbDataManagerService" scope="singleton" class="org.geppetto.persistence.DBDataManager">
-	<aop:scoped-proxy proxy-target-class="false"/>
-	<property name="dbManager" ref="dbManager"></property>
-</bean>
+	<osgi:service id="GeppettoDataManager" ref="geppettoDataManagerService"
+		interface="org.geppetto.core.data.IGeppettoDataManager">
+	</osgi:service>
+	<bean id="geppettoDataManagerService" scope="singleton"
+		class="org.geppetto.persistence.GeppettoDataManager">
+		<aop:scoped-proxy proxy-target-class="false" />
+		<property name="dbManager" ref="dbManager"></property>
+	</bean>
 
-<osgi:service id="S3DataManager" ref="s3ManagerService" 
-	interface="org.geppetto.core.data.IGeppettoS3Manager">
-</osgi:service>
-<bean id="s3ManagerService" scope="singleton" class="org.geppetto.persistence.s3.S3Manager">
-	<aop:scoped-proxy proxy-target-class="false"/>
-</bean>
+	<osgi:service id="S3DataManager" ref="s3ManagerService"
+		interface="org.geppetto.core.data.IGeppettoS3Manager">
+	</osgi:service>
+	<bean id="s3ManagerService" scope="singleton"
+		class="org.geppetto.persistence.s3.S3Manager">
+		<aop:scoped-proxy proxy-target-class="false" />
+	</bean>
 
-<osgi:service id="DBAuthService" ref="dbAuthService" 
-	interface="org.geppetto.core.auth.IAuthService">
-</osgi:service>
-<bean id="dbAuthService" scope="thread" class="org.geppetto.persistence.auth.GeppettoAuthentication">
-	<aop:scoped-proxy proxy-target-class="false"/>
-	<property name="dbManager" ref="dbManager"></property>
-</bean>
+	<osgi:service id="DBAuthService" ref="dbAuthService"
+		interface="org.geppetto.core.auth.IAuthService">
+	</osgi:service>
+	<bean id="dbAuthService" scope="thread"
+		class="org.geppetto.persistence.auth.GeppettoAuthentication">
+		<aop:scoped-proxy proxy-target-class="false" />
+		<property name="dbManager" ref="dbManager"></property>
+	</bean>
 </beans>

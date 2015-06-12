@@ -65,7 +65,7 @@ public class User implements Serializable, IUser
 	private long simulationTimeAllowance;
 
 	@Join
-	@Persistent
+	@Persistent(defaultFetchGroup = "true")
 	private List<GeppettoProject> geppettoProjects;
 
 	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects, long spaceAllowance, long simulationTimeAllowance)

@@ -65,7 +65,16 @@ public class InstancePath implements IInstancePath
 
 	public String getInstancePath()
 	{
-		return entityInstancePath + "." + aspect + "." + localInstancePath;
+		String path = entityInstancePath;
+		if(aspect != null && !aspect.isEmpty())
+		{
+			path += "." + aspect;
+		}
+		if(localInstancePath != null && !localInstancePath.isEmpty())
+		{
+			path += "." + localInstancePath;
+		}
+		return path;
 	}
 
 }

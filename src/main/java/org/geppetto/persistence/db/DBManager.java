@@ -92,7 +92,7 @@ public class DBManager
 		{
 			pm.getFetchPlan().setGroup(FetchGroup.ALL);
 			pm.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_GREEDY);
-			pm.getFetchPlan().setMaxFetchDepth(5);
+			pm.getFetchPlan().setMaxFetchDepth(10);
 			Query query = pm.newQuery(type);
 			return (List<T>) query.execute();
 		}
@@ -127,8 +127,9 @@ public class DBManager
 			pm.close();
 		}
 	}
-	
-	public void deleteProject(long id, IUser user) {
+
+	public void deleteProject(long id, IUser user)
+	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		try
@@ -139,13 +140,15 @@ public class DBManager
 			query.setFilter("id == searchedId");
 			query.declareParameters("int searchedId");
 			List<GeppettoProject> projects = (List<GeppettoProject>) query.execute(id);
-			if (projects.size() > 0) {
+			if(projects.size() > 0)
+			{
 				GeppettoProject project = projects.get(0);
 				query = pm.newQuery(User.class);
 				query.setFilter("login == searchedLogin");
 				query.declareParameters("String searchedLogin");
 				List<User> users = (List<User>) query.execute(user.getLogin());
-				if (users.size() > 0) {
+				if(users.size() > 0)
+				{
 					user = users.get(0);
 					user.getGeppettoProjects().remove(project);
 					pm.makePersistent(user);
@@ -180,7 +183,8 @@ public class DBManager
 			query.setFilter("id == searchedId");
 			query.declareParameters("int searchedId");
 			List<IEntity> entities = (List<IEntity>) query.execute(entity.getId());
-			if (entities.size() > 0) {
+			if(entities.size() > 0)
+			{
 				entity = entities.get(0);
 				pm.deletePersistent(entity);
 			}
@@ -200,23 +204,22 @@ public class DBManager
 		}
 	}
 
+	/**
+	 * @param type
+	 * @param id
+	 * @return
+	 */
 	public <T> T findEntityById(Class<T> type, long id)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try
 		{
-			pm.getFetchPlan().setGroup(FetchGroup.ALL);
-			pm.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_GREEDY);
-			pm.getFetchPlan().setMaxFetchDepth(5);
-			Query query = pm.newQuery(type);
-			query.setFilter("id == searchedId");
-			query.declareParameters("int searchedId");
-			List<T> entities = (List<T>) query.execute(id);
-			if(entities.size() > 0)
-			{
-				return entities.get(0);
-			}
-			return null;
+			T o=(T)pm.getObjectById(type,id);
+			return o;
+		}
+		catch(Exception e)
+		{
+			throw new RuntimeException(e);
 		}
 		finally
 		{
@@ -224,21 +227,24 @@ public class DBManager
 		}
 	}
 
+	/**
+	 * Fetches a user from the database
+	 * @param login
+	 * @return
+	 */
 	public User findUserByLogin(String login)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try
 		{
-			pm.getFetchPlan().setGroup(FetchGroup.ALL);
-			pm.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_GREEDY);
-			pm.getFetchPlan().setMaxFetchDepth(5);
+			pm.getFetchPlan().setMaxFetchDepth(-1);
 			Query query = pm.newQuery(User.class);
 			query.setFilter("login == searchedLogin");
 			query.declareParameters("String searchedLogin");
 			List<User> users = (List<User>) query.execute(login);
 			if(users.size() > 0)
 			{
-				return users.get(0);
+				return pm.detachCopy(users.get(0));
 			}
 			return null;
 		}

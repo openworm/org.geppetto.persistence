@@ -52,19 +52,19 @@ public class AspectConfiguration implements IAspectConfiguration
 	private long id;
 
 	@Column(name = "aspect_id")
-	@Persistent(dependent = "true")
+	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private InstancePath aspect;
 
 	@Join
-	@Persistent
+	@Persistent(defaultFetchGroup = "true")
 	private List<InstancePath> watchedVariables;
 
 	@Join
-	@Persistent
+	@Persistent(defaultFetchGroup = "true")
 	private List<Parameter> modelParameters;
 
 	@Column(name = "simulatorconfiguration_id")
-	@Persistent(dependent = "true")
+	@Persistent(dependent = "true",defaultFetchGroup = "true")
 	private SimulatorConfiguration simulatorConfiguration;
 
 	public AspectConfiguration(InstancePath aspect, List<InstancePath> watchedVariables, List<Parameter> modelParameter, SimulatorConfiguration simulatorConfiguration)
@@ -113,6 +113,11 @@ public class AspectConfiguration implements IAspectConfiguration
 		{
 			modelParameters.add((Parameter) modelParameter);
 		}
+	}
+
+	public void setAspect(InstancePath aspect)
+	{
+		this.aspect=aspect;		
 	}
 
 }

@@ -57,7 +57,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	private String name;
 
 	@Join
-	@Persistent
+	@Persistent(defaultFetchGroup = "true")
 	private List<Experiment> experiments;
 
 	// TODO: add this when a View class will be available
@@ -66,7 +66,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	// private List<View> views;
 
 	@Column(name = "persisteddata_id")
-	@Persistent(dependent = "true")
+	@Persistent(dependent = "true",defaultFetchGroup = "true")
 	private PersistedData geppettoModel;
 
 	public GeppettoProject(String name, PersistedData geppettoModel)
