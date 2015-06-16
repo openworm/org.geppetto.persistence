@@ -43,7 +43,7 @@ import javax.jdo.annotations.PrimaryKey;
 import org.geppetto.core.data.model.IPersistedData;
 import org.geppetto.core.data.model.PersistedDataType;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class PersistedData implements Serializable, IPersistedData
 {
 	private static final long serialVersionUID = 1;

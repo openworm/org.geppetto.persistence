@@ -44,7 +44,7 @@ import javax.jdo.annotations.PrimaryKey;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IParameter;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class AspectConfiguration implements IAspectConfiguration
 {
 	@PrimaryKey

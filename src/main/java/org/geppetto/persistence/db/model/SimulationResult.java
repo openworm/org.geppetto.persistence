@@ -43,7 +43,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.ISimulationResult;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class SimulationResult implements Serializable, ISimulationResult
 {
 	private static final long serialVersionUID = 1;

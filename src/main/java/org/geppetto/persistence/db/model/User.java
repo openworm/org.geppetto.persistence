@@ -44,7 +44,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IUser;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class User implements Serializable, IUser
 {
 

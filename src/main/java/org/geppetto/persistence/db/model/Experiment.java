@@ -48,7 +48,7 @@ import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.core.data.model.ISimulationResult;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class Experiment implements Serializable, IExperiment
 {
 	private static final long serialVersionUID = 1L;

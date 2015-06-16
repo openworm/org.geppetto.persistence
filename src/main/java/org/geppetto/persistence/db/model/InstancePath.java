@@ -7,7 +7,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IInstancePath;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class InstancePath implements IInstancePath
 {
 	@PrimaryKey

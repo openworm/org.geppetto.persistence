@@ -9,7 +9,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class SimulatorConfiguration implements ISimulatorConfiguration
 {
 	@PrimaryKey

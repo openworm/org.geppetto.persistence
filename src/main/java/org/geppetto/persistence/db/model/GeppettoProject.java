@@ -45,7 +45,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IGeppettoProject;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class GeppettoProject implements Serializable, IGeppettoProject
 {
 	private static final long serialVersionUID = 1L;

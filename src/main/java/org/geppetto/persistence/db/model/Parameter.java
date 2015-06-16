@@ -43,7 +43,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IParameter;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class Parameter implements Serializable, IParameter
 {
 	private static final long serialVersionUID = 1;
