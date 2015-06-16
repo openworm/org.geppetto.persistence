@@ -58,7 +58,7 @@ public class S3ManagerTest
 	{
 		List<S3ObjectSummary> paths = s3.retrievePathsFromS3(PATH);
 		int count = paths.size();
-		s3.saveTextToS3("S3ManagerTest test", PATH + "/test" + new Date().getTime() + ".txt");
+		s3.saveTextToS3("S3ManagerTest test", PATH + "/" + PATH + new Date().getTime() + ".txt");
 		List<S3ObjectSummary> objects = s3.retrievePathsFromS3(PATH);
 		Assert.assertEquals(count + 1, objects.size());
 		s3.deleteFromS3(objects.get(objects.size() - 1).getKey());
