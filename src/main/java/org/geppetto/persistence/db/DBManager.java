@@ -61,6 +61,10 @@ public class DBManager
 		this.pmf = pmf;
 	}
 
+	/**
+	 * Save or update an entity to the DB.
+	 * @param entity
+	 */
 	public <T> void storeEntity(T entity)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
@@ -85,6 +89,11 @@ public class DBManager
 		}
 	}
 
+	/**
+	 * Retrieve all entities of a given type.
+	 * @param type
+	 * @return
+	 */
 	public <T> List<T> getAllEntities(Class<T> type)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
@@ -102,6 +111,10 @@ public class DBManager
 		}
 	}
 
+	/**
+	 * Delete all entities of a given type.
+	 * @param type
+	 */
 	public <T> void deleteAllEntities(Class<T> type)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
@@ -128,6 +141,11 @@ public class DBManager
 		}
 	}
 
+	/**
+	 * Delete a project identified by id and user.
+	 * @param id
+	 * @param user
+	 */
 	public void deleteProject(long id, IUser user)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
@@ -171,6 +189,10 @@ public class DBManager
 		}
 	}
 
+	/**
+	 * Delete the provided entity from DB.
+	 * @param entity
+	 */
 	public void deleteEntity(IEntity entity)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
@@ -205,6 +227,7 @@ public class DBManager
 	}
 
 	/**
+	 * Retrieves an entity of a given type and id.
 	 * @param type
 	 * @param id
 	 * @return
