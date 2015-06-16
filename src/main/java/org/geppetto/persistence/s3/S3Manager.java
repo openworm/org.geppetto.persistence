@@ -79,12 +79,24 @@ public class S3Manager implements IGeppettoS3Manager
 		return _s3Connection;
 	}
 
+	/**
+	 * Save a file to S3.
+	 * 
+	 * @param file
+	 * @param path
+	 */
 	public void saveFileToS3(File file, String path)
 	{
 		AmazonS3 s3 = getS3Connection();
 		s3.putObject(PersistenceHelper.BUCKET_NAME, path, file);
 	}
 
+	/**
+	 * Save a text to S3.
+	 * 
+	 * @param text
+	 * @param path
+	 */
 	public void saveTextToS3(String text, String path) throws IOException
 	{
 		File file = File.createTempFile("file", "");
@@ -92,6 +104,12 @@ public class S3Manager implements IGeppettoS3Manager
 		saveFileToS3(file, path);
 	}
 
+	/**
+	 * Return the object pointers to the files that are stored at the paths starting with a given prefix.
+	 * 
+	 * @param prefix
+	 * @return
+	 */
 	public List<S3ObjectSummary> retrievePathsFromS3(String prefix)
 	{
 		ObjectListing listing = getS3Connection().listObjects(PersistenceHelper.BUCKET_NAME, prefix);
@@ -109,16 +127,13 @@ public class S3Manager implements IGeppettoS3Manager
 		return allSummaries;
 	}
 
+	/**
+	 * Delete the file given by the path from S3.
+	 * 
+	 * @param path
+	 */
 	public void deleteFromS3(String path)
 	{
 		getS3Connection().deleteObject(PersistenceHelper.BUCKET_NAME, path);
-	}
-
-	public static void main(String[] args)
-	{
-		List<S3ObjectSummary> paths = new S3Manager().retrievePathsFromS3("test");
-		for (S3ObjectSummary path : paths) {
-			System.out.println(path.getKey());
-		}
 	}
 }

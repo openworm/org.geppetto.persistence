@@ -41,7 +41,6 @@ import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.User;
 import org.geppetto.persistence.util.DBTestData;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class DBManagerTest
@@ -73,7 +72,7 @@ public class DBManagerTest
 		db.storeEntity(experiment2);
 		Assert.assertEquals(count + 1, project.getExperiments().size());
 		Assert.assertEquals(allCount + 2, db.getAllEntities(Experiment.class).size());
-		
+
 		project.getExperiments().remove(experiment);
 		db.storeEntity(project);
 		db.deleteEntity(experiment);
