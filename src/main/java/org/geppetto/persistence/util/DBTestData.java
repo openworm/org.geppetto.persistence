@@ -111,7 +111,7 @@ public class DBTestData
 			GeppettoProject project = new GeppettoProject("LEMS Sample Hodgkin-Huxley Neuron", geppettoModel);
 
 			List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
-			aspectConfigurations1.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), null, null, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0, null)));
+			aspectConfigurations1.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), null, null, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0, 0, null)));
 			Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
 			List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
@@ -120,8 +120,7 @@ public class DBTestData
 			watchedVariables2.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
 			watchedVariables2.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
 			watchedVariables2.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
-			aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables2, null, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0,
-					null)));
+			aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables2, null, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0, 0, null)));
 			List<SimulationResult> simulationResults2 = new ArrayList<>();
 			simulationResults2.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(path + "results.h5", PersistedDataType.RECORDING)));
 			Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project);
@@ -136,8 +135,7 @@ public class DBTestData
 			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"), "0"));
 			modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"), "0"));
 
-			aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables3, modelParameters3, new SimulatorConfiguration("neuronSimulator",
-					"lemsConversion", 0, null)));
+			aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables3, modelParameters3, new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0, 0, null)));
 			Experiment exp3 = new Experiment(aspectConfigurations3, "Experiment with parameters", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(),
 					project);
 

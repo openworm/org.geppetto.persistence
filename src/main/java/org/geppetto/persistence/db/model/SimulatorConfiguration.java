@@ -20,16 +20,21 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 
 	private String conversionServiceId;
 
+	//TODO: We are using SI units but in the future we should add scaling factor
 	private float timestep;
+
+	//TODO: We are using SI units but in the future we should add scaling factor
+	private float length;
 
 	private Map<String, String> parameters;
 
-	public SimulatorConfiguration(String simulatorId, String conversionServiceId, float timestep, Map<String, String> parameters)
+	public SimulatorConfiguration(String simulatorId, String conversionServiceId, float timestep, float length, Map<String, String> parameters)
 	{
 		super();
 		this.simulatorId = simulatorId;
 		this.conversionServiceId = conversionServiceId;
 		this.timestep = timestep;
+		this.length = length;
 		this.parameters = parameters;
 	}
 
@@ -66,6 +71,16 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 	public void setTimestep(float timestep)
 	{
 		this.timestep = timestep;
+	}
+	
+	public float getLength()
+	{
+		return length;
+	}
+
+	public void setLength(float length)
+	{
+		this.length = length;
 	}
 
 	public Map<String, String> getParameters()
