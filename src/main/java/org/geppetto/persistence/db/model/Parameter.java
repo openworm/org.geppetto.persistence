@@ -53,7 +53,7 @@ public class Parameter implements Serializable, IParameter
 	private long id;
 
 	@Column(name = "variable_id")
-	@Persistent(dependent = "true")
+	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private InstancePath variable;
 
 	private String value;

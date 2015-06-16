@@ -304,6 +304,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/S3ManagerTest.java</exclude>
+						<exclude>**/DBManagerTest.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
