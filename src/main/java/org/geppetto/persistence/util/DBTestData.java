@@ -70,7 +70,7 @@ public class DBTestData
 		dbManager.setPersistenceManagerFactory(getPersistenceManagerFactory());
 	}
 
-	private PersistenceManagerFactory getPersistenceManagerFactory()
+	public static PersistenceManagerFactory getPersistenceManagerFactory()
 	{
 		Map<String, String> dbConnProperties = new HashMap<>();
 		dbConnProperties.put("javax.jdo.PersistenceManagerFactoryClass", "org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
