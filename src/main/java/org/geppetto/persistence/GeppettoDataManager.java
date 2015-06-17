@@ -292,70 +292,22 @@ public class GeppettoDataManager implements IGeppettoDataManager
 
 	}
 
-//	/**
-//	 * Even though I set the fetch depth to 5 and to EAGER, it still retrieves data randomly, so we have to fill all the data with methods like this.
-//	 * 
-//	 * @param project
-//	 */
-//	private GeppettoProject loadProjectData(GeppettoProject project)
-//	{
-//		project = dbManager.findEntityById(project.getClass(), project.getId());
-//		if(project.getGeppettoModel() != null)
-//		{
-//			project.setGeppettoModel(dbManager.findEntityById(project.getGeppettoModel().getClass(), project.getGeppettoModel().getId()));
-//		}
-//		List<Experiment> experiments = project.getExperiments();
-//		if(experiments != null)
-//		{
-//			List<Experiment> fullExperiments = new ArrayList<>();
-//			for(Experiment experiment : experiments)
-//			{
-//				Experiment loadedExperiment = loadExperiment(experiment);
-//				loadedExperiment.setParentProject(project);
-//				fullExperiments.add(loadedExperiment);
-//			}
-//			project.setExperiments(fullExperiments);
-//		}
-//		return project;
-//	}
-//
-//	/**
-//	 * Even though I set the fetch depth to 5 and to EAGER, it still retrieves data randomly, so we have to fill all the data with methods like this.
-//	 * 
-//	 * @param experiment
-//	 */
-//	private Experiment loadExperiment(Experiment experiment)
-//	{
-//		experiment = dbManager.findEntityById(experiment.getClass(), experiment.getId());
-//		List<AspectConfiguration> configs = experiment.getAspectConfigurations();
-//		if(configs != null)
-//		{
-//			List<AspectConfiguration> newConfigs = new ArrayList<>();
-//			for(AspectConfiguration config : configs)
-//			{
-//				AspectConfiguration newConfig = dbManager.findEntityById(config.getClass(), config.getId());
-//				newConfig.setAspect((InstancePath)dbManager.findEntityById(InstancePath.class, newConfig.getAspect().getId()));
-//				List<Parameter> params = newConfig.getModelParameter();
-//				if(params != null)
-//				{
-//					List<Parameter> newParams = new ArrayList<>();
-//					for(Parameter param : params)
-//					{
-//						Parameter newParam = dbManager.findEntityById(param.getClass(), param.getId());
-//						if(newParam.getVariable() != null)
-//						{
-//							newParam.setVariable(dbManager.findEntityById(newParam.getVariable().getClass(), newParam.getVariable().getId()));
-//						}
-//						newParams.add(newParam);
-//					}
-//					newConfig.setModelParameter(newParams);
-//				}
-//				newConfigs.add(newConfig);
-//			}
-//			experiment.setAspectConfigurations(newConfigs);
-//		}
-//
-//		return experiment;
-//	}
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#saveProject(org.geppetto.core.data.model.IGeppettoProject)
+	 */
+	@Override
+	public void saveProject(IGeppettoProject project)
+	{
+		dbManager.storeEntity(project);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#saveExperiment(org.geppetto.core.data.model.IExperiment)
+	 */
+	@Override
+	public void saveExperiment(IExperiment experiment)
+	{
+		dbManager.storeEntity(experiment);		
+	}
 
 }

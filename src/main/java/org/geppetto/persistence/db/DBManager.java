@@ -237,8 +237,16 @@ public class DBManager
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try
 		{
-			T o=(T)pm.getObjectById(type,id);
-			return o;
+			pm.getFetchPlan().setMaxFetchDepth(-1);
+			Query query = pm.newQuery(type);
+			query.setFilter("id == searchedId");
+			query.declareParameters("int searchedId");
+			List<T> entities = (List<T>) query.execute(id);
+			if(entities.size() > 0)
+			{
+				return pm.detachCopy(entities.get(0));
+			}
+			return null;
 		}
 		catch(Exception e)
 		{

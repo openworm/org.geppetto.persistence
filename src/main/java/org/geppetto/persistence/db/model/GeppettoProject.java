@@ -55,7 +55,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	private long id;
 
 	private String name;
-
+	
 	@Join
 	@Persistent(defaultFetchGroup = "true")
 	private List<Experiment> experiments;

@@ -84,11 +84,9 @@ public class DBManagerTest
 	@Test
 	public void testExperimentUpdate()
 	{
-		Experiment experiment = user.getGeppettoProjects().get(0).getExperiments().get(0);
+		Experiment experiment = db.findEntityById(Experiment.class,1l);
 		experiment.setStatus(ExperimentStatus.COMPLETED);
 		db.storeEntity(experiment);
-		// if I would do here a db.findEntityById() to retrieve the experiment, when calling db.storeEntity()
-		// it would create a new instance even with the detachable = "true" set on the entity class
 		experiment = user.getGeppettoProjects().get(0).getExperiments().get(0);
 		Assert.assertEquals(ExperimentStatus.COMPLETED, experiment.getStatus());
 		experiment.setStatus(ExperimentStatus.DESIGN);
