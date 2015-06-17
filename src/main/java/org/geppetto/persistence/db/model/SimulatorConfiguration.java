@@ -3,6 +3,7 @@ package org.geppetto.persistence.db.model;
 import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -26,6 +27,7 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 	//TODO: We are using SI units but in the future we should add scaling factor
 	private float length;
 
+	@Join
 	@Persistent(defaultFetchGroup = "true")
 	private Map<String, String> parameters;
 
