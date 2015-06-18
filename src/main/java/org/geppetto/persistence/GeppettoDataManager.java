@@ -296,18 +296,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#saveProject(org.geppetto.core.data.model.IGeppettoProject)
 	 */
 	@Override
-	public void saveProject(IGeppettoProject project)
+	public void saveEntity(Object entity)
 	{
-		dbManager.storeEntity(project);
+		dbManager.storeEntity(entity);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.geppetto.core.data.IGeppettoDataManager#saveExperiment(org.geppetto.core.data.model.IExperiment)
-	 */
-	@Override
-	public void saveExperiment(IExperiment experiment)
-	{
-		dbManager.storeEntity(experiment);		
-	}
 
 }

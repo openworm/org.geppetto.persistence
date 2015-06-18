@@ -227,7 +227,7 @@ public class Experiment implements Serializable, IExperiment
 	@Override
 	public int hashCode()
 	{
-		return name.hashCode();
+		return (Experiment.class.getName()+Float.toString(id)).hashCode();
 	}
 
 }

@@ -118,6 +118,6 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 
 	public int hashCode()
 	{
-		return name.hashCode();
+		return (GeppettoProject.class.getName()+Float.toString(id)).hashCode();
 	}
 }
