@@ -33,34 +33,32 @@
 
 package org.geppetto.persistence.auth;
 
-import org.geppetto.core.auth.AuthManager;
 import org.geppetto.core.auth.IAuthService;
 import org.geppetto.persistence.db.DBManager;
-import org.geppetto.persistence.db.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GeppettoAuthentication implements IAuthService
 {
+
 	private DBManager dbManager;
-	
-	public void setDbManager(DBManager manager) {
+
+	public void setDbManager(DBManager manager)
+	{
 		dbManager = manager;
 	}
 
 	@Override
 	public Boolean isAuthenticated()
 	{
-		String userName = AuthManager.getCurrentUser();
-		User user = dbManager.findUserByLogin(userName);
-		return user != null || userName.equals("guest");
+		// Authentication is checked in the frontend with shiro
+		return false;
 	}
 
 	@Override
 	public String authFailureRedirect()
 	{
-		// TODO Auto-generated method stub
-		return "";
+		return "http://geppetto.org";
 	}
 
 	@Override
