@@ -44,6 +44,8 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IUser;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @PersistenceCapable(detachable = "true")
 public class User implements Serializable, IUser
 {
@@ -56,6 +58,7 @@ public class User implements Serializable, IUser
 
 	private String login;
 
+	@JsonIgnore
 	private String password;
 
 	private String name;
