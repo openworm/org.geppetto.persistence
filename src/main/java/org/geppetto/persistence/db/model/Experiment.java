@@ -217,4 +217,17 @@ public class Experiment implements Serializable, IExperiment
 		this.project = project;
 	}
 
+	@Override
+	public boolean equals(Object o)
+	{
+		Experiment other = (Experiment) o;
+		return id == other.id;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return name.hashCode();
+	}
+
 }

@@ -65,18 +65,23 @@ public class DBManagerTest
 		Experiment experiment = new Experiment(null, "test exp", "test exp", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 		project.getExperiments().add(experiment);
 		db.storeEntity(project);
+		
+		project = db.findEntityById(GeppettoProject.class, project.getId());
 		Assert.assertEquals(count + 1, project.getExperiments().size());
 		Assert.assertEquals(allCount + 1, db.getAllEntities(Experiment.class).size());
 		Experiment experiment2 = new Experiment(null, "test exp", "test exp", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 		// standalone experiment, not added to a project
 		db.storeEntity(experiment2);
+		project = db.findEntityById(GeppettoProject.class, project.getId());
 		Assert.assertEquals(count + 1, project.getExperiments().size());
 		Assert.assertEquals(allCount + 2, db.getAllEntities(Experiment.class).size());
 
+		experiment = db.findEntityById(Experiment.class, experiment.getId());
 		project.getExperiments().remove(experiment);
 		db.storeEntity(project);
 		db.deleteEntity(experiment);
 		db.deleteEntity(experiment2);
+		project = db.findEntityById(GeppettoProject.class, project.getId());
 		Assert.assertEquals(count, project.getExperiments().size());
 		Assert.assertEquals(allCount, db.getAllEntities(Experiment.class).size());
 	}
@@ -84,14 +89,14 @@ public class DBManagerTest
 	@Test
 	public void testExperimentUpdate()
 	{
-		Experiment experiment = db.findEntityById(Experiment.class,1l);
+		Experiment experiment = db.findEntityById(Experiment.class, 1l);
 		experiment.setStatus(ExperimentStatus.COMPLETED);
 		db.storeEntity(experiment);
-		experiment = user.getGeppettoProjects().get(0).getExperiments().get(0);
+		experiment = db.findEntityById(Experiment.class, 1l);
 		Assert.assertEquals(ExperimentStatus.COMPLETED, experiment.getStatus());
 		experiment.setStatus(ExperimentStatus.DESIGN);
 		db.storeEntity(experiment);
-		experiment = user.getGeppettoProjects().get(0).getExperiments().get(0);
+		experiment = db.findEntityById(Experiment.class, 1l);
 		Assert.assertEquals(ExperimentStatus.DESIGN, experiment.getStatus());
 	}
 }
