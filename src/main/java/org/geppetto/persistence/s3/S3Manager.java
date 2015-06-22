@@ -35,6 +35,8 @@ package org.geppetto.persistence.s3;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -135,5 +137,15 @@ public class S3Manager implements IGeppettoS3Manager
 	public void deleteFromS3(String path)
 	{
 		getS3Connection().deleteObject(PersistenceHelper.BUCKET_NAME, path);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.geppetto.core.data.IGeppettoS3Manager#getURL(java.lang.String)
+	 */
+	@Override
+	public URL getURL(String path) throws MalformedURLException
+	{
+		// Example: http://org.geppetto.bucket.s3.amazonaws.com/projects/1/GEPPETTO.xml
+		return new URL("http://" + PersistenceHelper.BUCKET_NAME + ".s3.amazonaws.com/" + path);
 	}
 }

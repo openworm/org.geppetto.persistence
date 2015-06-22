@@ -230,4 +230,10 @@ public class Experiment implements Serializable, IExperiment
 		return (Experiment.class.getName()+Float.toString(id)).hashCode();
 	}
 
+	@Override
+	public void setId(long id)
+	{
+		this.id=id;
+	}
+
 }

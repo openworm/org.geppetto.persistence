@@ -69,6 +69,8 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	@Persistent(dependent = "true",defaultFetchGroup = "true")
 	private PersistedData geppettoModel;
 
+	private transient boolean volatileProject;
+
 	public GeppettoProject(String name, PersistedData geppettoModel)
 	{
 		super();
@@ -111,13 +113,25 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.geppettoModel = geppettoModel;
 	}
 
-	public boolean equals(Object obj)
-	{
-		return id == ((GeppettoProject) obj).id;
-	}
-
 	public int hashCode()
 	{
 		return (GeppettoProject.class.getName()+Float.toString(id)).hashCode();
+	}
+
+	public void setId(long id)
+	{
+		this.id=id;
+	}
+
+	@Override
+	public boolean isVolatile()
+	{
+		return this.volatileProject;
+	}
+	
+	@Override
+	public void setVolatile(boolean volatileProject)
+	{
+		this.volatileProject=volatileProject;
 	}
 }

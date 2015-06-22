@@ -96,4 +96,10 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 		this.parameters = parameters;
 	}
 
+	@Override
+	public void setId(long id)
+	{
+		this.id=id;
+	}
+
 }

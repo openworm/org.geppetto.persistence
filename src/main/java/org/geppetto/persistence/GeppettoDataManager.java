@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.geppetto.core.data.IGeppettoDataManager;
@@ -266,7 +267,11 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, String json)
 	{
-		return gson.fromJson(json, GeppettoProject.class);
+		GeppettoProject project= gson.fromJson(json, GeppettoProject.class);
+		project.setId(UUID.randomUUID().getLeastSignificantBits());
+		project.setVolatile(true);
+		projects.put(project.getId(), project);
+		return project;
 	}
 
 	/*
@@ -277,7 +282,11 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, Reader json)
 	{
-		return gson.fromJson(json, GeppettoProject.class);
+		GeppettoProject project= gson.fromJson(json, GeppettoProject.class);
+		project.setId(UUID.randomUUID().getLeastSignificantBits());
+		project.setVolatile(true);
+		projects.put(project.getId(), project);
+		return project;
 	}
 
 	/*
