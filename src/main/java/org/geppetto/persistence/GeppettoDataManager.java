@@ -38,7 +38,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.geppetto.core.data.IGeppettoDataManager;
@@ -231,9 +230,11 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#addGeppettoProject(org.geppetto.core.data.model.IGeppettoProject)
 	 */
 	@Override
-	public void addGeppettoProject(IGeppettoProject project)
+	public void addGeppettoProject(IGeppettoProject project, IUser user)
 	{
-		dbManager.storeEntity(project);
+		((User)user).getGeppettoProjects().add((GeppettoProject)project);
+		dbManager.storeEntity(user);
+		project.setVolatile(false);
 	}
 
 	/*
