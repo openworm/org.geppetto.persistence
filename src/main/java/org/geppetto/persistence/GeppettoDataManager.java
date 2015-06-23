@@ -33,6 +33,7 @@
 package org.geppetto.persistence;
 
 import java.io.Reader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,14 +48,18 @@ import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.core.data.model.IInstancePath;
 import org.geppetto.core.data.model.IParameter;
+import org.geppetto.core.data.model.IPersistedData;
 import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.IUser;
+import org.geppetto.core.data.model.PersistedDataType;
+import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
+import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.User;
 
@@ -161,13 +166,6 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		return project.getExperiments();
 	}
 
-	public ISimulationResult newSimulationResult()
-	{
-		SimulationResult result = new SimulationResult(null, null);
-		dbManager.storeEntity(result);
-		return result;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -190,7 +188,6 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	public IInstancePath newInstancePath(String entityPath, String aspectPath, String localPath)
 	{
 		InstancePath instancePath = new InstancePath(entityPath, aspectPath, localPath);
-		dbManager.storeEntity(instancePath);
 		return instancePath;
 	}
 
@@ -324,6 +321,24 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	public void saveEntity(Object entity)
 	{
 		dbManager.storeEntity(entity);
+	}
+
+	@Override
+	public ISimulationResult newSimulationResult(IInstancePath parameterPath, IPersistedData results)
+	{
+		return new SimulationResult((InstancePath)parameterPath, (PersistedData)results);
+	}
+
+	@Override
+	public IInstancePath newInstancePath(ANode node)
+	{
+		return newInstancePath(node.getEntityInstancePath(), node.getAspectInstancePath(), node.getLocalInstancePath());
+	}
+
+	@Override
+	public IPersistedData newPersistedData(URL url, PersistedDataType type)
+	{
+		return new PersistedData(url.toString(), type);
 	}
 
 

@@ -53,11 +53,11 @@ public class SimulationResult implements Serializable, ISimulationResult
 	private long id;
 
 	@Column(name = "aspect_id")
-	@Persistent(dependent = "true",defaultFetchGroup = "true")
+	@Persistent(defaultFetchGroup = "true")
 	private InstancePath aspect;
 
 	@Column(name = "result_id")
-	@Persistent(dependent = "true",defaultFetchGroup = "true")
+	@Persistent(defaultFetchGroup = "true")
 	private PersistedData result;
 
 	public SimulationResult(InstancePath aspect, PersistedData result)
@@ -90,6 +90,12 @@ public class SimulationResult implements Serializable, ISimulationResult
 	public void setResult(PersistedData result)
 	{
 		this.result = result;
+	}
+
+	@Override
+	public void setId(long id)
+	{
+		this.id = id;
 	}
 
 }

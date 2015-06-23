@@ -88,4 +88,10 @@ public class PersistedData implements Serializable, IPersistedData
 		this.type = type;
 	}
 
+	@Override
+	public void setId(long id)
+	{
+		this.id = id;
+	}
+
 }

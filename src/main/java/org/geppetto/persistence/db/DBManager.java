@@ -44,7 +44,7 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geppetto.core.data.model.IEntity;
+import org.geppetto.core.data.model.IDataEntity;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.User;
@@ -63,34 +63,19 @@ public class DBManager
 
 	/**
 	 * Save or update an entity to the DB.
+	 * 
 	 * @param entity
 	 */
 	public <T> void storeEntity(T entity)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
-		Transaction tx = pm.currentTransaction();
-		try
-		{
-			tx.begin();
-			pm.makePersistent(entity);
-			tx.commit();
-		}
-		catch(Exception e)
-		{
-			_logger.warn("Could not store data", e);
-		}
-		finally
-		{
-			if(tx.isActive())
-			{
-				tx.rollback();
-			}
-			pm.close();
-		}
+		pm.makePersistent(entity);
+		pm.close();
 	}
 
 	/**
 	 * Retrieve all entities of a given type.
+	 * 
 	 * @param type
 	 * @return
 	 */
@@ -113,6 +98,7 @@ public class DBManager
 
 	/**
 	 * Delete all entities of a given type.
+	 * 
 	 * @param type
 	 */
 	public <T> void deleteAllEntities(Class<T> type)
@@ -143,6 +129,7 @@ public class DBManager
 
 	/**
 	 * Delete a project identified by id and user.
+	 * 
 	 * @param id
 	 * @param user
 	 */
@@ -191,9 +178,10 @@ public class DBManager
 
 	/**
 	 * Delete the provided entity from DB.
+	 * 
 	 * @param entity
 	 */
-	public void deleteEntity(IEntity entity)
+	public void deleteEntity(IDataEntity entity)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
@@ -204,7 +192,7 @@ public class DBManager
 			Query query = pm.newQuery(entity.getClass());
 			query.setFilter("id == searchedId");
 			query.declareParameters("int searchedId");
-			List<IEntity> entities = (List<IEntity>) query.execute(entity.getId());
+			List<IDataEntity> entities = (List<IDataEntity>) query.execute(entity.getId());
 			if(entities.size() > 0)
 			{
 				entity = entities.get(0);
@@ -228,6 +216,7 @@ public class DBManager
 
 	/**
 	 * Retrieves an entity of a given type and id.
+	 * 
 	 * @param type
 	 * @param id
 	 * @return
@@ -260,6 +249,7 @@ public class DBManager
 
 	/**
 	 * Fetches a user from the database
+	 * 
 	 * @param login
 	 * @return
 	 */

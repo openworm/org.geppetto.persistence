@@ -46,7 +46,5 @@
 		</property>
 	</bean>
 
-	<bean id="s3Manager" class="org.geppetto.persistence.s3.S3Manager">
-	</bean>
 
 </beans>

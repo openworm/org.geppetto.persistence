@@ -47,7 +47,7 @@ import javax.jdo.PersistenceManagerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.gemini.blueprint.context.BundleContextAware;
-import org.geppetto.persistence.util.PersistenceHelper;
+import org.geppetto.core.beans.Settings;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean;
@@ -63,7 +63,7 @@ public class OSGiLocalPersistenceManagerFactoryBean extends LocalPersistenceMana
 
 	public OSGiLocalPersistenceManagerFactoryBean()
 	{
-		File dbConnFile = new File(PersistenceHelper.SETTINGS_DIR + "/db.properties");
+		File dbConnFile = new File(Settings.SETTINGS_DIR + "/db.properties");
 		try
 		{
 			List<String> lines = Files.readAllLines(dbConnFile.toPath(), Charset.defaultCharset());

@@ -33,11 +33,20 @@
 
 package org.geppetto.persistence.db;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 
 import org.geppetto.core.data.model.ExperimentStatus;
+import org.geppetto.core.data.model.IInstancePath;
+import org.geppetto.core.data.model.IPersistedData;
+import org.geppetto.core.data.model.ISimulationResult;
+import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
+import org.geppetto.persistence.db.model.InstancePath;
+import org.geppetto.persistence.db.model.PersistedData;
+import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.User;
 import org.geppetto.persistence.util.DBTestData;
 import org.junit.Assert;
@@ -85,7 +94,31 @@ public class DBManagerTest
 		Assert.assertEquals(count, project.getExperiments().size());
 		Assert.assertEquals(allCount, db.getAllEntities(Experiment.class).size());
 	}
-
+	
+	@Test
+	public void testSimulatorResultsUpdate() throws MalformedURLException
+	{
+		Experiment experiment = db.findEntityById(Experiment.class, 1l);
+		Assert.assertEquals(0, experiment.getSimulationResults().size());
+		InstancePath aspect = new InstancePath("hhcell","electrical","");
+		PersistedData recording = new PersistedData("http://testURL", PersistedDataType.RECORDING);
+		ISimulationResult results = new SimulationResult(aspect, recording);
+		experiment.addSimulationResult(results);
+		Assert.assertEquals(results, experiment.getSimulationResults().get(0));
+		Assert.assertEquals(recording, experiment.getSimulationResults().get(0).getResult());
+		Assert.assertEquals(aspect, experiment.getSimulationResults().get(0).getAspect());
+		db.storeEntity(experiment);
+		Assert.assertEquals(results, experiment.getSimulationResults().get(0));
+		Assert.assertEquals(recording, experiment.getSimulationResults().get(0).getResult());
+		Assert.assertEquals(aspect, experiment.getSimulationResults().get(0).getAspect());
+		experiment.getSimulationResults().clear();
+		db.deleteEntity(aspect);
+		db.deleteEntity(recording);
+		db.deleteEntity(results);
+		db.storeEntity(experiment);
+		Assert.assertEquals(0, experiment.getSimulationResults().size());
+	}
+	
 	@Test
 	public void testExperimentUpdate()
 	{

@@ -46,6 +46,7 @@ import java.util.Map;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
 
+import org.geppetto.core.beans.Settings;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.persistence.db.DBManager;
@@ -80,7 +81,7 @@ public class DBTestData
 		dbConnProperties.put("datanucleus.connection2.resourceType", "RESOURCE_LOCAL");
 		dbConnProperties.put("datanucleus.autoCreateSchema", "true");
 		dbConnProperties.put("datanucleus.autoCreateColumns", "true");
-		File dbConnFile = new File(PersistenceHelper.SETTINGS_DIR + "/db.properties");
+		File dbConnFile = new File(Settings.SETTINGS_DIR + "/db.properties");
 		try
 		{
 			List<String> lines = Files.readAllLines(dbConnFile.toPath(), Charset.defaultCharset());
@@ -113,7 +114,12 @@ public class DBTestData
 			List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
 			SimulatorConfiguration sc1=new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String,String>());
 			sc1.getParameters().put("target", "net1");
-			aspectConfigurations1.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), null, null, sc1));
+			List<InstancePath> watchedVariables = new ArrayList<>();
+			watchedVariables.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].v"));
+			watchedVariables.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
+			watchedVariables.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
+			watchedVariables.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+			aspectConfigurations1.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables, null, sc1));
 			Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
 			List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
