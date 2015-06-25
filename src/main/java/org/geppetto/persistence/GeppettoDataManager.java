@@ -36,6 +36,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -50,6 +51,7 @@ import org.geppetto.core.data.model.IInstancePath;
 import org.geppetto.core.data.model.IParameter;
 import org.geppetto.core.data.model.IPersistedData;
 import org.geppetto.core.data.model.ISimulationResult;
+import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.model.runtime.ANode;
@@ -61,6 +63,7 @@ import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
 import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationResult;
+import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
 
 import com.google.gson.Gson;
@@ -69,8 +72,8 @@ public class GeppettoDataManager implements IGeppettoDataManager
 {
 
 	private DBManager dbManager;
-	
-	Map<Long,GeppettoProject> projects=new ConcurrentHashMap<Long,GeppettoProject>();
+
+	Map<Long, GeppettoProject> projects = new ConcurrentHashMap<Long, GeppettoProject>();
 
 	public void setDbManager(DBManager manager)
 	{
@@ -133,11 +136,11 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		if(!projects.containsKey(id))
 		{
 			GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, id);
-			for(Experiment e:project.getExperiments())
+			for(Experiment e : project.getExperiments())
 			{
 				e.setParentProject(project);
 			}
-			projects.put(id,project);
+			projects.put(id, project);
 		}
 		return projects.get(id);
 	}
@@ -188,6 +191,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	public IInstancePath newInstancePath(String entityPath, String aspectPath, String localPath)
 	{
 		InstancePath instancePath = new InstancePath(entityPath, aspectPath, localPath);
+		saveEntity(instancePath);
 		return instancePath;
 	}
 
@@ -201,7 +205,8 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	{
 		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
 				new Date(), project);
-		dbManager.storeEntity(experiment);
+		((GeppettoProject) project).getExperiments().add(experiment);
+		dbManager.storeEntity(project);
 		return experiment;
 	}
 
@@ -229,7 +234,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public void addGeppettoProject(IGeppettoProject project, IUser user)
 	{
-		((User)user).getGeppettoProjects().add((GeppettoProject)project);
+		((User) user).getGeppettoProjects().add((GeppettoProject) project);
 		dbManager.storeEntity(user);
 		project.setVolatile(false);
 	}
@@ -266,10 +271,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, String json)
 	{
-		GeppettoProject project= gson.fromJson(json, GeppettoProject.class);
+		GeppettoProject project = gson.fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
-		for(Experiment e:project.getExperiments())
+		for(Experiment e : project.getExperiments())
 		{
 			e.setParentProject(project);
 		}
@@ -285,20 +290,20 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, Reader json)
 	{
-		GeppettoProject project= gson.fromJson(json, GeppettoProject.class);
+		GeppettoProject project = gson.fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
-		for(Experiment e:project.getExperiments())
+		for(Experiment e : project.getExperiments())
 		{
 			e.setParentProject(project);
 		}
 		projects.put(project.getId(), project);
 		return project;
 	}
-	
+
 	private long getRandomId()
 	{
-		Random rnd=new Random();
+		Random rnd = new Random();
 		return (long) rnd.nextInt();
 	}
 
@@ -314,7 +319,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#saveProject(org.geppetto.core.data.model.IGeppettoProject)
 	 */
 	@Override
@@ -323,10 +330,33 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		dbManager.storeEntity(entity);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geppetto.core.data.IGeppettoDataManager#saveProject(org.geppetto.core.data.model.IGeppettoProject)
+	 */
+	@Override
+	public void saveEntity(IGeppettoProject entity)
+	{
+		dbManager.storeEntity(entity);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geppetto.core.data.IGeppettoDataManager#saveProject(org.geppetto.core.data.model.IGeppettoProject)
+	 */
+	@Override
+	public void saveEntity(IExperiment entity)
+	{
+		entity.updateLastModified();
+		dbManager.storeEntity(entity);
+	}
+
 	@Override
 	public ISimulationResult newSimulationResult(IInstancePath parameterPath, IPersistedData results)
 	{
-		return new SimulationResult((InstancePath)parameterPath, (PersistedData)results);
+		return new SimulationResult((InstancePath) parameterPath, (PersistedData) results);
 	}
 
 	@Override
@@ -341,5 +371,20 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		return new PersistedData(url.toString(), type);
 	}
 
+	@Override
+	public IAspectConfiguration newAspectConfiguration(IExperiment experiment, IInstancePath instancePath, ISimulatorConfiguration simulatorConfiguration)
+	{
+		AspectConfiguration aspectConfiguration= new AspectConfiguration((InstancePath)instancePath, new ArrayList<InstancePath>(), new ArrayList<Parameter>(), (SimulatorConfiguration)simulatorConfiguration);
+		saveEntity(aspectConfiguration);
+		((Experiment)experiment).getAspectConfigurations().add(aspectConfiguration);
+		saveEntity(experiment);
+		return aspectConfiguration;
+	}
+
+	@Override
+	public ISimulatorConfiguration newSimulatorConfiguration(String simulator, String conversionService, long timestep, long length)
+	{
+		return new SimulatorConfiguration(simulator, conversionService, timestep, length, new HashMap<String,String>());
+	}
 
 }

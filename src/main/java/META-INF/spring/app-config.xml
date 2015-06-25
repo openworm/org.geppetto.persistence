@@ -35,7 +35,7 @@
 			<props>
 				<prop key="datanucleus.autoCreateSchema">true</prop>
 				<prop key="datanucleus.autoCreateColumns">true</prop>
-
+				<prop key="datanucleus.DetachAllOnCommit">true</prop>
 				<prop key="datanucleus.storeManagerType">rdbms</prop>
 				<prop key="datanucleus.validateTables">true</prop>
 				<prop key="datanucleus.connection.resourceType">RESOURCE_LOCAL</prop>

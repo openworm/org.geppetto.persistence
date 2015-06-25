@@ -34,14 +34,16 @@
 package org.geppetto.persistence.db;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 
 import org.geppetto.core.data.model.ExperimentStatus;
+import org.geppetto.core.data.model.IAspectConfiguration;
+import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IInstancePath;
-import org.geppetto.core.data.model.IPersistedData;
 import org.geppetto.core.data.model.ISimulationResult;
+import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.PersistedDataType;
+import org.geppetto.persistence.GeppettoDataManager;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.InstancePath;
@@ -103,6 +105,7 @@ public class DBManagerTest
 		InstancePath aspect = new InstancePath("hhcell","electrical","");
 		PersistedData recording = new PersistedData("http://testURL", PersistedDataType.RECORDING);
 		ISimulationResult results = new SimulationResult(aspect, recording);
+		db.storeEntity(results);
 		experiment.addSimulationResult(results);
 		Assert.assertEquals(results, experiment.getSimulationResults().get(0));
 		Assert.assertEquals(recording, experiment.getSimulationResults().get(0).getResult());
@@ -131,5 +134,24 @@ public class DBManagerTest
 		db.storeEntity(experiment);
 		experiment = db.findEntityById(Experiment.class, 1l);
 		Assert.assertEquals(ExperimentStatus.DESIGN, experiment.getStatus());
+	}
+	
+	@Test
+	public void testNewExperiment()
+	{
+		GeppettoDataManager geppettoDataManager=new GeppettoDataManager();
+		geppettoDataManager.setDbManager(db);
+		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
+		IExperiment experiment = geppettoDataManager.newExperiment("E","D", project);
+		Assert.assertNotNull(experiment.getName());
+		IInstancePath instancePath=geppettoDataManager.newInstancePath("entity","aspect","");
+		ISimulatorConfiguration simulatorConfiguration=geppettoDataManager.newSimulatorConfiguration("","",0l,0l);
+		IAspectConfiguration aspectConfiguration=geppettoDataManager.newAspectConfiguration(experiment,instancePath,simulatorConfiguration);
+		Assert.assertNotNull(experiment.getName());
+		Assert.assertTrue(experiment.getAspectConfigurations().contains(aspectConfiguration));
+		Assert.assertEquals(simulatorConfiguration,aspectConfiguration.getSimulatorConfiguration());
+		Assert.assertEquals("aspect",instancePath.getAspect());
+		
+		
 	}
 }

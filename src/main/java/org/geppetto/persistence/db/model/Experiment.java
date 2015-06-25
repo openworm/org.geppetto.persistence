@@ -236,4 +236,10 @@ public class Experiment implements Serializable, IExperiment
 		this.id=id;
 	}
 
+	@Override
+	public void updateLastModified()
+	{
+		lastModified=new Date();
+	}
+
 }

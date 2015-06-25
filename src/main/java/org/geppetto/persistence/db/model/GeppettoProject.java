@@ -43,6 +43,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 
 @PersistenceCapable(detachable = "true")
@@ -59,6 +60,9 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	@Join
 	@Persistent(defaultFetchGroup = "true")
 	private List<Experiment> experiments;
+	
+	@Persistent(defaultFetchGroup = "true")
+	private Experiment activeExperiment;
 
 	// TODO: add this when a View class will be available
 	// @Join
@@ -134,4 +138,18 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	{
 		this.volatileProject=volatileProject;
 	}
+
+	@Override
+	public IExperiment getActiveExperiment()
+	{
+		return this.activeExperiment;
+	}
+
+	@Override
+	public void setActiveExperiment(IExperiment experiment)
+	{
+		this.activeExperiment=(Experiment)experiment;
+	}
+
+	
 }
