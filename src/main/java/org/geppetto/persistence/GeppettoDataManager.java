@@ -259,6 +259,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public Object deleteExperiment(IExperiment experiment)
 	{
+		//everything inside an experiment is cleared automatically thanks to dependent = "true" in the entity configuration
 		dbManager.deleteEntity(experiment);
 		return true;
 	}
@@ -374,9 +375,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IAspectConfiguration newAspectConfiguration(IExperiment experiment, IInstancePath instancePath, ISimulatorConfiguration simulatorConfiguration)
 	{
-		AspectConfiguration aspectConfiguration= new AspectConfiguration((InstancePath)instancePath, new ArrayList<InstancePath>(), new ArrayList<Parameter>(), (SimulatorConfiguration)simulatorConfiguration);
+		AspectConfiguration aspectConfiguration = new AspectConfiguration((InstancePath) instancePath, new ArrayList<InstancePath>(), new ArrayList<Parameter>(),
+				(SimulatorConfiguration) simulatorConfiguration);
 		saveEntity(aspectConfiguration);
-		((Experiment)experiment).getAspectConfigurations().add(aspectConfiguration);
+		((Experiment) experiment).getAspectConfigurations().add(aspectConfiguration);
 		saveEntity(experiment);
 		return aspectConfiguration;
 	}
@@ -384,7 +386,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public ISimulatorConfiguration newSimulatorConfiguration(String simulator, String conversionService, long timestep, long length)
 	{
-		return new SimulatorConfiguration(simulator, conversionService, timestep, length, new HashMap<String,String>());
+		return new SimulatorConfiguration(simulator, conversionService, timestep, length, new HashMap<String, String>());
 	}
 
 }
