@@ -81,6 +81,8 @@ public class Experiment implements Serializable, IExperiment
 
 	private transient IGeppettoProject project;
 
+	private String script;
+
 	public Experiment(List<AspectConfiguration> aspectConfigurations, String name, String description, Date creationDate, Date lastModified, ExperimentStatus status,
 			List<SimulationResult> simulationResults, Date startDate, Date endDate, IGeppettoProject project)
 	{
@@ -240,6 +242,18 @@ public class Experiment implements Serializable, IExperiment
 	public void updateLastModified()
 	{
 		lastModified=new Date();
+	}
+	
+	@Override
+	public String getScript()
+	{
+		return script;
+	}
+
+	@Override
+	public void setScript(String script)
+	{
+		this.script=script;
 	}
 
 }

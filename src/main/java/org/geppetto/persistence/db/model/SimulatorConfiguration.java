@@ -28,7 +28,7 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 	private float length;
 
 	@Join
-	@Persistent(defaultFetchGroup = "true")
+	@Persistent(dependentElement="true",defaultFetchGroup = "true")
 	private Map<String, String> parameters;
 
 	public SimulatorConfiguration(String simulatorId, String conversionServiceId, float timestep, float length, Map<String, String> parameters)

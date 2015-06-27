@@ -42,6 +42,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.data.IGeppettoDataManager;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
@@ -70,6 +72,8 @@ import com.google.gson.Gson;
 
 public class GeppettoDataManager implements IGeppettoDataManager
 {
+
+	private static Log logger = LogFactory.getLog(GeppettoDataManager.class);
 
 	private DBManager dbManager;
 
@@ -234,9 +238,13 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public void addGeppettoProject(IGeppettoProject project, IUser user)
 	{
+		long oldId=project.getId();
+		project.setVolatile(false);
+		dbManager.storeEntity(project);
 		((User) user).getGeppettoProjects().add((GeppettoProject) project);
 		dbManager.storeEntity(user);
-		project.setVolatile(false);
+		projects.remove(oldId);
+		projects.put(project.getId(),(GeppettoProject)project);
 	}
 
 	/*
@@ -259,7 +267,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public Object deleteExperiment(IExperiment experiment)
 	{
-		//everything inside an experiment is cleared automatically thanks to dependent = "true" in the entity configuration
+		// everything inside an experiment is cleared automatically thanks to dependent = "true" in the entity configuration
 		dbManager.deleteEntity(experiment);
 		return true;
 	}
@@ -339,7 +347,14 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public void saveEntity(IGeppettoProject entity)
 	{
-		dbManager.storeEntity(entity);
+		if(!entity.isVolatile())
+		{
+			dbManager.storeEntity(entity);
+		}
+		else
+		{
+			logger.debug("Saving of volatile project " + entity + " attempted, saving not performed, need to use addGeppettoProject instead.");
+		}
 	}
 
 	/*

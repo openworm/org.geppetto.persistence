@@ -63,13 +63,19 @@ public class User implements Serializable, IUser
 
 	private String name;
 
+	@JsonIgnore
 	private long spaceAllowance;
 
+	@JsonIgnore
 	private long simulationTimeAllowance;
 
 	@Join
+	@JsonIgnore
 	@Persistent(defaultFetchGroup = "true")
 	private List<GeppettoProject> geppettoProjects;
+
+	@JsonIgnore
+	private String dropboxToken;
 
 	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects, long spaceAllowance, long simulationTimeAllowance)
 	{
@@ -146,5 +152,18 @@ public class User implements Serializable, IUser
 	{
 		this.simulationTimeAllowance = simulationTimeAllowance;
 	}
+	
+	@Override
+	public String getDropboxToken()
+	{
+		return this.dropboxToken;
+	}
+
+	@Override
+	public void setDropboxToken(String token)
+	{
+		this.dropboxToken=token;
+	}
+
 
 }
