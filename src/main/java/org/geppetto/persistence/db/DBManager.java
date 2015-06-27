@@ -33,6 +33,7 @@
 
 package org.geppetto.persistence.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.FetchGroup;
@@ -84,11 +85,15 @@ public class DBManager
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try
 		{
-			pm.getFetchPlan().setGroup(FetchGroup.ALL);
-			pm.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_GREEDY);
-			pm.getFetchPlan().setMaxFetchDepth(10);
+			pm.getFetchPlan().setMaxFetchDepth(-1);
 			Query query = pm.newQuery(type);
-			return (List<T>) query.execute();
+			List<T> results= (List<T>) query.execute();
+			List<T> entities=new ArrayList<T>();
+			for(T t:results)
+			{
+				entities.add(pm.detachCopy(t));
+			}
+			return entities;
 		}
 		finally
 		{
