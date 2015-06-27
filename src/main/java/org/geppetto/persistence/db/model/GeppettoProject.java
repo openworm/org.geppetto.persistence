@@ -123,11 +123,6 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.geppettoModel = geppettoModel;
 	}
 
-	public int hashCode()
-	{
-		return (GeppettoProject.class.getName()+Float.toString(id)).hashCode();
-	}
-
 	public void setId(long id)
 	{
 		this.id=id;

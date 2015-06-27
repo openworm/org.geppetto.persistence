@@ -227,12 +227,6 @@ public class Experiment implements Serializable, IExperiment
 	}
 
 	@Override
-	public int hashCode()
-	{
-		return (Experiment.class.getName()+Float.toString(id)).hashCode();
-	}
-
-	@Override
 	public void setId(long id)
 	{
 		this.id=id;

@@ -35,13 +35,16 @@ package org.geppetto.persistence.db;
 
 import java.net.MalformedURLException;
 import java.util.Date;
+import java.util.List;
 
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IExperiment;
+import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.core.data.model.IInstancePath;
 import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.ISimulatorConfiguration;
+import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.persistence.GeppettoDataManager;
 import org.geppetto.persistence.db.model.Experiment;
@@ -61,15 +64,19 @@ public class DBManagerTest
 
 	private User user;
 
+	private GeppettoDataManager dataManager;
+
 	public DBManagerTest()
 	{
 		db.setPersistenceManagerFactory(DBTestData.getPersistenceManagerFactory());
-		user = db.findUserByLogin("guest1");
+		dataManager=new GeppettoDataManager();
+		dataManager.setDbManager(db);
 	}
 
 	@Test
 	public void testExperimentCreate()
 	{
+		user = db.findUserByLogin("guest1");
 		GeppettoProject project = user.getGeppettoProjects().get(0);
 		int count = project.getExperiments().size();
 		int allCount = db.getAllEntities(Experiment.class).size();
@@ -100,6 +107,7 @@ public class DBManagerTest
 	@Test
 	public void testSimulatorResultsUpdate() throws MalformedURLException
 	{
+		user = db.findUserByLogin("guest1");
 		Experiment experiment = db.findEntityById(Experiment.class, 1l);
 		Assert.assertEquals(0, experiment.getSimulationResults().size());
 		InstancePath aspect = new InstancePath("hhcell","electrical","");
@@ -125,6 +133,7 @@ public class DBManagerTest
 	@Test
 	public void testExperimentUpdate()
 	{
+		user = db.findUserByLogin("guest1");
 		Experiment experiment = db.findEntityById(Experiment.class, 1l);
 		experiment.setStatus(ExperimentStatus.COMPLETED);
 		db.storeEntity(experiment);
@@ -139,19 +148,43 @@ public class DBManagerTest
 	@Test
 	public void testNewExperiment()
 	{
-		GeppettoDataManager geppettoDataManager=new GeppettoDataManager();
-		geppettoDataManager.setDbManager(db);
+		user = db.findUserByLogin("guest1");
 		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
-		IExperiment experiment = geppettoDataManager.newExperiment("E","D", project);
+		IExperiment experiment = dataManager.newExperiment("E","D", project);
 		Assert.assertNotNull(experiment.getName());
-		IInstancePath instancePath=geppettoDataManager.newInstancePath("entity","aspect","");
-		ISimulatorConfiguration simulatorConfiguration=geppettoDataManager.newSimulatorConfiguration("","",0l,0l);
-		IAspectConfiguration aspectConfiguration=geppettoDataManager.newAspectConfiguration(experiment,instancePath,simulatorConfiguration);
+		IInstancePath instancePath=dataManager.newInstancePath("entity","aspect","");
+		ISimulatorConfiguration simulatorConfiguration=dataManager.newSimulatorConfiguration("","",0l,0l);
+		IAspectConfiguration aspectConfiguration=dataManager.newAspectConfiguration(experiment,instancePath,simulatorConfiguration);
 		Assert.assertNotNull(experiment.getName());
 		Assert.assertTrue(experiment.getAspectConfigurations().contains(aspectConfiguration));
 		Assert.assertEquals(simulatorConfiguration,aspectConfiguration.getSimulatorConfiguration());
 		Assert.assertEquals("aspect",instancePath.getAspect());
-		
+	}
+	
+	@Test
+	public void testMultipleQueriesPart1()
+	{
+		List<? extends IUser> users = dataManager.getAllUsers();
+	}
+	
+	@Test
+	public void testMultipleQueriesPart2()
+	{
+		dataManager.getUserByLogin("guest1");
+		dataManager.getGeppettoProjectsForUser("guest1");
+		IGeppettoProject  project=dataManager.getGeppettoProjectById(3l);
+		IExperiment theExperiment=null;
+		for(IExperiment e : project.getExperiments())
+		{
+			if(e.getId() == 8l)
+			{
+				// The experiment is found
+				theExperiment = e;
+				break;
+			}
+		}
+		theExperiment.getParentProject().setActiveExperimentId(theExperiment.getId());
+		dataManager.saveEntity(theExperiment.getParentProject());
 		
 	}
 }

@@ -74,32 +74,7 @@ public class DBManager
 		pm.close();
 	}
 
-	/**
-	 * Retrieve all entities of a given type.
-	 * 
-	 * @param type
-	 * @return
-	 */
-	public <T> List<T> getAllEntities(Class<T> type)
-	{
-		PersistenceManager pm = pmf.getPersistenceManager();
-		try
-		{
-			pm.getFetchPlan().setMaxFetchDepth(-1);
-			Query query = pm.newQuery(type);
-			List<T> results= (List<T>) query.execute();
-			List<T> entities=new ArrayList<T>();
-			for(T t:results)
-			{
-				entities.add(pm.detachCopy(t));
-			}
-			return entities;
-		}
-		finally
-		{
-			pm.close();
-		}
-	}
+
 
 	/**
 	 * Delete all entities of a given type.
@@ -219,6 +194,34 @@ public class DBManager
 		}
 	}
 
+	
+	/**
+	 * Retrieve all entities of a given type.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public <T> List<T> getAllEntities(Class<T> type)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try
+		{
+			pm.getFetchPlan().setMaxFetchDepth(-1);
+			Query query = pm.newQuery(type);
+			List<T> results= (List<T>) query.execute();
+			List<T> entities=new ArrayList<T>();
+			for(T t:results)
+			{
+				entities.add(pm.detachCopy(t));
+			}
+			return entities;
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
+	
 	/**
 	 * Retrieves an entity of a given type and id.
 	 * 
