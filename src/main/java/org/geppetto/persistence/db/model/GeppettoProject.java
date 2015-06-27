@@ -76,6 +76,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	public GeppettoProject(String name, PersistedData geppettoModel)
 	{
 		super();
+		this.activeExperimentId=-1;
 		this.name = name;
 		this.geppettoModel = geppettoModel;
 
