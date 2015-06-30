@@ -70,9 +70,9 @@ public class InstancePath implements IInstancePath
 		{
 			path += "." + aspect;
 		}
-		if(localInstancePath != null && !localInstancePath.isEmpty())
+		if(getLocalInstancePath() != null && !getLocalInstancePath().isEmpty())
 		{
-			path += "." + localInstancePath;
+			path += "." + getLocalInstancePath();
 		}
 		return path;
 	}

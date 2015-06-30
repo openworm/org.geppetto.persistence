@@ -238,13 +238,13 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public void addGeppettoProject(IGeppettoProject project, IUser user)
 	{
-		long oldId=project.getId();
+		long oldId = project.getId();
 		project.setVolatile(false);
 		dbManager.storeEntity(project);
 		((User) user).getGeppettoProjects().add((GeppettoProject) project);
 		dbManager.storeEntity(user);
 		projects.remove(oldId);
-		projects.put(project.getId(),(GeppettoProject)project);
+		projects.put(project.getId(), (GeppettoProject) project);
 	}
 
 	/*
@@ -402,6 +402,12 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	public ISimulatorConfiguration newSimulatorConfiguration(String simulator, String conversionService, long timestep, long length)
 	{
 		return new SimulatorConfiguration(simulator, conversionService, timestep, length, new HashMap<String, String>());
+	}
+
+	@Override
+	public void addWatchedVariable(IAspectConfiguration aspectConfiguration, IInstancePath instancePath)
+	{
+		((AspectConfiguration) aspectConfiguration).getWatchedVariables().add((InstancePath) instancePath);
 	}
 
 }
