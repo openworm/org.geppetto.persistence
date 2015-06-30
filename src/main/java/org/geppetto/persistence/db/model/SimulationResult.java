@@ -42,6 +42,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.ISimulationResult;
+import org.geppetto.core.data.model.ResultsFormat;
 
 @PersistenceCapable(detachable = "true")
 public class SimulationResult implements Serializable, ISimulationResult
@@ -53,18 +54,21 @@ public class SimulationResult implements Serializable, ISimulationResult
 	private long id;
 
 	@Column(name = "aspect_id")
-	@Persistent(dependent="true", defaultFetchGroup = "true")
+	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private InstancePath aspect;
 
 	@Column(name = "result_id")
-	@Persistent(dependent="true", defaultFetchGroup = "true")
+	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private PersistedData result;
 
-	public SimulationResult(InstancePath aspect, PersistedData result)
+	private ResultsFormat format;
+
+	public SimulationResult(InstancePath aspect, PersistedData result, ResultsFormat format)
 	{
 		super();
 		this.aspect = aspect;
 		this.result = result;
+		this.format = format;
 	}
 
 	public long getId()
@@ -96,6 +100,12 @@ public class SimulationResult implements Serializable, ISimulationResult
 	public void setId(long id)
 	{
 		this.id = id;
+	}
+
+	@Override
+	public ResultsFormat getFormat()
+	{
+		return this.format;
 	}
 
 }

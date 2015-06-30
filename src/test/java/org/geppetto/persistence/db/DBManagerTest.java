@@ -46,6 +46,7 @@ import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
+import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.persistence.GeppettoDataManager;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
@@ -112,7 +113,7 @@ public class DBManagerTest
 		Assert.assertEquals(0, experiment.getSimulationResults().size());
 		InstancePath aspect = new InstancePath("hhcell","electrical","");
 		PersistedData recording = new PersistedData("http://testURL", PersistedDataType.RECORDING);
-		ISimulationResult results = new SimulationResult(aspect, recording);
+		ISimulationResult results = new SimulationResult(aspect, recording,ResultsFormat.GEPPETTO_RECORDING);
 		db.storeEntity(results);
 		experiment.addSimulationResult(results);
 		Assert.assertEquals(results, experiment.getSimulationResults().get(0));

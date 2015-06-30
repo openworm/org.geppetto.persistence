@@ -49,6 +49,7 @@ import javax.jdo.PersistenceManagerFactory;
 import org.geppetto.core.beans.Settings;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.PersistedDataType;
+import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
@@ -137,7 +138,7 @@ public class DBTestData
 		sc2.getParameters().put("target", "net1");
 		aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables2, null, sc2));
 		List<SimulationResult> simulationResults2 = new ArrayList<>();
-		simulationResults2.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(path + "results.h5", PersistedDataType.RECORDING)));
+		simulationResults2.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(path + "results.h5", PersistedDataType.RECORDING),ResultsFormat.GEPPETTO_RECORDING));
 		Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project);
 
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();

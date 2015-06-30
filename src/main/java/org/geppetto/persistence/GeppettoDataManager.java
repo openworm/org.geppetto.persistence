@@ -56,6 +56,7 @@ import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
+import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
@@ -370,9 +371,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	}
 
 	@Override
-	public ISimulationResult newSimulationResult(IInstancePath parameterPath, IPersistedData results)
+	public ISimulationResult newSimulationResult(IInstancePath parameterPath, IPersistedData results, ResultsFormat format)
 	{
-		return new SimulationResult((InstancePath) parameterPath, (PersistedData) results);
+		return new SimulationResult((InstancePath) parameterPath, (PersistedData) results, format);
 	}
 
 	@Override
