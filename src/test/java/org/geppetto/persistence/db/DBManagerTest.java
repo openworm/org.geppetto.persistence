@@ -34,19 +34,24 @@
 package org.geppetto.persistence.db;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import org.geppetto.core.beans.Settings;
+import org.geppetto.core.data.DataManagerHelper;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.core.data.model.IInstancePath;
+import org.geppetto.core.data.model.IPersistedData;
 import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
+import org.geppetto.core.s3.S3Manager;
 import org.geppetto.persistence.GeppettoDataManager;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
@@ -70,7 +75,7 @@ public class DBManagerTest
 	public DBManagerTest()
 	{
 		db.setPersistenceManagerFactory(DBTestData.getPersistenceManagerFactory());
-		dataManager=new GeppettoDataManager();
+		dataManager = new GeppettoDataManager();
 		dataManager.setDbManager(db);
 	}
 
@@ -84,7 +89,7 @@ public class DBManagerTest
 		Experiment experiment = new Experiment(null, "test exp", "test exp", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 		project.getExperiments().add(experiment);
 		db.storeEntity(project);
-		
+
 		project = db.findEntityById(GeppettoProject.class, project.getId());
 		Assert.assertEquals(count + 1, project.getExperiments().size());
 		Assert.assertEquals(allCount + 1, db.getAllEntities(Experiment.class).size());
@@ -104,16 +109,16 @@ public class DBManagerTest
 		Assert.assertEquals(count, project.getExperiments().size());
 		Assert.assertEquals(allCount, db.getAllEntities(Experiment.class).size());
 	}
-	
+
 	@Test
 	public void testSimulatorResultsUpdate() throws MalformedURLException
 	{
 		user = db.findUserByLogin("guest1");
 		Experiment experiment = db.findEntityById(Experiment.class, 1l);
 		Assert.assertEquals(0, experiment.getSimulationResults().size());
-		InstancePath aspect = new InstancePath("hhcell","electrical","");
+		InstancePath aspect = new InstancePath("hhcell", "electrical", "");
 		PersistedData recording = new PersistedData("http://testURL", PersistedDataType.RECORDING);
-		ISimulationResult results = new SimulationResult(aspect, recording,ResultsFormat.GEPPETTO_RECORDING);
+		ISimulationResult results = new SimulationResult(aspect, recording, ResultsFormat.GEPPETTO_RECORDING);
 		db.storeEntity(results);
 		experiment.addSimulationResult(results);
 		Assert.assertEquals(results, experiment.getSimulationResults().get(0));
@@ -130,7 +135,7 @@ public class DBManagerTest
 		db.storeEntity(experiment);
 		Assert.assertEquals(0, experiment.getSimulationResults().size());
 	}
-	
+
 	@Test
 	public void testExperimentUpdate()
 	{
@@ -145,36 +150,36 @@ public class DBManagerTest
 		experiment = db.findEntityById(Experiment.class, 1l);
 		Assert.assertEquals(ExperimentStatus.DESIGN, experiment.getStatus());
 	}
-	
+
 	@Test
 	public void testNewExperiment()
 	{
 		user = db.findUserByLogin("guest1");
 		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
-		IExperiment experiment = dataManager.newExperiment("E","D", project);
+		IExperiment experiment = dataManager.newExperiment("E", "D", project);
 		Assert.assertNotNull(experiment.getName());
-		IInstancePath instancePath=dataManager.newInstancePath("entity","aspect","");
-		ISimulatorConfiguration simulatorConfiguration=dataManager.newSimulatorConfiguration("","",0l,0l);
-		IAspectConfiguration aspectConfiguration=dataManager.newAspectConfiguration(experiment,instancePath,simulatorConfiguration);
+		IInstancePath instancePath = dataManager.newInstancePath("entity", "aspect", "");
+		ISimulatorConfiguration simulatorConfiguration = dataManager.newSimulatorConfiguration("", "", 0l, 0l);
+		IAspectConfiguration aspectConfiguration = dataManager.newAspectConfiguration(experiment, instancePath, simulatorConfiguration);
 		Assert.assertNotNull(experiment.getName());
 		Assert.assertTrue(experiment.getAspectConfigurations().contains(aspectConfiguration));
-		Assert.assertEquals(simulatorConfiguration,aspectConfiguration.getSimulatorConfiguration());
-		Assert.assertEquals("aspect",instancePath.getAspect());
+		Assert.assertEquals(simulatorConfiguration, aspectConfiguration.getSimulatorConfiguration());
+		Assert.assertEquals("aspect", instancePath.getAspect());
 	}
-	
+
 	@Test
 	public void testMultipleQueriesPart1()
 	{
 		List<? extends IUser> users = dataManager.getAllUsers();
 	}
-	
+
 	@Test
 	public void testMultipleQueriesPart2()
 	{
 		dataManager.getUserByLogin("guest1");
 		dataManager.getGeppettoProjectsForUser("guest1");
-		IGeppettoProject  project=dataManager.getGeppettoProjectById(3l);
-		IExperiment theExperiment=null;
+		IGeppettoProject project = dataManager.getGeppettoProjectById(3l);
+		IExperiment theExperiment = null;
 		for(IExperiment e : project.getExperiments())
 		{
 			if(e.getId() == 8l)
@@ -186,6 +191,23 @@ public class DBManagerTest
 		}
 		theExperiment.getParentProject().setActiveExperimentId(theExperiment.getId());
 		dataManager.saveEntity(theExperiment.getParentProject());
-		
+
+	}
+
+	@Test
+	public void testNPEOnGetInstancePath() throws MalformedURLException
+	{
+		user = db.findUserByLogin("guest1");
+		IGeppettoProject project=dataManager.getGeppettoProjectById(1l);
+		IExperiment experiment = project.getExperiments().get(1);
+		for(int i = 0; i < 10; i++)
+		{
+			URL result = new URL("http://org.geppetto.bucket.s3.amazonaws.com/projects/1/results.h5");
+			IInstancePath aspect = dataManager.newInstancePath("hhcell", "electrical", "");
+			IPersistedData recording = dataManager.newPersistedData(result, PersistedDataType.RECORDING);
+			ISimulationResult simulationResults = dataManager.newSimulationResult(aspect, recording, ResultsFormat.GEPPETTO_RECORDING);
+			experiment.addSimulationResult(simulationResults);
+			dataManager.saveEntity(experiment.getParentProject());
+		}
 	}
 }
