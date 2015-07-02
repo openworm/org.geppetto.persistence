@@ -148,12 +148,11 @@ public class DBTestData
 		watchedVariables3.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
 		watchedVariables3.add(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
 		List<Parameter> modelParameters3 = new ArrayList<>();
-		modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"), "0"));
-		modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical.SimulationTree", "hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"), "0"));
+		modelParameters3.add(new Parameter(new InstancePath("hhcell", "electrical.ModelTree", "pulseGen1.Amplitude"), "0.2"));
 		SimulatorConfiguration sc3 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc3.getParameters().put("target", "net1");
 		aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables3, modelParameters3, sc3));
-		Experiment exp3 = new Experiment(aspectConfigurations3, "Experiment with parameters", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp3 = new Experiment(aspectConfigurations3, "Higher input current", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
