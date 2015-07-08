@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
@@ -63,6 +64,7 @@ public class Experiment implements Serializable, IExperiment
 
 	private String name;
 
+	@Column(length=1000)
 	private String description;
 
 	private Date creationDate;

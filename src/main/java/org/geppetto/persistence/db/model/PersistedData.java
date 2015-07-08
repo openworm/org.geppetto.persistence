@@ -73,11 +73,6 @@ public class PersistedData implements Serializable, IPersistedData
 		return url;
 	}
 
-	public void setUrl(String url)
-	{
-		this.url = url;
-	}
-
 	public PersistedDataType getType()
 	{
 		return type;
