@@ -38,8 +38,6 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
-import org.geppetto.core.beans.Settings;
-import org.geppetto.core.data.DataManagerHelper;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IExperiment;
@@ -51,7 +49,6 @@ import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
-import org.geppetto.core.s3.S3Manager;
 import org.geppetto.persistence.GeppettoDataManager;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;

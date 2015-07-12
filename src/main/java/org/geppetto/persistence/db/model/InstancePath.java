@@ -80,7 +80,7 @@ public class InstancePath implements IInstancePath
 	@Override
 	public void setId(long id)
 	{
-		this.id=id;
+		this.id = id;
 	}
 
 }

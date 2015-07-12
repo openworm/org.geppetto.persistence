@@ -41,7 +41,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import org.eclipse.osgi.internal.loader.buddy.DependentPolicy;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IParameter;
 
@@ -65,7 +64,7 @@ public class AspectConfiguration implements IAspectConfiguration
 	private List<Parameter> modelParameters;
 
 	@Column(name = "simulatorconfiguration_id")
-	@Persistent(dependent = "true",defaultFetchGroup = "true")
+	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private SimulatorConfiguration simulatorConfiguration;
 
 	public AspectConfiguration(InstancePath aspect, List<InstancePath> watchedVariables, List<Parameter> modelParameter, SimulatorConfiguration simulatorConfiguration)
@@ -118,13 +117,13 @@ public class AspectConfiguration implements IAspectConfiguration
 
 	public void setAspect(InstancePath aspect)
 	{
-		this.aspect=aspect;		
+		this.aspect = aspect;
 	}
 
 	@Override
 	public void setId(long id)
 	{
-		this.id=id;		
+		this.id = id;
 	}
 
 }

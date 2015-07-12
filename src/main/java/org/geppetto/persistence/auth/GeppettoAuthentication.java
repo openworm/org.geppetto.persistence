@@ -41,7 +41,6 @@ import org.springframework.stereotype.Service;
 public class GeppettoAuthentication implements IAuthService
 {
 
-
 	@Override
 	public String authFailureRedirect()
 	{
@@ -70,13 +69,13 @@ public class GeppettoAuthentication implements IAuthService
 	@Override
 	public void setUser(IUser user)
 	{
-		//TODO User is stored at the moment in the GeppettoManager, it would make more sense to probably have it here
+		// TODO User is stored at the moment in the GeppettoManager, it would make more sense to probably have it here
 	}
 
 	@Override
 	public IUser getUser()
 	{
-		//TODO User is stored at the moment in the GeppettoManager, it would make more sense to probably have it here
+		// TODO User is stored at the moment in the GeppettoManager, it would make more sense to probably have it here
 		return null;
 	}
 

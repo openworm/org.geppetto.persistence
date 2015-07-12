@@ -46,7 +46,7 @@ import java.util.Map;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
 
-import org.geppetto.core.beans.Settings;
+import org.geppetto.core.beans.PathConfiguration;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
@@ -72,7 +72,7 @@ public class DBTestData
 		dbManager = new DBManager();
 		dbManager.setPersistenceManagerFactory(getPersistenceManagerFactory());
 		long value = 1000l * 1000 * 1000;
-		user = new User("guest1", "guest", "Guest user",new ArrayList<GeppettoProject>(), value, 2 * value);
+		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>(), value, 2 * value);
 		dbManager.storeEntity(user);
 	}
 
@@ -87,7 +87,7 @@ public class DBTestData
 		dbConnProperties.put("datanucleus.connection2.resourceType", "RESOURCE_LOCAL");
 		dbConnProperties.put("datanucleus.autoCreateSchema", "true");
 		dbConnProperties.put("datanucleus.autoCreateColumns", "true");
-		File dbConnFile = new File(Settings.SETTINGS_DIR + "/db.properties");
+		File dbConnFile = new File(PathConfiguration.settingsFolder + "/db.properties");
 		try
 		{
 			List<String> lines = Files.readAllLines(dbConnFile.toPath(), Charset.defaultCharset());
@@ -111,7 +111,7 @@ public class DBTestData
 	private void buildDemoProject(String name)
 	{
 		String path = "http://org.geppetto.bucket.s3.amazonaws.com/projects/1/";
-		user=dbManager.findUserByLogin("guest1");
+		user = dbManager.findUserByLogin("guest1");
 		List<GeppettoProject> projects = user.getGeppettoProjects();
 
 		PersistedData geppettoModel = new PersistedData(path + "GEPPETTO.xml", PersistedDataType.GEPPETTO_PROJECT);
@@ -138,7 +138,8 @@ public class DBTestData
 		sc2.getParameters().put("target", "net1");
 		aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell", "electrical", ""), watchedVariables2, null, sc2));
 		List<SimulationResult> simulationResults2 = new ArrayList<>();
-		simulationResults2.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(path + "results.h5", PersistedDataType.RECORDING),ResultsFormat.GEPPETTO_RECORDING));
+		simulationResults2
+				.add(new SimulationResult(new InstancePath("hhcell", "electrical", ""), new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
 		Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project);
 
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();

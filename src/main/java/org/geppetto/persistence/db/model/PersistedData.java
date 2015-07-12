@@ -88,11 +88,11 @@ public class PersistedData implements Serializable, IPersistedData
 	{
 		this.id = id;
 	}
-	
+
 	@Override
 	public void setURL(String url)
 	{
-		this.url=url;
+		this.url = url;
 	}
 
 }
