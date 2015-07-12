@@ -36,8 +36,6 @@ package org.geppetto.persistence.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.FetchGroup;
-import javax.jdo.FetchPlan;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -73,8 +71,6 @@ public class DBManager
 		pm.makePersistent(entity);
 		pm.close();
 	}
-
-
 
 	/**
 	 * Delete all entities of a given type.
@@ -194,7 +190,6 @@ public class DBManager
 		}
 	}
 
-	
 	/**
 	 * Retrieve all entities of a given type.
 	 * 
@@ -208,9 +203,9 @@ public class DBManager
 		{
 			pm.getFetchPlan().setMaxFetchDepth(-1);
 			Query query = pm.newQuery(type);
-			List<T> results= (List<T>) query.execute();
-			List<T> entities=new ArrayList<T>();
-			for(T t:results)
+			List<T> results = (List<T>) query.execute();
+			List<T> entities = new ArrayList<T>();
+			for(T t : results)
 			{
 				entities.add(pm.detachCopy(t));
 			}
@@ -221,7 +216,7 @@ public class DBManager
 			pm.close();
 		}
 	}
-	
+
 	/**
 	 * Retrieves an entity of a given type and id.
 	 * 

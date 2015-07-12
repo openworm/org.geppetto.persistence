@@ -64,7 +64,7 @@ public class Experiment implements Serializable, IExperiment
 
 	private String name;
 
-	@Column(length=1000)
+	@Column(length = 1000)
 	private String description;
 
 	private Date creationDate;
@@ -231,15 +231,15 @@ public class Experiment implements Serializable, IExperiment
 	@Override
 	public void setId(long id)
 	{
-		this.id=id;
+		this.id = id;
 	}
 
 	@Override
 	public void updateLastModified()
 	{
-		lastModified=new Date();
+		lastModified = new Date();
 	}
-	
+
 	@Override
 	public String getScript()
 	{
@@ -249,7 +249,7 @@ public class Experiment implements Serializable, IExperiment
 	@Override
 	public void setScript(String script)
 	{
-		this.script=script;
+		this.script = script;
 	}
 
 }

@@ -21,14 +21,14 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 
 	private String conversionServiceId;
 
-	//TODO: We are using SI units but in the future we should add scaling factor
+	// TODO: We are using SI units but in the future we should add scaling factor
 	private float timestep;
 
-	//TODO: We are using SI units but in the future we should add scaling factor
+	// TODO: We are using SI units but in the future we should add scaling factor
 	private float length;
 
 	@Join
-	@Persistent(dependentElement="true",defaultFetchGroup = "true")
+	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
 	private Map<String, String> parameters;
 
 	public SimulatorConfiguration(String simulatorId, String conversionServiceId, float timestep, float length, Map<String, String> parameters)
@@ -75,7 +75,7 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 	{
 		this.timestep = timestep;
 	}
-	
+
 	public float getLength()
 	{
 		return length;
@@ -99,7 +99,7 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 	@Override
 	public void setId(long id)
 	{
-		this.id=id;
+		this.id = id;
 	}
 
 }

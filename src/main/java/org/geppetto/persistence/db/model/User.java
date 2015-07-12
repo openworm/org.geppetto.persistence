@@ -152,7 +152,7 @@ public class User implements Serializable, IUser
 	{
 		this.simulationTimeAllowance = simulationTimeAllowance;
 	}
-	
+
 	@Override
 	public String getDropboxToken()
 	{
@@ -162,8 +162,7 @@ public class User implements Serializable, IUser
 	@Override
 	public void setDropboxToken(String token)
 	{
-		this.dropboxToken=token;
+		this.dropboxToken = token;
 	}
-
 
 }

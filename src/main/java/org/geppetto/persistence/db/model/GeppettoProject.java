@@ -55,11 +55,11 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	private long id;
 
 	private String name;
-	
+
 	@Join
-	@Persistent(dependentElement="true",defaultFetchGroup = "true")
+	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
 	private List<Experiment> experiments;
-	
+
 	private long activeExperimentId;
 
 	// TODO: add this when a View class will be available
@@ -68,15 +68,15 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	// private List<View> views;
 
 	@Column(name = "persisteddata_id")
-	@Persistent(dependent = "true",defaultFetchGroup = "true")
+	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private PersistedData geppettoModel;
 
 	private transient boolean volatileProject;
-	
+
 	public GeppettoProject(String name, PersistedData geppettoModel)
 	{
 		super();
-		this.activeExperimentId=-1;
+		this.activeExperimentId = -1;
 		this.name = name;
 		this.geppettoModel = geppettoModel;
 
@@ -85,7 +85,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	public GeppettoProject()
 	{
 		super();
-		this.activeExperimentId=-1;
+		this.activeExperimentId = -1;
 	}
 
 	public long getId()
@@ -125,7 +125,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 
 	public void setId(long id)
 	{
-		this.id=id;
+		this.id = id;
 	}
 
 	@Override
@@ -133,11 +133,11 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	{
 		return this.volatileProject;
 	}
-	
+
 	@Override
 	public void setVolatile(boolean volatileProject)
 	{
-		this.volatileProject=volatileProject;
+		this.volatileProject = volatileProject;
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	@Override
 	public void setActiveExperimentId(long experimentId)
 	{
-		this.activeExperimentId=experimentId;
+		this.activeExperimentId = experimentId;
 	}
-	
+
 }

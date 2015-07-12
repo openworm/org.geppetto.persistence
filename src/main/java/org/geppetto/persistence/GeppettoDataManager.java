@@ -240,10 +240,34 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	public void addGeppettoProject(IGeppettoProject project, IUser user)
 	{
 		long oldId = project.getId();
+		long oldActiveExperimentId = project.getActiveExperimentId();
+		String activeExperimentName = null;
+		if(oldActiveExperimentId != -1)
+		{
+			for(IExperiment e : project.getExperiments())
+			{
+				if(e.getId() == oldActiveExperimentId)
+				{
+					activeExperimentName = e.getName();
+					break;
+				}
+			}
+		}
 		project.setVolatile(false);
 		dbManager.storeEntity(project);
 		((User) user).getGeppettoProjects().add((GeppettoProject) project);
 		dbManager.storeEntity(user);
+		if(activeExperimentName != null)
+		{
+			for(IExperiment e : project.getExperiments())
+			{
+				if(e.getName().equals(activeExperimentName))
+				{
+					project.setActiveExperimentId(e.getId());
+					break;
+				}
+			}
+		}
 		projects.remove(oldId);
 		projects.put(project.getId(), (GeppettoProject) project);
 	}
