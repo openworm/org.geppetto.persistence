@@ -43,7 +43,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IParameter;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class Parameter implements Serializable, IParameter
 {
 	private static final long serialVersionUID = 1;
@@ -53,7 +53,7 @@ public class Parameter implements Serializable, IParameter
 	private long id;
 
 	@Column(name = "variable_id")
-	@Persistent(dependent = "true")
+	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private InstancePath variable;
 
 	private String value;

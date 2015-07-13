@@ -7,7 +7,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IInstancePath;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class InstancePath implements IInstancePath
 {
 	@PrimaryKey
@@ -70,11 +70,17 @@ public class InstancePath implements IInstancePath
 		{
 			path += "." + aspect;
 		}
-		if(localInstancePath != null && !localInstancePath.isEmpty())
+		if(getLocalInstancePath() != null && !getLocalInstancePath().isEmpty())
 		{
-			path += "." + localInstancePath;
+			path += "." + getLocalInstancePath();
 		}
 		return path;
+	}
+
+	@Override
+	public void setId(long id)
+	{
+		this.id = id;
 	}
 
 }

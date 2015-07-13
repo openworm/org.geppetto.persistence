@@ -43,7 +43,7 @@ import javax.jdo.annotations.PrimaryKey;
 import org.geppetto.core.data.model.IPersistedData;
 import org.geppetto.core.data.model.PersistedDataType;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class PersistedData implements Serializable, IPersistedData
 {
 	private static final long serialVersionUID = 1;
@@ -73,11 +73,6 @@ public class PersistedData implements Serializable, IPersistedData
 		return url;
 	}
 
-	public void setUrl(String url)
-	{
-		this.url = url;
-	}
-
 	public PersistedDataType getType()
 	{
 		return type;
@@ -86,6 +81,18 @@ public class PersistedData implements Serializable, IPersistedData
 	public void setType(PersistedDataType type)
 	{
 		this.type = type;
+	}
+
+	@Override
+	public void setId(long id)
+	{
+		this.id = id;
+	}
+
+	@Override
+	public void setURL(String url)
+	{
+		this.url = url;
 	}
 
 }

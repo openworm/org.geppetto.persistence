@@ -3,13 +3,14 @@ package org.geppetto.persistence.db.model;
 import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class SimulatorConfiguration implements ISimulatorConfiguration
 {
 	@PrimaryKey
@@ -20,16 +21,23 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 
 	private String conversionServiceId;
 
+	// TODO: We are using SI units but in the future we should add scaling factor
 	private float timestep;
 
+	// TODO: We are using SI units but in the future we should add scaling factor
+	private float length;
+
+	@Join
+	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
 	private Map<String, String> parameters;
 
-	public SimulatorConfiguration(String simulatorId, String conversionServiceId, float timestep, Map<String, String> parameters)
+	public SimulatorConfiguration(String simulatorId, String conversionServiceId, float timestep, float length, Map<String, String> parameters)
 	{
 		super();
 		this.simulatorId = simulatorId;
 		this.conversionServiceId = conversionServiceId;
 		this.timestep = timestep;
+		this.length = length;
 		this.parameters = parameters;
 	}
 
@@ -68,6 +76,16 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 		this.timestep = timestep;
 	}
 
+	public float getLength()
+	{
+		return length;
+	}
+
+	public void setLength(float length)
+	{
+		this.length = length;
+	}
+
 	public Map<String, String> getParameters()
 	{
 		return parameters;
@@ -76,6 +94,12 @@ public class SimulatorConfiguration implements ISimulatorConfiguration
 	public void setParameters(Map<String, String> parameters)
 	{
 		this.parameters = parameters;
+	}
+
+	@Override
+	public void setId(long id)
+	{
+		this.id = id;
 	}
 
 }

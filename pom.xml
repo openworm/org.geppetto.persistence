@@ -4,7 +4,7 @@
 	<groupId>org.geppetto</groupId>
 	<artifactId>persistence</artifactId>
 	<name>Geppetto Persistence Bundle</name>
-	<version>0.2.3</version>
+	<version>0.2.4</version>
 	<packaging>bundle</packaging>
 	<properties>
 		<spring.version>3.1.3.RELEASE</spring.version>
@@ -149,12 +149,6 @@
 			<artifactId>com.springsource.com.mysql.jdbc</artifactId>
 			<version>5.1.6</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.apache.servicemix.bundles</groupId>
-			<artifactId>org.apache.servicemix.bundles.aws-java-sdk</artifactId>
-			<version>1.8.3_2</version>
-		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -252,6 +246,7 @@
 							{maven-resources},META-INF/spring=src/main/java/META-INF/spring
 						</Include-Resource>
 						<Import-Package>
+							org.geppetto.core.model.runtime,
 							org.geppetto.core.auth,
 							org.apache.commons.logging,
 							org.osgi.framework,
@@ -289,14 +284,21 @@
 							org.apache.http.protocol,
 							org.aopalliance.aop,org.springframework.aop,,org.springframework.aop.scope,org.springframework.aop.framework,*
 						</Import-Package>
-						<DynamicImport-Package>
-							com.amazonaws.http.conn,
-							org.apache.http.conn.routing
-						</DynamicImport-Package>
 					</instructions>
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.15</version>
+				<configuration>
+					<excludes>
+						<exclude>**/DBManagerTest.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			
 			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>datanucleus-maven-plugin</artifactId>

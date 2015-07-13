@@ -33,10 +33,9 @@
 
 package org.geppetto.persistence.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.FetchGroup;
-import javax.jdo.FetchPlan;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -44,7 +43,7 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geppetto.core.data.model.IEntity;
+import org.geppetto.core.data.model.IDataEntity;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.User;
@@ -61,47 +60,23 @@ public class DBManager
 		this.pmf = pmf;
 	}
 
+	/**
+	 * Save or update an entity to the DB.
+	 * 
+	 * @param entity
+	 */
 	public <T> void storeEntity(T entity)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
-		Transaction tx = pm.currentTransaction();
-		try
-		{
-			tx.begin();
-			pm.makePersistent(entity);
-			tx.commit();
-		}
-		catch(Exception e)
-		{
-			_logger.warn("Could not store data", e);
-		}
-		finally
-		{
-			if(tx.isActive())
-			{
-				tx.rollback();
-			}
-			pm.close();
-		}
+		pm.makePersistent(entity);
+		pm.close();
 	}
 
-	public <T> List<T> getAllEntities(Class<T> type)
-	{
-		PersistenceManager pm = pmf.getPersistenceManager();
-		try
-		{
-			pm.getFetchPlan().setGroup(FetchGroup.ALL);
-			pm.getFetchPlan().setFetchSize(FetchPlan.FETCH_SIZE_GREEDY);
-			pm.getFetchPlan().setMaxFetchDepth(10);
-			Query query = pm.newQuery(type);
-			return (List<T>) query.execute();
-		}
-		finally
-		{
-			pm.close();
-		}
-	}
-
+	/**
+	 * Delete all entities of a given type.
+	 * 
+	 * @param type
+	 */
 	public <T> void deleteAllEntities(Class<T> type)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
@@ -128,6 +103,12 @@ public class DBManager
 		}
 	}
 
+	/**
+	 * Delete a project identified by id and user.
+	 * 
+	 * @param id
+	 * @param user
+	 */
 	public void deleteProject(long id, IUser user)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
@@ -171,7 +152,12 @@ public class DBManager
 		}
 	}
 
-	public void deleteEntity(IEntity entity)
+	/**
+	 * Delete the provided entity from DB.
+	 * 
+	 * @param entity
+	 */
+	public void deleteEntity(IDataEntity entity)
 	{
 		PersistenceManager pm = pmf.getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
@@ -182,7 +168,7 @@ public class DBManager
 			Query query = pm.newQuery(entity.getClass());
 			query.setFilter("id == searchedId");
 			query.declareParameters("int searchedId");
-			List<IEntity> entities = (List<IEntity>) query.execute(entity.getId());
+			List<IDataEntity> entities = (List<IDataEntity>) query.execute(entity.getId());
 			if(entities.size() > 0)
 			{
 				entity = entities.get(0);
@@ -205,6 +191,35 @@ public class DBManager
 	}
 
 	/**
+	 * Retrieve all entities of a given type.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public <T> List<T> getAllEntities(Class<T> type)
+	{
+		PersistenceManager pm = pmf.getPersistenceManager();
+		try
+		{
+			pm.getFetchPlan().setMaxFetchDepth(-1);
+			Query query = pm.newQuery(type);
+			List<T> results = (List<T>) query.execute();
+			List<T> entities = new ArrayList<T>();
+			for(T t : results)
+			{
+				entities.add(pm.detachCopy(t));
+			}
+			return entities;
+		}
+		finally
+		{
+			pm.close();
+		}
+	}
+
+	/**
+	 * Retrieves an entity of a given type and id.
+	 * 
 	 * @param type
 	 * @param id
 	 * @return
@@ -214,8 +229,16 @@ public class DBManager
 		PersistenceManager pm = pmf.getPersistenceManager();
 		try
 		{
-			T o=(T)pm.getObjectById(type,id);
-			return o;
+			pm.getFetchPlan().setMaxFetchDepth(-1);
+			Query query = pm.newQuery(type);
+			query.setFilter("id == searchedId");
+			query.declareParameters("int searchedId");
+			List<T> entities = (List<T>) query.execute(id);
+			if(entities.size() > 0)
+			{
+				return pm.detachCopy(entities.get(0));
+			}
+			return null;
 		}
 		catch(Exception e)
 		{
@@ -229,6 +252,7 @@ public class DBManager
 
 	/**
 	 * Fetches a user from the database
+	 * 
 	 * @param login
 	 * @return
 	 */

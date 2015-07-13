@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
@@ -48,7 +49,7 @@ import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.core.data.model.ISimulationResult;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class Experiment implements Serializable, IExperiment
 {
 	private static final long serialVersionUID = 1L;
@@ -58,11 +59,12 @@ public class Experiment implements Serializable, IExperiment
 	private long id;
 
 	@Join
-	@Persistent(defaultFetchGroup = "true")
+	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
 	private List<AspectConfiguration> aspectConfigurations;
 
 	private String name;
 
+	@Column(length = 1000)
 	private String description;
 
 	private Date creationDate;
@@ -72,7 +74,7 @@ public class Experiment implements Serializable, IExperiment
 	private ExperimentStatus status;
 
 	@Join
-	@Persistent(defaultFetchGroup = "true")
+	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
 	private List<SimulationResult> simulationResults;
 
 	private Date startDate;
@@ -80,6 +82,8 @@ public class Experiment implements Serializable, IExperiment
 	private Date endDate;
 
 	private transient IGeppettoProject project;
+
+	private String script;
 
 	public Experiment(List<AspectConfiguration> aspectConfigurations, String name, String description, Date creationDate, Date lastModified, ExperimentStatus status,
 			List<SimulationResult> simulationResults, Date startDate, Date endDate, IGeppettoProject project)
@@ -215,6 +219,37 @@ public class Experiment implements Serializable, IExperiment
 	public void setParentProject(IGeppettoProject project)
 	{
 		this.project = project;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		Experiment other = (Experiment) o;
+		return id == other.id;
+	}
+
+	@Override
+	public void setId(long id)
+	{
+		this.id = id;
+	}
+
+	@Override
+	public void updateLastModified()
+	{
+		lastModified = new Date();
+	}
+
+	@Override
+	public String getScript()
+	{
+		return script;
+	}
+
+	@Override
+	public void setScript(String script)
+	{
+		this.script = script;
 	}
 
 }

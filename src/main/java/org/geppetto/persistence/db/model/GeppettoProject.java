@@ -45,7 +45,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IGeppettoProject;
 
-@PersistenceCapable
+@PersistenceCapable(detachable = "true")
 public class GeppettoProject implements Serializable, IGeppettoProject
 {
 	private static final long serialVersionUID = 1L;
@@ -57,8 +57,10 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	private String name;
 
 	@Join
-	@Persistent(defaultFetchGroup = "true")
+	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
 	private List<Experiment> experiments;
+
+	private long activeExperimentId;
 
 	// TODO: add this when a View class will be available
 	// @Join
@@ -66,14 +68,24 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	// private List<View> views;
 
 	@Column(name = "persisteddata_id")
-	@Persistent(dependent = "true",defaultFetchGroup = "true")
+	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private PersistedData geppettoModel;
+
+	private transient boolean volatileProject;
 
 	public GeppettoProject(String name, PersistedData geppettoModel)
 	{
 		super();
+		this.activeExperimentId = -1;
 		this.name = name;
 		this.geppettoModel = geppettoModel;
+
+	}
+
+	public GeppettoProject()
+	{
+		super();
+		this.activeExperimentId = -1;
 	}
 
 	public long getId()
@@ -111,13 +123,33 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.geppettoModel = geppettoModel;
 	}
 
-	public boolean equals(Object obj)
+	public void setId(long id)
 	{
-		return id == ((GeppettoProject) obj).id;
+		this.id = id;
 	}
 
-	public int hashCode()
+	@Override
+	public boolean isVolatile()
 	{
-		return name.hashCode();
+		return this.volatileProject;
 	}
+
+	@Override
+	public void setVolatile(boolean volatileProject)
+	{
+		this.volatileProject = volatileProject;
+	}
+
+	@Override
+	public long getActiveExperimentId()
+	{
+		return this.activeExperimentId;
+	}
+
+	@Override
+	public void setActiveExperimentId(long experimentId)
+	{
+		this.activeExperimentId = experimentId;
+	}
+
 }
