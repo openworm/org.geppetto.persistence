@@ -141,11 +141,15 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		if(!projects.containsKey(id))
 		{
 			GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, id);
-			for(Experiment e : project.getExperiments())
-			{
-				e.setParentProject(project);
+			if(project!=null){
+				for(Experiment e : project.getExperiments())
+				{
+					if(e !=null){
+						e.setParentProject(project);
+					}
+				}
+				projects.put(id, project);
 			}
-			projects.put(id, project);
 		}
 		return projects.get(id);
 	}
