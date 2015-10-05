@@ -207,7 +207,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.geppetto.core.data.IGeppettoDataManager#newExperiment(java.lang.String, java.lang.String)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#newExperiment(java.lang.String, java.lang.String, org.geppetto.core.data.model.IGeppettoProject)
 	 */
 	@Override
 	public IExperiment newExperiment(String name, String description, IGeppettoProject project)
@@ -222,7 +222,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.geppetto.core.data.IGeppettoDataManager#newUser(java.lang.String)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#newUser(java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
 	public IUser newUser(String name, String password, boolean persistent)
@@ -234,11 +234,23 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		}
 		return user;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geppetto.core.data.IGeppettoDataManager#updateUser(org.geppetto.core.data.model.IUser, java.lang.String)
+	 */
+	@Override
+	public IUser updateUser(IUser user, String password){
+		((User)user).setPassword(password);
+		dbManager.storeEntity(user);
+		return user;
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.geppetto.core.data.IGeppettoDataManager#addGeppettoProject(org.geppetto.core.data.model.IGeppettoProject)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#addGeppettoProject(org.geppetto.core.data.model.IGeppettoProject, org.geppetto.core.data.model.IUser)
 	 */
 	@Override
 	public void addGeppettoProject(IGeppettoProject project, IUser user)
