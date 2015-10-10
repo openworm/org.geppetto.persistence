@@ -141,11 +141,15 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		if(!projects.containsKey(id))
 		{
 			GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, id);
-			for(Experiment e : project.getExperiments())
-			{
-				e.setParentProject(project);
+			if(project!=null){
+				for(Experiment e : project.getExperiments())
+				{
+					if(e !=null){
+						e.setParentProject(project);
+					}
+				}
+				projects.put(id, project);
 			}
-			projects.put(id, project);
 		}
 		return projects.get(id);
 	}
@@ -203,7 +207,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.geppetto.core.data.IGeppettoDataManager#newExperiment(java.lang.String, java.lang.String)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#newExperiment(java.lang.String, java.lang.String, org.geppetto.core.data.model.IGeppettoProject)
 	 */
 	@Override
 	public IExperiment newExperiment(String name, String description, IGeppettoProject project)
@@ -218,7 +222,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.geppetto.core.data.IGeppettoDataManager#newUser(java.lang.String)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#newUser(java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
 	public IUser newUser(String name, String password, boolean persistent)
@@ -230,11 +234,23 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		}
 		return user;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geppetto.core.data.IGeppettoDataManager#updateUser(org.geppetto.core.data.model.IUser, java.lang.String)
+	 */
+	@Override
+	public IUser updateUser(IUser user, String password){
+		((User)user).setPassword(password);
+		dbManager.storeEntity(user);
+		return user;
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.geppetto.core.data.IGeppettoDataManager#addGeppettoProject(org.geppetto.core.data.model.IGeppettoProject)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#addGeppettoProject(org.geppetto.core.data.model.IGeppettoProject, org.geppetto.core.data.model.IUser)
 	 */
 	@Override
 	public void addGeppettoProject(IGeppettoProject project, IUser user)
