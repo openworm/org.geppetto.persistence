@@ -72,7 +72,7 @@ public class DBTestData
 		dbManager = new DBManager();
 		dbManager.setPersistenceManagerFactory(getPersistenceManagerFactory());
 		long value = 1000l * 1000 * 1000;
-		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>(), value, 2 * value);
+		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>());
 		dbManager.storeEntity(user);
 	}
 

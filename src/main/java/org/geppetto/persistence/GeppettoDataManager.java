@@ -227,7 +227,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IUser newUser(String name, String password, boolean persistent)
 	{
-		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), 0, 0);
+		User user = new User(name, password, name, new ArrayList<GeppettoProject>());
 		if(persistent)
 		{
 			dbManager.storeEntity(user);
