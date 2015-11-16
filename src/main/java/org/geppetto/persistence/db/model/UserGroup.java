@@ -57,6 +57,7 @@ public class UserGroup implements Serializable, IUserGroup {
 	
 	private String name;
 	
+	@Persistent(defaultFetchGroup = "true")
 	private List<UserPrivileges> privileges;
 
 	@JsonIgnore
@@ -65,6 +66,21 @@ public class UserGroup implements Serializable, IUserGroup {
 	@JsonIgnore
 	private long simulationTimeAllowance;
 	
+	public UserGroup(String name, List<UserPrivileges> privileges, long spaceAllowance, long timeAllowance)
+	{
+		super();
+		this.name = name;
+		this.privileges = privileges;
+		this.spaceAllowance = spaceAllowance;
+		this.simulationTimeAllowance = timeAllowance;
+	}
+	
+	@Override
+	public long getId() {
+		return this.id;
+	}
+	
+	@Override
 	public String getName()
 	{
 		return name;
@@ -95,11 +111,6 @@ public class UserGroup implements Serializable, IUserGroup {
 	public void setSimulationTimeAllowance(long simulationTimeAllowance)
 	{
 		this.simulationTimeAllowance = simulationTimeAllowance;
-	}
-
-	@Override
-	public long getId() {
-		return this.id;
 	}
 
 	@Override

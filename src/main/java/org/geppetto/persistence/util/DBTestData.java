@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,8 +49,10 @@ import javax.jdo.PersistenceManagerFactory;
 
 import org.geppetto.core.beans.PathConfiguration;
 import org.geppetto.core.data.model.ExperimentStatus;
+import org.geppetto.core.data.model.IUserGroup;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
+import org.geppetto.core.data.model.UserPrivileges;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
@@ -60,6 +63,7 @@ import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
+import org.geppetto.persistence.db.model.UserGroup;
 
 public class DBTestData
 {
@@ -72,7 +76,10 @@ public class DBTestData
 		dbManager = new DBManager();
 		dbManager.setPersistenceManagerFactory(getPersistenceManagerFactory());
 		long value = 1000l * 1000 * 1000;
-		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>());
+		
+		List<UserPrivileges> privileges = Arrays.asList(UserPrivileges.READ_PROJECT);
+		IUserGroup group = new UserGroup("guest", privileges, value, value * 2);
+		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>(), group);
 		dbManager.storeEntity(user);
 	}
 

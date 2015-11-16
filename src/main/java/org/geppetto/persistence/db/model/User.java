@@ -64,7 +64,8 @@ public class User implements Serializable, IUser
 
 	private String name;
 
-	private IUserGroup userGroup;
+	@Persistent(defaultFetchGroup = "true")
+	private UserGroup userGroup;
 	
 	@Join
 	@JsonIgnore
@@ -74,13 +75,14 @@ public class User implements Serializable, IUser
 	@JsonIgnore
 	private String dropboxToken;
 
-	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects)
+	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects, IUserGroup group)
 	{
 		super();
 		this.login = login;
 		this.password = password;
 		this.name = name;
 		this.geppettoProjects = geppettoProjects;
+		this.userGroup = (UserGroup)group;
 	}
 
 	public long getId()
@@ -146,7 +148,7 @@ public class User implements Serializable, IUser
 		return this.userGroup;
 	}
 	
-	public void setUserGroup(IUserGroup group)
+	public void setUserGroup(UserGroup group)
 	{
 		this.userGroup = group;
 	}
