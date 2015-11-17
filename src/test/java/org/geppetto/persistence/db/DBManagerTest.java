@@ -49,6 +49,7 @@ import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
+import org.geppetto.core.data.model.UserPrivileges;
 import org.geppetto.persistence.GeppettoDataManager;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
@@ -76,6 +77,16 @@ public class DBManagerTest
 		dataManager.setDbManager(db);
 	}
 
+	@Test
+	public void testUserGroups(){
+		user = db.findUserByLogin("guest1");
+		
+		Assert.assertTrue(user != null);
+		Assert.assertTrue(user.getUserGroup() != null);
+		Assert.assertTrue(user.getUserGroup().getPrivileges().size() == 1);
+		Assert.assertTrue(user.getUserGroup().getPrivileges().get(0) == UserPrivileges.READ_PROJECT);
+	}
+	
 	@Test
 	public void testExperimentCreate()
 	{
