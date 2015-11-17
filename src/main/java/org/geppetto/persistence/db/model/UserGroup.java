@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -57,6 +58,7 @@ public class UserGroup implements Serializable, IUserGroup {
 	
 	private String name;
 	
+	@Join
 	@Persistent(defaultFetchGroup = "true")
 	private List<UserPrivileges> privileges;
 
@@ -113,7 +115,6 @@ public class UserGroup implements Serializable, IUserGroup {
 		this.simulationTimeAllowance = simulationTimeAllowance;
 	}
 
-	@Override
 	public List<UserPrivileges> getPrivileges() {
 		return this.privileges;
 	}
