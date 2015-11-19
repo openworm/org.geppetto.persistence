@@ -228,13 +228,13 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IUser newUser(String name, String password, boolean persistent, IUserGroup group)
 	{
-		// TODO: if group is null fetch default group and assign
-		
 		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), group);
+		
 		if(persistent)
 		{
 			dbManager.storeEntity(user);
 		}
+		
 		return user;
 	}
 	
