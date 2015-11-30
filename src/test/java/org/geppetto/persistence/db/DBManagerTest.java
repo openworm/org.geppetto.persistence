@@ -113,7 +113,7 @@ public class DBManagerTest
 		user = db.findUserByLogin("guest1");
 		Experiment experiment = db.findEntityById(Experiment.class, 1l);
 		Assert.assertEquals(0, experiment.getSimulationResults().size());
-		InstancePath aspect = new InstancePath("hhcell", "electrical", "");
+		InstancePath aspect = new InstancePath("hhcell.electrical");
 		PersistedData recording = new PersistedData("http://testURL", PersistedDataType.RECORDING);
 		ISimulationResult results = new SimulationResult(aspect, recording, ResultsFormat.GEPPETTO_RECORDING);
 		db.storeEntity(results);
@@ -155,13 +155,12 @@ public class DBManagerTest
 		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
 		IExperiment experiment = dataManager.newExperiment("E", "D", project);
 		Assert.assertNotNull(experiment.getName());
-		IInstancePath instancePath = dataManager.newInstancePath("entity", "aspect", "");
+		IInstancePath instancePath = dataManager.newInstancePath("entity.aspect");
 		ISimulatorConfiguration simulatorConfiguration = dataManager.newSimulatorConfiguration("", "", 0l, 0l);
 		IAspectConfiguration aspectConfiguration = dataManager.newAspectConfiguration(experiment, instancePath, simulatorConfiguration);
 		Assert.assertNotNull(experiment.getName());
 		Assert.assertTrue(experiment.getAspectConfigurations().contains(aspectConfiguration));
 		Assert.assertEquals(simulatorConfiguration, aspectConfiguration.getSimulatorConfiguration());
-		Assert.assertEquals("aspect", instancePath.getAspect());
 	}
 
 	@Test
@@ -200,7 +199,7 @@ public class DBManagerTest
 		for(int i = 0; i < 10; i++)
 		{
 			URL result = new URL("http://org.geppetto.bucket.s3.amazonaws.com/projects/1/results.h5");
-			IInstancePath aspect = dataManager.newInstancePath("hhcell", "electrical", "");
+			IInstancePath aspect = dataManager.newInstancePath("hhcell.electrical");
 			IPersistedData recording = dataManager.newPersistedData(result, PersistedDataType.RECORDING);
 			ISimulationResult simulationResults = dataManager.newSimulationResult(aspect, recording, ResultsFormat.GEPPETTO_RECORDING);
 			experiment.addSimulationResult(simulationResults);

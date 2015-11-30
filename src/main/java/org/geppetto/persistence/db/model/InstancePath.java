@@ -14,67 +14,23 @@ public class InstancePath implements IInstancePath
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
-	private String entityInstancePath;
+	private String instancePath;
 
-	private String aspect;
-
-	private String localInstancePath;
-
-	public InstancePath(String entityInstancePath, String aspect, String localInstancePath)
+	public InstancePath(String instancePathString)
 	{
 		super();
-		this.entityInstancePath = entityInstancePath;
-		this.aspect = aspect;
-		this.localInstancePath = localInstancePath;
+		this.instancePath = instancePathString;
 	}
 
 	public long getId()
 	{
 		return id;
 	}
-
-	public String getEntityInstancePath()
-	{
-		return entityInstancePath;
-	}
-
-	public void setEntityInstancePath(String entityInstancePath)
-	{
-		this.entityInstancePath = entityInstancePath;
-	}
-
-	public String getAspect()
-	{
-		return aspect;
-	}
-
-	public void setAspect(String aspect)
-	{
-		this.aspect = aspect;
-	}
-
-	public String getLocalInstancePath()
-	{
-		return localInstancePath;
-	}
-
-	public void setLocalInstancePath(String localInstancePath)
-	{
-		this.localInstancePath = localInstancePath;
-	}
+	
 
 	public String getInstancePath()
 	{
-		String path = entityInstancePath;
-		if(aspect != null && !aspect.isEmpty())
-		{
-			path += "." + aspect;
-		}
-		if(getLocalInstancePath() != null && !getLocalInstancePath().isEmpty())
-		{
-			path += "." + getLocalInstancePath();
-		}
-		return path;
+		return instancePath;
 	}
 
 	@Override

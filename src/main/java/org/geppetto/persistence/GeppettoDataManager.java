@@ -57,7 +57,6 @@ import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
-import org.geppetto.core.model.runtime.ANode;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
@@ -197,9 +196,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#newInstancePath(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IInstancePath newInstancePath(String entityPath, String aspectPath, String localPath)
+	public IInstancePath newInstancePath(String instancePathString)
 	{
-		InstancePath instancePath = new InstancePath(entityPath, aspectPath, localPath);
+		InstancePath instancePath = new InstancePath(instancePathString);
 		saveEntity(instancePath);
 		return instancePath;
 	}
@@ -416,11 +415,6 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		return new SimulationResult((InstancePath) parameterPath, (PersistedData) results, format);
 	}
 
-	@Override
-	public IInstancePath newInstancePath(ANode node)
-	{
-		return newInstancePath(node.getEntityInstancePath(), node.getAspectInstancePath(), node.getLocalInstancePath());
-	}
 
 	@Override
 	public IPersistedData newPersistedData(URL url, PersistedDataType type)
