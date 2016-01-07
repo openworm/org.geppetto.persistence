@@ -55,6 +55,7 @@ import org.geppetto.core.data.model.IPersistedData;
 import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
+import org.geppetto.core.data.model.IUserGroup;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.persistence.db.DBManager;
@@ -224,13 +225,15 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#newUser(java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public IUser newUser(String name, String password, boolean persistent)
+	public IUser newUser(String name, String password, boolean persistent, IUserGroup group)
 	{
-		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), 0, 0);
+		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), group);
+		
 		if(persistent)
 		{
 			dbManager.storeEntity(user);
 		}
+		
 		return user;
 	}
 	
