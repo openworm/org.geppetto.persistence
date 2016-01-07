@@ -58,6 +58,7 @@ import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.IUserGroup;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
+import org.geppetto.core.data.model.UserPrivileges;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
@@ -68,6 +69,7 @@ import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
+import org.geppetto.persistence.db.model.UserGroup;
 
 import com.google.gson.Gson;
 
@@ -446,6 +448,12 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	public void addWatchedVariable(IAspectConfiguration aspectConfiguration, IInstancePath instancePath)
 	{
 		((AspectConfiguration) aspectConfiguration).getWatchedVariables().add((InstancePath) instancePath);
+	}
+
+	@Override
+	public IUserGroup newUserGroup(String name, List<UserPrivileges> privileges, long spaceAllowance, long timeAllowance)
+	{
+		return new UserGroup(name, privileges, spaceAllowance, timeAllowance);
 	}
 
 }
