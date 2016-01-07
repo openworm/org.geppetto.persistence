@@ -121,45 +121,45 @@ public class DBTestData
 		user = dbManager.findUserByLogin("guest1");
 		List<GeppettoProject> projects = user.getGeppettoProjects();
 
-		PersistedData geppettoModel = new PersistedData(path + "GEPPETTO.xml", PersistedDataType.GEPPETTO_PROJECT);
+		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
 		GeppettoProject project = new GeppettoProject(name, geppettoModel);
 
 		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc1.getParameters().put("target", "net1");
 		List<InstancePath> watchedVariables = new ArrayList<>();
-		watchedVariables.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].v"));
-		watchedVariables.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-		watchedVariables.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-		watchedVariables.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
-		aspectConfigurations1.add(new AspectConfiguration(new InstancePath("hhcell.electrical"), watchedVariables, null, sc1));
+		watchedVariables.add(new InstancePath("hhcell.hhpop[0].v"));
+		watchedVariables.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
+		watchedVariables.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
+		watchedVariables.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+		aspectConfigurations1.add(new AspectConfiguration(new InstancePath("hhcell"), watchedVariables, null, sc1));
 		Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
 		List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
 		List<InstancePath> watchedVariables2 = new ArrayList<>();
-		watchedVariables2.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].v"));
-		watchedVariables2.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-		watchedVariables2.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-		watchedVariables2.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+		watchedVariables2.add(new InstancePath("hhcell.hhpop[0].v"));
+		watchedVariables2.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
+		watchedVariables2.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
+		watchedVariables2.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
 		SimulatorConfiguration sc2 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc2.getParameters().put("target", "net1");
-		aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell.electrical"), watchedVariables2, null, sc2));
+		aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell"), watchedVariables2, null, sc2));
 		List<SimulationResult> simulationResults2 = new ArrayList<>();
 		simulationResults2
-				.add(new SimulationResult(new InstancePath("hhcell.electrical"), new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
+				.add(new SimulationResult(new InstancePath("hhcell"), new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
 		Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project);
 
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
 		List<InstancePath> watchedVariables3 = new ArrayList<>();
-		watchedVariables3.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].v"));
-		watchedVariables3.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-		watchedVariables3.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-		watchedVariables3.add(new InstancePath("hhcell.electrical.SimulationTree.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].v"));
+		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
+		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
+		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
 		List<Parameter> modelParameters3 = new ArrayList<>();
-		modelParameters3.add(new Parameter(new InstancePath("hhcell.electrical.ModelTree.pulseGen1.Amplitude"), "0.2"));
+		modelParameters3.add(new Parameter(new InstancePath("hhcell.pulseGen1.Amplitude"), "0.2"));
 		SimulatorConfiguration sc3 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc3.getParameters().put("target", "net1");
-		aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell.electrical"), watchedVariables3, modelParameters3, sc3));
+		aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell"), watchedVariables3, modelParameters3, sc3));
 		Experiment exp3 = new Experiment(aspectConfigurations3, "Higher input current", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
 		List<Experiment> experiments = new ArrayList<>();
