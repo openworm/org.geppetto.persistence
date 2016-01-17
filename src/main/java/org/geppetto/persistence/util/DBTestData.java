@@ -76,10 +76,15 @@ public class DBTestData
 		dbManager = new DBManager();
 		dbManager.setPersistenceManagerFactory(getPersistenceManagerFactory());
 		long value = 1000l * 1000 * 1000;
-		
-		List<UserPrivileges> privileges = Arrays.asList(UserPrivileges.READ_PROJECT);
+		List<UserPrivileges> privileges = new ArrayList<UserPrivileges>();
+		privileges.add(UserPrivileges.READ_PROJECT);
+		privileges.add(UserPrivileges.WRITE_PROJECT);
+		privileges.add(UserPrivileges.DOWNLOAD);
+		privileges.add(UserPrivileges.DROPBOX_INTEGRATION);
+		privileges.add(UserPrivileges.RUN_EXPERIMENT);
 		IUserGroup group = new UserGroup("guest", privileges, value, value * 2);
 		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>(), group);
+		dbManager.storeEntity(group);
 		dbManager.storeEntity(user);
 	}
 
@@ -115,9 +120,49 @@ public class DBTestData
 		return JDOHelper.getPersistenceManagerFactory(dbConnProperties);
 	}
 
-	private void buildDemoProject(String name)
+	private void buildACNet2DemoProject(String name, int id)
 	{
-		String path = "http://org.geppetto.bucket.s3.amazonaws.com/projects/1/";
+		String path = "http://org.geppetto.bucket.s3.amazonaws.com/projects/"+id+"/";
+		user = dbManager.findUserByLogin("guest1");
+		List<GeppettoProject> projects = user.getGeppettoProjects();
+
+		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
+		GeppettoProject project = new GeppettoProject(name, geppettoModel);
+
+		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
+		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
+		sc1.getParameters().put("target", "network_ACnet2");
+		List<InstancePath> watchedVariables = new ArrayList<>();
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[1].v"));
+		watchedVariables.add(new InstancePath("acnet2.baskets_12[2].v"));
+		aspectConfigurations1.add(new AspectConfiguration(new InstancePath("acnet2"), watchedVariables, null, sc1));
+		
+		
+		Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+
+		List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
+		List<InstancePath> watchedVariables2 = new ArrayList<>();
+
+		SimulatorConfiguration sc2 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
+		sc2.getParameters().put("target", "network_ACnet2");
+		aspectConfigurations2.add(new AspectConfiguration(new InstancePath("acnet2"), watchedVariables2, null, sc2));
+		Experiment exp2 = new Experiment(aspectConfigurations2, "Executed to configure", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+
+
+		List<Experiment> experiments = new ArrayList<>();
+		experiments.add(exp1);
+		experiments.add(exp2);
+		project.setExperiments(experiments);
+		projects.add(project);
+
+		dbManager.storeEntity(user);
+
+	}
+	
+	private void buildHHCellDemoProject(String name, int id)
+	{
+		String path = "http://org.geppetto.bucket.s3.amazonaws.com/projects/"+id+"/";
 		user = dbManager.findUserByLogin("guest1");
 		List<GeppettoProject> projects = user.getGeppettoProjects();
 
@@ -176,9 +221,12 @@ public class DBTestData
 	public static void main(String[] args)
 	{
 		DBTestData testDBCreator = new DBTestData();
-		testDBCreator.buildDemoProject("Hodgkin-Huxley Model 1");
-		testDBCreator.buildDemoProject("Hodgkin-Huxley Model 2");
-		testDBCreator.buildDemoProject("Hodgkin-Huxley Model 3");
+		testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 1",1);
+		testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 2",1);
+		testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 3",1);
+		testDBCreator.buildACNet2DemoProject("ACNet2 1",5);
+		testDBCreator.buildACNet2DemoProject("ACNet2 2",5);
+		testDBCreator.buildACNet2DemoProject("ACNet2 3",5);
 	}
 
 }
