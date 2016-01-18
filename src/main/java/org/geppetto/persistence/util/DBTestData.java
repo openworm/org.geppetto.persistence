@@ -147,12 +147,27 @@ public class DBTestData
 		SimulatorConfiguration sc2 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc2.getParameters().put("target", "network_ACnet2");
 		aspectConfigurations2.add(new AspectConfiguration(new InstancePath("acnet2"), watchedVariables2, null, sc2));
-		Experiment exp2 = new Experiment(aspectConfigurations2, "Executed to configure", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp2 = new Experiment(aspectConfigurations2, "Experiment to configure", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
+		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
+		List<InstancePath> watchedVariables3 = new ArrayList<>();
+		watchedVariables3.add(new InstancePath("acnet2.pyramidals_48[0].v"));
+		watchedVariables3.add(new InstancePath("acnet2.pyramidals_48[1].v"));
+		watchedVariables3.add(new InstancePath("acnet2.baskets_12[2].v"));
+		SimulatorConfiguration sc3 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
+		sc3.getParameters().put("target", "network_ACnet2");
+		aspectConfigurations3.add(new AspectConfiguration(new InstancePath("acnet2"), watchedVariables3, null, sc3));
+		List<SimulationResult> simulationResults3 = new ArrayList<>();
+		simulationResults3
+				.add(new SimulationResult(new InstancePath("acnet2"), new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
+		simulationResults3
+			.add(new SimulationResult(new InstancePath("acnet2"), new PersistedData(path + "rawRecording.zip", PersistedDataType.RECORDING), ResultsFormat.RAW));
+		Experiment exp3= new Experiment(aspectConfigurations3, "Experiment executed", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults3, new Date(), new Date(), project);
 
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
 		experiments.add(exp2);
+		experiments.add(exp3);
 		project.setExperiments(experiments);
 		projects.add(project);
 
@@ -192,6 +207,8 @@ public class DBTestData
 		List<SimulationResult> simulationResults2 = new ArrayList<>();
 		simulationResults2
 				.add(new SimulationResult(new InstancePath("hhcell"), new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
+		simulationResults2
+			.add(new SimulationResult(new InstancePath("hhcell"), new PersistedData(path + "rawRecording.zip", PersistedDataType.RECORDING), ResultsFormat.RAW));
 		Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project);
 
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
