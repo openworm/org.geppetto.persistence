@@ -43,6 +43,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IUser;
+import org.geppetto.core.data.model.IUserGroup;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -63,12 +64,9 @@ public class User implements Serializable, IUser
 
 	private String name;
 
-	@JsonIgnore
-	private long spaceAllowance;
-
-	@JsonIgnore
-	private long simulationTimeAllowance;
-
+	@Persistent(defaultFetchGroup = "true")
+	private UserGroup userGroup;
+	
 	@Join
 	@JsonIgnore
 	@Persistent(defaultFetchGroup = "true")
@@ -77,15 +75,14 @@ public class User implements Serializable, IUser
 	@JsonIgnore
 	private String dropboxToken;
 
-	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects, long spaceAllowance, long simulationTimeAllowance)
+	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects, IUserGroup group)
 	{
 		super();
 		this.login = login;
 		this.password = password;
 		this.name = name;
 		this.geppettoProjects = geppettoProjects;
-		this.spaceAllowance = spaceAllowance;
-		this.simulationTimeAllowance = simulationTimeAllowance;
+		this.userGroup = (UserGroup)group;
 	}
 
 	public long getId()
@@ -133,26 +130,6 @@ public class User implements Serializable, IUser
 		this.geppettoProjects = geppettoProjects;
 	}
 
-	public long getSpaceAllowance()
-	{
-		return spaceAllowance;
-	}
-
-	public void setSpaceAllowance(long spaceAllowance)
-	{
-		this.spaceAllowance = spaceAllowance;
-	}
-
-	public long getSimulationTimeAllowance()
-	{
-		return simulationTimeAllowance;
-	}
-
-	public void setSimulationTimeAllowance(long simulationTimeAllowance)
-	{
-		this.simulationTimeAllowance = simulationTimeAllowance;
-	}
-
 	@Override
 	public String getDropboxToken()
 	{
@@ -163,6 +140,17 @@ public class User implements Serializable, IUser
 	public void setDropboxToken(String token)
 	{
 		this.dropboxToken = token;
+	}
+
+	@Override
+	public IUserGroup getUserGroup() 
+	{
+		return this.userGroup;
+	}
+	
+	public void setUserGroup(UserGroup group)
+	{
+		this.userGroup = group;
 	}
 
 }

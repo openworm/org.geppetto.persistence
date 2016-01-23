@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>org.geppetto</groupId>
 			<artifactId>core</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -246,7 +246,6 @@
 							{maven-resources},META-INF/spring=src/main/java/META-INF/spring
 						</Include-Resource>
 						<Import-Package>
-							org.geppetto.core.model.runtime,
 							org.geppetto.core.auth,
 							org.apache.commons.logging,
 							org.osgi.framework,
