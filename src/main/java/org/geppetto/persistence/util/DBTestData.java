@@ -133,9 +133,17 @@ public class DBTestData
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc1.getParameters().put("target", "network_ACnet2");
 		List<InstancePath> watchedVariables = new ArrayList<>();
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[1].v"));
-		watchedVariables.add(new InstancePath("acnet2.baskets_12[2].v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].soma_0.v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical0_1.v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical2_2.v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical3_3.v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical4_4.v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical1_5.v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].basal0_6.v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].basal1_7.v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].basal2_8.v"));
+		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[1].soma_0.v"));
+		watchedVariables.add(new InstancePath("acnet2.baskets_12[2].soma_0.v"));
 		aspectConfigurations1.add(new AspectConfiguration(new InstancePath("acnet2"), watchedVariables, null, sc1));
 		
 		
@@ -151,9 +159,9 @@ public class DBTestData
 
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
 		List<InstancePath> watchedVariables3 = new ArrayList<>();
-		watchedVariables3.add(new InstancePath("acnet2.pyramidals_48[0].v"));
-		watchedVariables3.add(new InstancePath("acnet2.pyramidals_48[1].v"));
-		watchedVariables3.add(new InstancePath("acnet2.baskets_12[2].v"));
+		watchedVariables3.add(new InstancePath("acnet2.pyramidals_48[0].soma_0.v"));
+		watchedVariables3.add(new InstancePath("acnet2.pyramidals_48[1].soma_0.v"));
+		watchedVariables3.add(new InstancePath("acnet2.baskets_12[2].soma_0.v"));
 		SimulatorConfiguration sc3 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc3.getParameters().put("target", "network_ACnet2");
 		aspectConfigurations3.add(new AspectConfiguration(new InstancePath("acnet2"), watchedVariables3, null, sc3));
