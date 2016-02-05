@@ -226,7 +226,7 @@ public class DBTestData
 		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
 		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
 		List<Parameter> modelParameters3 = new ArrayList<>();
-		modelParameters3.add(new Parameter(new InstancePath("hhcell.pulseGen1.Amplitude"), "0.2"));
+		modelParameters3.add(new Parameter(new InstancePath("hhcell.explicitInput.pulseGen1.amplitude"), "0.2"));
 		SimulatorConfiguration sc3 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc3.getParameters().put("target", "net1");
 		aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell"), watchedVariables3, modelParameters3, sc3));
