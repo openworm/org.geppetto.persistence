@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +56,6 @@ import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
-import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
 import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationResult;
@@ -132,44 +130,44 @@ public class DBTestData
 		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc1.getParameters().put("target", "network_ACnet2");
-		List<InstancePath> watchedVariables = new ArrayList<>();
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].soma_0.v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical0_1.v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical2_2.v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical3_3.v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical4_4.v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].apical1_5.v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].basal0_6.v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].basal1_7.v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[0].basal2_8.v"));
-		watchedVariables.add(new InstancePath("acnet2.pyramidals_48[1].soma_0.v"));
-		watchedVariables.add(new InstancePath("acnet2.baskets_12[2].soma_0.v"));
-		aspectConfigurations1.add(new AspectConfiguration(new InstancePath("acnet2"), watchedVariables, null, sc1));
+		List<String> watchedVariables = new ArrayList<>();
+		watchedVariables.add("acnet2.pyramidals_48[0].soma_0.v");
+		watchedVariables.add("acnet2.pyramidals_48[0].apical0_1.v");
+		watchedVariables.add("acnet2.pyramidals_48[0].apical2_2.v");
+		watchedVariables.add("acnet2.pyramidals_48[0].apical3_3.v");
+		watchedVariables.add("acnet2.pyramidals_48[0].apical4_4.v");
+		watchedVariables.add("acnet2.pyramidals_48[0].apical1_5.v");
+		watchedVariables.add("acnet2.pyramidals_48[0].basal0_6.v");
+		watchedVariables.add("acnet2.pyramidals_48[0].basal1_7.v");
+		watchedVariables.add("acnet2.pyramidals_48[0].basal2_8.v");
+		watchedVariables.add("acnet2.pyramidals_48[1].soma_0.v");
+		watchedVariables.add("acnet2.baskets_12[2].soma_0.v");
+		aspectConfigurations1.add(new AspectConfiguration("acnet2", watchedVariables, null, sc1));
 		
 		
 		Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
 		List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
-		List<InstancePath> watchedVariables2 = new ArrayList<>();
+		List<String> watchedVariables2 = new ArrayList<>();
 
 		SimulatorConfiguration sc2 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc2.getParameters().put("target", "network_ACnet2");
-		aspectConfigurations2.add(new AspectConfiguration(new InstancePath("acnet2"), watchedVariables2, null, sc2));
+		aspectConfigurations2.add(new AspectConfiguration("acnet2", watchedVariables2, null, sc2));
 		Experiment exp2 = new Experiment(aspectConfigurations2, "Experiment to configure", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
-		List<InstancePath> watchedVariables3 = new ArrayList<>();
-		watchedVariables3.add(new InstancePath("acnet2.pyramidals_48[0].soma_0.v"));
-		watchedVariables3.add(new InstancePath("acnet2.pyramidals_48[1].soma_0.v"));
-		watchedVariables3.add(new InstancePath("acnet2.baskets_12[2].soma_0.v"));
+		List<String> watchedVariables3 = new ArrayList<>();
+		watchedVariables3.add("acnet2.pyramidals_48[0].soma_0.v");
+		watchedVariables3.add("acnet2.pyramidals_48[1].soma_0.v");
+		watchedVariables3.add("acnet2.baskets_12[2].soma_0.v");
 		SimulatorConfiguration sc3 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc3.getParameters().put("target", "network_ACnet2");
-		aspectConfigurations3.add(new AspectConfiguration(new InstancePath("acnet2"), watchedVariables3, null, sc3));
+		aspectConfigurations3.add(new AspectConfiguration("acnet2", watchedVariables3, null, sc3));
 		List<SimulationResult> simulationResults3 = new ArrayList<>();
 		simulationResults3
-				.add(new SimulationResult(new InstancePath("acnet2"), new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
+				.add(new SimulationResult("acnet2", new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
 		simulationResults3
-			.add(new SimulationResult(new InstancePath("acnet2"), new PersistedData(path + "rawRecording.zip", PersistedDataType.RECORDING), ResultsFormat.RAW));
+			.add(new SimulationResult("acnet2", new PersistedData(path + "rawRecording.zip", PersistedDataType.RECORDING), ResultsFormat.RAW));
 		Experiment exp3= new Experiment(aspectConfigurations3, "Experiment executed", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults3, new Date(), new Date(), project);
 
 		List<Experiment> experiments = new ArrayList<>();
@@ -195,41 +193,41 @@ public class DBTestData
 		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc1.getParameters().put("target", "net1");
-		List<InstancePath> watchedVariables = new ArrayList<>();
-		watchedVariables.add(new InstancePath("hhcell.hhpop[0].v"));
-		watchedVariables.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-		watchedVariables.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-		watchedVariables.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
-		aspectConfigurations1.add(new AspectConfiguration(new InstancePath("hhcell"), watchedVariables, null, sc1));
+		List<String> watchedVariables = new ArrayList<>();
+		watchedVariables.add("hhcell.hhpop[0].v");
+		watchedVariables.add("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q");
+		watchedVariables.add("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q");
+		watchedVariables.add("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q");
+		aspectConfigurations1.add(new AspectConfiguration("hhcell", watchedVariables, null, sc1));
 		Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
 		List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
-		List<InstancePath> watchedVariables2 = new ArrayList<>();
-		watchedVariables2.add(new InstancePath("hhcell.hhpop[0].v"));
-		watchedVariables2.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-		watchedVariables2.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-		watchedVariables2.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+		List<String> watchedVariables2 = new ArrayList<>();
+		watchedVariables2.add("hhcell.hhpop[0].v");
+		watchedVariables2.add("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q");
+		watchedVariables2.add("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q");
+		watchedVariables2.add("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q");
 		SimulatorConfiguration sc2 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc2.getParameters().put("target", "net1");
-		aspectConfigurations2.add(new AspectConfiguration(new InstancePath("hhcell"), watchedVariables2, null, sc2));
+		aspectConfigurations2.add(new AspectConfiguration("hhcell", watchedVariables2, null, sc2));
 		List<SimulationResult> simulationResults2 = new ArrayList<>();
 		simulationResults2
-				.add(new SimulationResult(new InstancePath("hhcell"), new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
+				.add(new SimulationResult("hhcell", new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
 		simulationResults2
-			.add(new SimulationResult(new InstancePath("hhcell"), new PersistedData(path + "rawRecording.zip", PersistedDataType.RECORDING), ResultsFormat.RAW));
+			.add(new SimulationResult("hhcell", new PersistedData(path + "rawRecording.zip", PersistedDataType.RECORDING), ResultsFormat.RAW));
 		Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project);
 
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
-		List<InstancePath> watchedVariables3 = new ArrayList<>();
-		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].v"));
-		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q"));
-		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q"));
-		watchedVariables3.add(new InstancePath("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q"));
+		List<String> watchedVariables3 = new ArrayList<>();
+		watchedVariables3.add("hhcell.hhpop[0].v");
+		watchedVariables3.add("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.m.q");
+		watchedVariables3.add("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q");
+		watchedVariables3.add("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q");
 		List<Parameter> modelParameters3 = new ArrayList<>();
-		modelParameters3.add(new Parameter(new InstancePath("hhcell.explicitInput.pulseGen1.amplitude"), "0.2"));
+		modelParameters3.add(new Parameter("hhcell.explicitInput.pulseGen1.amplitude", "0.2"));
 		SimulatorConfiguration sc3 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc3.getParameters().put("target", "net1");
-		aspectConfigurations3.add(new AspectConfiguration(new InstancePath("hhcell"), watchedVariables3, modelParameters3, sc3));
+		aspectConfigurations3.add(new AspectConfiguration("hhcell", watchedVariables3, modelParameters3, sc3));
 		Experiment exp3 = new Experiment(aspectConfigurations3, "Higher input current", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 
 		List<Experiment> experiments = new ArrayList<>();

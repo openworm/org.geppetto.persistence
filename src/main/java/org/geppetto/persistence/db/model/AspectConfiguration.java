@@ -51,13 +51,12 @@ public class AspectConfiguration implements IAspectConfiguration
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
-	@Column(name = "aspect_id")
-	@Persistent(dependent = "true", defaultFetchGroup = "true")
-	private InstancePath aspect;
+	private String instance;
 
-	@Join
+    @Join
+    @Column(name = "watchedVariables")
 	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
-	private List<InstancePath> watchedVariables;
+	private List<String> watchedVariables;
 
 	@Join
 	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
@@ -67,10 +66,10 @@ public class AspectConfiguration implements IAspectConfiguration
 	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private SimulatorConfiguration simulatorConfiguration;
 
-	public AspectConfiguration(InstancePath aspect, List<InstancePath> watchedVariables, List<Parameter> modelParameter, SimulatorConfiguration simulatorConfiguration)
+	public AspectConfiguration(String instance, List<String> watchedVariables, List<Parameter> modelParameter, SimulatorConfiguration simulatorConfiguration)
 	{
 		super();
-		this.aspect = aspect;
+		this.instance = instance;
 		this.watchedVariables = watchedVariables;
 		this.modelParameters = modelParameter;
 		this.simulatorConfiguration = simulatorConfiguration;
@@ -81,12 +80,12 @@ public class AspectConfiguration implements IAspectConfiguration
 		return id;
 	}
 
-	public InstancePath getAspect()
+	public String getInstance()
 	{
-		return aspect;
+		return instance;
 	}
 
-	public List<InstancePath> getWatchedVariables()
+	public List<String> getWatchedVariables()
 	{
 		return watchedVariables;
 	}
@@ -115,9 +114,9 @@ public class AspectConfiguration implements IAspectConfiguration
 		}
 	}
 
-	public void setAspect(InstancePath aspect)
+	public void setInstance(String instance)
 	{
-		this.aspect = aspect;
+		this.instance = instance;
 	}
 
 	@Override

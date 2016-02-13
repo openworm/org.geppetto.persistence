@@ -62,11 +62,6 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 
 	private long activeExperimentId;
 
-	// TODO: add this when a View class will be available
-	// @Join
-	// @Persistent(dependentElement = "true")
-	// private List<View> views;
-
 	@Column(name = "persisteddata_id")
 	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private PersistedData geppettoModel;
