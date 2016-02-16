@@ -34,7 +34,7 @@
 	<osgi:service id="DBAuthService" ref="dbAuthService"
 		interface="org.geppetto.core.auth.IAuthService">
 	</osgi:service>
-	<bean id="dbAuthService" scope="thread"
+	<bean id="dbAuthService" scope="singleton"
 		class="org.geppetto.persistence.auth.GeppettoAuthentication">
 		<aop:scoped-proxy proxy-target-class="false" />
 	</bean>

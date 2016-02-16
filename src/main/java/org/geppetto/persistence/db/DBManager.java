@@ -51,7 +51,7 @@ import org.geppetto.persistence.db.model.User;
 public class DBManager
 {
 
-	private PersistenceManagerFactory pmf;
+	private static PersistenceManagerFactory pmf;
 
 	private static Log _logger = LogFactory.getLog(DBManager.class);
 
@@ -60,16 +60,44 @@ public class DBManager
 		this.pmf = pmf;
 	}
 
+	private static final ThreadLocal<PersistenceManager> PER_THREAD_PM = new ThreadLocal<PersistenceManager>();
+
+	public static PersistenceManager getPersistenceManager()
+	{
+		PersistenceManager pm = PER_THREAD_PM.get();
+		if(pm == null)
+		{
+			pm = pmf.getPersistenceManager();
+			PER_THREAD_PM.set(pm);
+		}
+		return pm;
+	}
+
+	public static void finishRequest()
+	{
+		PersistenceManager pm = PER_THREAD_PM.get();
+		if(pm != null)
+		{
+			PER_THREAD_PM.remove();
+			Transaction tx = pm.currentTransaction();
+			if(tx.isActive())
+			{
+				tx.rollback();
+			}
+			pm.close();
+		}
+	}
+
 	/**
 	 * Save or update an entity to the DB.
 	 * 
 	 * @param entity
 	 */
-	public <T> void storeEntity(T entity)
+	public synchronized <T> void storeEntity(T entity)
 	{
-		PersistenceManager pm = pmf.getPersistenceManager();
+		PersistenceManager pm = getPersistenceManager();
 		pm.makePersistent(entity);
-		pm.close();
+		finishRequest();
 	}
 
 	/**
@@ -79,7 +107,7 @@ public class DBManager
 	 */
 	public <T> void deleteAllEntities(Class<T> type)
 	{
-		PersistenceManager pm = pmf.getPersistenceManager();
+		PersistenceManager pm = getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		try
 		{
@@ -95,11 +123,7 @@ public class DBManager
 		}
 		finally
 		{
-			if(tx.isActive())
-			{
-				tx.rollback();
-			}
-			pm.close();
+			finishRequest();
 		}
 	}
 
@@ -111,7 +135,7 @@ public class DBManager
 	 */
 	public void deleteProject(long id, IUser user)
 	{
-		PersistenceManager pm = pmf.getPersistenceManager();
+		PersistenceManager pm = getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		try
 		{
@@ -144,11 +168,7 @@ public class DBManager
 		}
 		finally
 		{
-			if(tx.isActive())
-			{
-				tx.rollback();
-			}
-			pm.close();
+			finishRequest();
 		}
 	}
 
@@ -159,7 +179,7 @@ public class DBManager
 	 */
 	public void deleteEntity(IDataEntity entity)
 	{
-		PersistenceManager pm = pmf.getPersistenceManager();
+		PersistenceManager pm = getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		try
 		{
@@ -182,11 +202,7 @@ public class DBManager
 		}
 		finally
 		{
-			if(tx.isActive())
-			{
-				tx.rollback();
-			}
-			pm.close();
+			finishRequest();
 		}
 	}
 
@@ -198,7 +214,7 @@ public class DBManager
 	 */
 	public <T> List<T> getAllEntities(Class<T> type)
 	{
-		PersistenceManager pm = pmf.getPersistenceManager();
+		PersistenceManager pm = getPersistenceManager();
 		try
 		{
 			pm.getFetchPlan().setMaxFetchDepth(-1);
@@ -213,7 +229,7 @@ public class DBManager
 		}
 		finally
 		{
-			pm.close();
+			finishRequest();
 		}
 	}
 
@@ -226,7 +242,7 @@ public class DBManager
 	 */
 	public <T> T findEntityById(Class<T> type, long id)
 	{
-		PersistenceManager pm = pmf.getPersistenceManager();
+		PersistenceManager pm = getPersistenceManager();
 		try
 		{
 			pm.getFetchPlan().setMaxFetchDepth(-1);
@@ -246,7 +262,7 @@ public class DBManager
 		}
 		finally
 		{
-			pm.close();
+			finishRequest();
 		}
 	}
 
@@ -258,7 +274,7 @@ public class DBManager
 	 */
 	public User findUserByLogin(String login)
 	{
-		PersistenceManager pm = pmf.getPersistenceManager();
+		PersistenceManager pm = getPersistenceManager();
 		try
 		{
 			pm.getFetchPlan().setMaxFetchDepth(-1);
@@ -274,7 +290,7 @@ public class DBManager
 		}
 		finally
 		{
-			pm.close();
+			finishRequest();
 		}
 	}
 

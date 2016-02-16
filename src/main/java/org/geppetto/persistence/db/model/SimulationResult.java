@@ -53,9 +53,7 @@ public class SimulationResult implements Serializable, ISimulationResult
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
-	@Column(name = "aspect_id")
-	@Persistent(dependent = "true", defaultFetchGroup = "true")
-	private InstancePath aspect;
+	private String simulatedInstance;
 
 	@Column(name = "result_id")
 	@Persistent(dependent = "true", defaultFetchGroup = "true")
@@ -63,10 +61,10 @@ public class SimulationResult implements Serializable, ISimulationResult
 
 	private ResultsFormat format;
 
-	public SimulationResult(InstancePath aspect, PersistedData result, ResultsFormat format)
+	public SimulationResult(String simulatedInstance, PersistedData result, ResultsFormat format)
 	{
 		super();
-		this.aspect = aspect;
+		this.simulatedInstance = simulatedInstance;
 		this.result = result;
 		this.format = format;
 	}
@@ -76,14 +74,14 @@ public class SimulationResult implements Serializable, ISimulationResult
 		return id;
 	}
 
-	public InstancePath getAspect()
+	public String getSimulatedInstance()
 	{
-		return aspect;
+		return simulatedInstance;
 	}
 
-	public void setAspect(InstancePath aspect)
+	public void setSimulatedInstance(String simulatedInstance)
 	{
-		this.aspect = aspect;
+		this.simulatedInstance = simulatedInstance;
 	}
 
 	public PersistedData getResult()

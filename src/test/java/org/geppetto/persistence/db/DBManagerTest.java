@@ -42,17 +42,16 @@ import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
-import org.geppetto.core.data.model.IInstancePath;
 import org.geppetto.core.data.model.IPersistedData;
 import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
+import org.geppetto.core.data.model.UserPrivileges;
 import org.geppetto.persistence.GeppettoDataManager;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
-import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.User;
@@ -76,6 +75,16 @@ public class DBManagerTest
 		dataManager.setDbManager(db);
 	}
 
+	@Test
+	public void testUserGroups(){
+		user = db.findUserByLogin("guest1");
+		
+		Assert.assertTrue(user != null);
+		Assert.assertTrue(user.getUserGroup() != null);
+		Assert.assertTrue(user.getUserGroup().getPrivileges().size() == 5);
+		Assert.assertTrue(user.getUserGroup().getPrivileges().get(0) == UserPrivileges.READ_PROJECT);
+	}
+	
 	@Test
 	public void testExperimentCreate()
 	{
@@ -113,20 +122,19 @@ public class DBManagerTest
 		user = db.findUserByLogin("guest1");
 		Experiment experiment = db.findEntityById(Experiment.class, 1l);
 		Assert.assertEquals(0, experiment.getSimulationResults().size());
-		InstancePath aspect = new InstancePath("hhcell", "electrical", "");
+		String aspect = new String("hhcell");
 		PersistedData recording = new PersistedData("http://testURL", PersistedDataType.RECORDING);
 		ISimulationResult results = new SimulationResult(aspect, recording, ResultsFormat.GEPPETTO_RECORDING);
 		db.storeEntity(results);
 		experiment.addSimulationResult(results);
 		Assert.assertEquals(results, experiment.getSimulationResults().get(0));
 		Assert.assertEquals(recording, experiment.getSimulationResults().get(0).getResult());
-		Assert.assertEquals(aspect, experiment.getSimulationResults().get(0).getAspect());
+		Assert.assertEquals(aspect, experiment.getSimulationResults().get(0).getSimulatedInstance());
 		db.storeEntity(experiment);
 		Assert.assertEquals(results, experiment.getSimulationResults().get(0));
 		Assert.assertEquals(recording, experiment.getSimulationResults().get(0).getResult());
-		Assert.assertEquals(aspect, experiment.getSimulationResults().get(0).getAspect());
+		Assert.assertEquals(aspect, experiment.getSimulationResults().get(0).getSimulatedInstance());
 		experiment.getSimulationResults().clear();
-		db.deleteEntity(aspect);
 		db.deleteEntity(recording);
 		db.deleteEntity(results);
 		db.storeEntity(experiment);
@@ -155,13 +163,12 @@ public class DBManagerTest
 		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
 		IExperiment experiment = dataManager.newExperiment("E", "D", project);
 		Assert.assertNotNull(experiment.getName());
-		IInstancePath instancePath = dataManager.newInstancePath("entity", "aspect", "");
+		String instancePath = "entity.aspect";
 		ISimulatorConfiguration simulatorConfiguration = dataManager.newSimulatorConfiguration("", "", 0l, 0l);
 		IAspectConfiguration aspectConfiguration = dataManager.newAspectConfiguration(experiment, instancePath, simulatorConfiguration);
 		Assert.assertNotNull(experiment.getName());
 		Assert.assertTrue(experiment.getAspectConfigurations().contains(aspectConfiguration));
 		Assert.assertEquals(simulatorConfiguration, aspectConfiguration.getSimulatorConfiguration());
-		Assert.assertEquals("aspect", instancePath.getAspect());
 	}
 
 	@Test
@@ -200,9 +207,9 @@ public class DBManagerTest
 		for(int i = 0; i < 10; i++)
 		{
 			URL result = new URL("http://org.geppetto.bucket.s3.amazonaws.com/projects/1/results.h5");
-			IInstancePath aspect = dataManager.newInstancePath("hhcell", "electrical", "");
+			String instance = "hhcell.electrical";
 			IPersistedData recording = dataManager.newPersistedData(result, PersistedDataType.RECORDING);
-			ISimulationResult simulationResults = dataManager.newSimulationResult(aspect, recording, ResultsFormat.GEPPETTO_RECORDING);
+			ISimulationResult simulationResults = dataManager.newSimulationResult(instance, recording, ResultsFormat.GEPPETTO_RECORDING);
 			experiment.addSimulationResult(simulationResults);
 			dataManager.saveEntity(experiment.getParentProject());
 		}

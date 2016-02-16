@@ -49,25 +49,25 @@ import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
-import org.geppetto.core.data.model.IInstancePath;
 import org.geppetto.core.data.model.IParameter;
 import org.geppetto.core.data.model.IPersistedData;
 import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
+import org.geppetto.core.data.model.IUserGroup;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
-import org.geppetto.core.model.runtime.ANode;
+import org.geppetto.core.data.model.UserPrivileges;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
-import org.geppetto.persistence.db.model.InstancePath;
 import org.geppetto.persistence.db.model.Parameter;
 import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
+import org.geppetto.persistence.db.model.UserGroup;
 
 import com.google.gson.Gson;
 
@@ -184,24 +184,11 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#createParameter(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IParameter newParameter(IInstancePath instancePath, String value)
+	public IParameter newParameter(String instancePath, String value)
 	{
-		Parameter parameter = new Parameter((InstancePath) instancePath, value);
+		Parameter parameter = new Parameter(instancePath, value);
 		dbManager.storeEntity(parameter);
 		return parameter;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.geppetto.core.data.IGeppettoDataManager#newInstancePath(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
-	public IInstancePath newInstancePath(String entityPath, String aspectPath, String localPath)
-	{
-		InstancePath instancePath = new InstancePath(entityPath, aspectPath, localPath);
-		saveEntity(instancePath);
-		return instancePath;
 	}
 
 	/*
@@ -225,13 +212,15 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#newUser(java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public IUser newUser(String name, String password, boolean persistent)
+	public IUser newUser(String name, String password, boolean persistent, IUserGroup group)
 	{
-		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), 0, 0);
+		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), group);
+		
 		if(persistent)
 		{
 			dbManager.storeEntity(user);
 		}
+		
 		return user;
 	}
 	
@@ -411,16 +400,11 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	}
 
 	@Override
-	public ISimulationResult newSimulationResult(IInstancePath parameterPath, IPersistedData results, ResultsFormat format)
+	public ISimulationResult newSimulationResult(String parameterPath, IPersistedData results, ResultsFormat format)
 	{
-		return new SimulationResult((InstancePath) parameterPath, (PersistedData) results, format);
+		return new SimulationResult(parameterPath, (PersistedData) results, format);
 	}
 
-	@Override
-	public IInstancePath newInstancePath(ANode node)
-	{
-		return newInstancePath(node.getEntityInstancePath(), node.getAspectInstancePath(), node.getLocalInstancePath());
-	}
 
 	@Override
 	public IPersistedData newPersistedData(URL url, PersistedDataType type)
@@ -429,9 +413,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	}
 
 	@Override
-	public IAspectConfiguration newAspectConfiguration(IExperiment experiment, IInstancePath instancePath, ISimulatorConfiguration simulatorConfiguration)
+	public IAspectConfiguration newAspectConfiguration(IExperiment experiment, String instancePath, ISimulatorConfiguration simulatorConfiguration)
 	{
-		AspectConfiguration aspectConfiguration = new AspectConfiguration((InstancePath) instancePath, new ArrayList<InstancePath>(), new ArrayList<Parameter>(),
+		AspectConfiguration aspectConfiguration = new AspectConfiguration(instancePath, new ArrayList<String>(), new ArrayList<Parameter>(),
 				(SimulatorConfiguration) simulatorConfiguration);
 		saveEntity(aspectConfiguration);
 		((Experiment) experiment).getAspectConfigurations().add(aspectConfiguration);
@@ -446,9 +430,15 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	}
 
 	@Override
-	public void addWatchedVariable(IAspectConfiguration aspectConfiguration, IInstancePath instancePath)
+	public void addWatchedVariable(IAspectConfiguration aspectConfiguration, String instancePath)
 	{
-		((AspectConfiguration) aspectConfiguration).getWatchedVariables().add((InstancePath) instancePath);
+		((AspectConfiguration) aspectConfiguration).getWatchedVariables().add(instancePath);
+	}
+
+	@Override
+	public IUserGroup newUserGroup(String name, List<UserPrivileges> privileges, long spaceAllowance, long timeAllowance)
+	{
+		return new UserGroup(name, privileges, spaceAllowance, timeAllowance);
 	}
 
 }

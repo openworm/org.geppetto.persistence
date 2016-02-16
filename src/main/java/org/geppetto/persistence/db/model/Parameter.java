@@ -35,7 +35,6 @@ package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -52,13 +51,11 @@ public class Parameter implements Serializable, IParameter
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 
-	@Column(name = "variable_id")
-	@Persistent(dependent = "true", defaultFetchGroup = "true")
-	private InstancePath variable;
+	private String variable;
 
 	private String value;
 
-	public Parameter(InstancePath variable, String value)
+	public Parameter(String variable, String value)
 	{
 		super();
 		this.variable = variable;
@@ -70,12 +67,12 @@ public class Parameter implements Serializable, IParameter
 		return id;
 	}
 
-	public InstancePath getVariable()
+	public String getVariable()
 	{
 		return variable;
 	}
 
-	public void setVariable(InstancePath instancePath)
+	public void setVariable(String instancePath)
 	{
 		this.variable = instancePath;
 	}
