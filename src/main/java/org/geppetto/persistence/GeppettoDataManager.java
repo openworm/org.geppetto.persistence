@@ -129,6 +129,16 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	{
 		return dbManager.findUserByLogin(login);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geppetto.core.data.IGeppettoDataManager#getUserGroupById(long)
+	 */
+	@Override
+	public IUserGroup getUserGroupById(long id){
+		return dbManager.findEntityById(UserGroup.class, id);	
+	}
 
 	/*
 	 * (non-Javadoc)
