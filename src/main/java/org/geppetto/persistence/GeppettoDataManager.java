@@ -35,6 +35,7 @@ package org.geppetto.persistence;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -172,7 +173,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public List<GeppettoProject> getGeppettoProjectsForUser(String login)
 	{
-		User user = dbManager.findUserByLogin(login);
+		User user = dbManager.findUserByLogin(login); 
 		return user.getGeppettoProjects();
 	}
 
@@ -216,6 +217,21 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		return experiment;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.geppetto.core.data.IGeppettoDataManager#newExperiment(java.lang.String, java.lang.String, org.geppetto.core.data.model.IGeppettoProject)
+	 */
+	@Override
+	public IExperiment cloneExperiment(String name, String description, IGeppettoProject project, IExperiment originalExperiment)
+	{
+		Experiment cloneExperiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
+				new Date(), project);
+		cloneExperiment.getAspectConfigurations().addAll((Collection<? extends AspectConfiguration>) originalExperiment.getAspectConfigurations());
+		((GeppettoProject) project).getExperiments().add(cloneExperiment);
+		dbManager.storeEntity(project);
+		return cloneExperiment;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
