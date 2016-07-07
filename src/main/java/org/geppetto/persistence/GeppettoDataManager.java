@@ -220,14 +220,19 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.geppetto.core.data.IGeppettoDataManager#newExperiment(java.lang.String, java.lang.String, org.geppetto.core.data.model.IGeppettoProject)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#cloneExperiment(java.lang.String, java.lang.String, 
+	 * 					org.geppetto.core.data.model.IGeppettoProject,org.geppetto.core.data.model.IExperiment)
 	 */
 	@Override
 	public IExperiment cloneExperiment(String name, String description, IGeppettoProject project, IExperiment originalExperiment)
 	{
-		Experiment cloneExperiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
-				new Date(), project);
-		cloneExperiment.getAspectConfigurations().addAll((Collection<? extends AspectConfiguration>) originalExperiment.getAspectConfigurations());
+		Experiment cloneExperiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, 
+						 new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), 
+						 new Date(),new Date(), project);
+		
+		Collection<? extends AspectConfiguration> collection = 
+				(Collection<? extends AspectConfiguration>) originalExperiment.getAspectConfigurations();
+		cloneExperiment.getAspectConfigurations().addAll(collection);
 		((GeppettoProject) project).getExperiments().add(cloneExperiment);
 		dbManager.storeEntity(project);
 		return cloneExperiment;
