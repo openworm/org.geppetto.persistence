@@ -170,53 +170,53 @@ public class DBManagerTest
 		Assert.assertTrue(experiment.getAspectConfigurations().contains(aspectConfiguration));
 		Assert.assertEquals(simulatorConfiguration, aspectConfiguration.getSimulatorConfiguration());
 	}
-	
-	@Test
-	public void testDeleteExperiment()
-	{
-		user = db.findUserByLogin("guest1");
-		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
-		IExperiment experiment = dataManager.newExperiment("E", "D", project);
-		int experimentsSize = project.getExperiments().size(); 
-		long id = experiment.getId();
-		dataManager.deleteExperiment(experiment);
-		IExperiment theExperiment = null;
-		for(IExperiment e : project.getExperiments())
-		{
-			if(e.getId() == id)
-			{
-				// The experiment is found
-				theExperiment = e;
-			}
-		}
-		Assert.assertNull(theExperiment);
-		Assert.assertEquals(experimentsSize-1, project.getExperiments().size());
-	}
-	
-	@Test
-	public void testMultipleNewAndDeleteExperiments()
-	{
-		int runNumber = 5;
-		user = db.findUserByLogin("guest1");
-		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
-		for(int i =0; i<runNumber; i++){
-			IExperiment experiment = dataManager.newExperiment("E", "D", project);
-			int experimentsSize = project.getExperiments().size(); 
-			long id = experiment.getId();
-			dataManager.deleteExperiment(experiment);
-			IExperiment theExperiment = null;
-			for(IExperiment e : project.getExperiments())
-			{
-				if(e.getId() == id)
-				{
-					// The experiment is found
-					theExperiment = e;
-				}
-			}
-			Assert.assertNull(theExperiment);
-			Assert.assertEquals(experimentsSize-1, project.getExperiments().size());
-		}
-	}
+//	
+//	@Test
+//	public void testDeleteExperiment()
+//	{
+//		user = db.findUserByLogin("guest1");
+//		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
+//		IExperiment experiment = dataManager.newExperiment("E", "D", project);
+//		int experimentsSize = project.getExperiments().size(); 
+//		long id = experiment.getId();
+//		dataManager.deleteExperiment(experiment);
+//		IExperiment theExperiment = null;
+//		for(IExperiment e : project.getExperiments())
+//		{
+//			if(e.getId() == id)
+//			{
+//				// The experiment is found
+//				theExperiment = e;
+//			}
+//		}
+//		Assert.assertNull(theExperiment);
+//		Assert.assertEquals(experimentsSize-1, project.getExperiments().size());
+//	}
+//	
+//	@Test
+//	public void testMultipleNewAndDeleteExperiments()
+//	{
+//		int runNumber = 5;
+//		user = db.findUserByLogin("guest1");
+//		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
+//		for(int i =0; i<runNumber; i++){
+//			IExperiment experiment = dataManager.newExperiment("E", "D", project);
+//			int experimentsSize = project.getExperiments().size(); 
+//			long id = experiment.getId();
+//			dataManager.deleteExperiment(experiment);
+//			IExperiment theExperiment = null;
+//			for(IExperiment e : project.getExperiments())
+//			{
+//				if(e.getId() == id)
+//				{
+//					// The experiment is found
+//					theExperiment = e;
+//				}
+//			}
+//			Assert.assertNull(theExperiment);
+//			Assert.assertEquals(experimentsSize-1, project.getExperiments().size());
+//		}
+//	}
 
 	@Test
 	public void testMultipleQueriesPart1()
