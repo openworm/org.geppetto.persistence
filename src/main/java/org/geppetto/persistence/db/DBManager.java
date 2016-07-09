@@ -198,7 +198,7 @@ public class DBManager
 		}
 		catch(Exception e)
 		{
-			_logger.warn("Could not delete data", e);
+			_logger.warn("Could not delete data",e);
 		}
 		finally
 		{
