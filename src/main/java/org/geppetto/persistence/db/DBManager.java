@@ -95,9 +95,19 @@ public class DBManager
 	 */
 	public synchronized <T> void storeEntity(T entity)
 	{
-		PersistenceManager pm = getPersistenceManager();
-		pm.makePersistent(entity);
-		finishRequest();
+		PersistenceManager pm = getPersistenceManager();		
+		try
+		{
+			pm.makePersistent(entity);
+		}
+		catch(Exception e)
+		{
+			_logger.warn("Could not insert data", e);
+		}
+		finally
+		{
+			finishRequest();
+		}
 	}
 
 	/**
