@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.data.IGeppettoDataManager;
@@ -225,17 +226,28 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	 */
 	@Override
 	public IExperiment cloneExperiment(String name, String description, IGeppettoProject project, IExperiment originalExperiment)
-	{
-		Experiment cloneExperiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, 
-						 new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), 
-						 new Date(),new Date(), project);
-		
+	{	
+		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
+				new Date(), project);
+		((GeppettoProject) project).getExperiments().add(experiment);
+		dbManager.storeEntity(project);
 		Collection<? extends AspectConfiguration> collection = 
 				(Collection<? extends AspectConfiguration>) originalExperiment.getAspectConfigurations();
-		cloneExperiment.getAspectConfigurations().addAll(collection);
-		((GeppettoProject) project).getExperiments().add(cloneExperiment);
+		for(AspectConfiguration a : collection){
+			if(a.getSimulatorConfiguration()!=null){
+				String simulator = a.getSimulatorConfiguration().getSimulatorId();
+				String conversion = a.getSimulatorConfiguration().getConversionServiceId();
+				float length = a.getSimulatorConfiguration().getLength();
+				float timeStep = a.getSimulatorConfiguration().getTimestep();
+
+				ISimulatorConfiguration simulatorConfiguration = this.newSimulatorConfiguration(simulator, conversion, timeStep,length);
+				AspectConfiguration aspectConfiguration = 
+						(AspectConfiguration) this.newAspectConfiguration(experiment, a.getInstance(), simulatorConfiguration);
+				experiment.getAspectConfigurations().add(aspectConfiguration);
+			}
+		}
 		dbManager.storeEntity(project);
-		return cloneExperiment;
+		return experiment;
 	}
 	/*
 	 * (non-Javadoc)
@@ -328,8 +340,12 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public Object deleteExperiment(IExperiment experiment)
 	{
-		// everything inside an experiment is cleared automatically thanks to dependent = "true" in the entity configuration
-		dbManager.deleteEntity(experiment);
+		GeppettoProject project = 
+				dbManager.findEntityById(GeppettoProject.class, experiment.getParentProject().getId());
+		Experiment e = dbManager.findEntityById(Experiment.class, experiment.getId());
+		project.getExperiments().remove(e);
+		dbManager.storeEntity(project);
+		dbManager.deleteEntity(e);
 		return true;
 	}
 
@@ -455,7 +471,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	}
 
 	@Override
-	public ISimulatorConfiguration newSimulatorConfiguration(String simulator, String conversionService, long timestep, long length)
+	public ISimulatorConfiguration newSimulatorConfiguration(String simulator, String conversionService, float timestep, float length)
 	{
 		return new SimulatorConfiguration(simulator, conversionService, timestep, length, new HashMap<String, String>());
 	}

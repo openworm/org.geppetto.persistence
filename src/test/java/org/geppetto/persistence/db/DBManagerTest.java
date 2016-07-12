@@ -50,6 +50,7 @@ import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.core.data.model.UserPrivileges;
 import org.geppetto.persistence.GeppettoDataManager;
+import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
 import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.PersistedData;
@@ -135,6 +136,7 @@ public class DBManagerTest
 		Assert.assertEquals(recording, experiment.getSimulationResults().get(0).getResult());
 		Assert.assertEquals(aspect, experiment.getSimulationResults().get(0).getSimulatedInstance());
 		experiment.getSimulationResults().clear();
+		db.storeEntity(experiment);
 		db.deleteEntity(recording);
 		db.deleteEntity(results);
 		db.storeEntity(experiment);
@@ -175,11 +177,22 @@ public class DBManagerTest
 	public void testDeleteExperiment()
 	{
 		user = db.findUserByLogin("guest1");
+		
+		//retrieve project
 		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
-		IExperiment experiment = dataManager.newExperiment("E", "D", project);
 		int experimentsSize = project.getExperiments().size(); 
+		IExperiment experiment = dataManager.newExperiment("E", "D", project);
+		
+		//retrieve project again 
+		project = db.findEntityById(GeppettoProject.class, 1l);
+		int newExperimentsSize = project.getExperiments().size(); 
+		Assert.assertEquals(experimentsSize+1, newExperimentsSize);
 		long id = experiment.getId();
+		
+		
 		dataManager.deleteExperiment(experiment);
+		
+		project = db.findEntityById(GeppettoProject.class, 1l);
 		IExperiment theExperiment = null;
 		for(IExperiment e : project.getExperiments())
 		{
@@ -190,7 +203,56 @@ public class DBManagerTest
 			}
 		}
 		Assert.assertNull(theExperiment);
-		Assert.assertEquals(experimentsSize-1, project.getExperiments().size());
+		Assert.assertEquals(experimentsSize, project.getExperiments().size());
+	}
+	
+	@Test
+	public void testCloneExperiment()
+	{
+		user = db.findUserByLogin("guest1");
+		
+		//retrieve project
+		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
+		IExperiment originalExperiment = db.findEntityById(Experiment.class, 1l);
+		ISimulatorConfiguration simulatorConfiguration = dataManager.newSimulatorConfiguration("", "", 0l, 0l);
+		IAspectConfiguration aspectConfiguration = dataManager.newAspectConfiguration(originalExperiment, "instancePath", simulatorConfiguration);
+		int experimentsSize = project.getExperiments().size(); 
+		originalExperiment = db.findEntityById(Experiment.class, 1l);
+		IExperiment experiment = dataManager.cloneExperiment("E", "D", project, originalExperiment);
+		
+		//retrieve project again 
+		project = db.findEntityById(GeppettoProject.class, 1l);
+		int newExperimentsSize = project.getExperiments().size(); 
+		Assert.assertEquals(experimentsSize+1, newExperimentsSize);
+		long id = experiment.getId();
+
+		float newLength =
+				experiment.getAspectConfigurations().get(0).getSimulatorConfiguration().getLength();
+		float oldLength =
+				originalExperiment.getAspectConfigurations().get(0).getSimulatorConfiguration().getLength();
+		Assert.assertEquals(oldLength, newLength, 0);
+		
+		float newStep =
+				experiment.getAspectConfigurations().get(0).getSimulatorConfiguration().getTimestep();
+		float oldStep =
+				originalExperiment.getAspectConfigurations().get(0).getSimulatorConfiguration().getTimestep();
+		Assert.assertEquals(oldStep, newStep, 0);
+
+		
+		dataManager.deleteExperiment(experiment);
+		
+		project = db.findEntityById(GeppettoProject.class, 1l);
+		IExperiment theExperiment = null;
+		for(IExperiment e : project.getExperiments())
+		{
+			if(e.getId() == id)
+			{
+				// The experiment is found
+				theExperiment = e;
+			}
+		}
+		Assert.assertNull(theExperiment);
+		Assert.assertEquals(experimentsSize, project.getExperiments().size());
 	}
 	
 	@Test
@@ -199,11 +261,18 @@ public class DBManagerTest
 		int runNumber = 5;
 		user = db.findUserByLogin("guest1");
 		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
+		int experimentsSize = project.getExperiments().size(); 
 		for(int i =0; i<runNumber; i++){
 			IExperiment experiment = dataManager.newExperiment("E", "D", project);
-			int experimentsSize = project.getExperiments().size(); 
+			
+			//retrieve project again from db to get updated version
+			project = db.findEntityById(GeppettoProject.class, 1l);
 			long id = experiment.getId();
+			
 			dataManager.deleteExperiment(experiment);
+			
+			//retrieve project again from db to get updated version
+			project = db.findEntityById(GeppettoProject.class, 1l);
 			IExperiment theExperiment = null;
 			for(IExperiment e : project.getExperiments())
 			{
@@ -214,8 +283,9 @@ public class DBManagerTest
 				}
 			}
 			Assert.assertNull(theExperiment);
-			Assert.assertEquals(experimentsSize-1, project.getExperiments().size());
 		}
+		project = db.findEntityById(GeppettoProject.class, 1l);
+		Assert.assertEquals(experimentsSize, project.getExperiments().size());
 	}
 
 	@Test
