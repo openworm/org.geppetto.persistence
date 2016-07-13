@@ -241,8 +241,8 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				float timeStep = a.getSimulatorConfiguration().getTimestep();
 
 				ISimulatorConfiguration simulatorConfiguration = this.newSimulatorConfiguration(simulator, conversion, timeStep,length);
-				AspectConfiguration aspectConfiguration = 
-						(AspectConfiguration) this.newAspectConfiguration(experiment, a.getInstance(), simulatorConfiguration);
+				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), new ArrayList<String>(), new ArrayList<Parameter>(),
+						(SimulatorConfiguration) simulatorConfiguration);
 				experiment.getAspectConfigurations().add(aspectConfiguration);
 			}
 		}
