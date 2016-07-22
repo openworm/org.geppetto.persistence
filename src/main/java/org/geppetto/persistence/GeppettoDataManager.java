@@ -239,9 +239,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				String conversion = a.getSimulatorConfiguration().getConversionServiceId();
 				float length = a.getSimulatorConfiguration().getLength();
 				float timeStep = a.getSimulatorConfiguration().getTimestep();
-
+				List<String> watchedVariables = a.getWatchedVariables();
+				List<Parameter> parameters = a.getModelParameter();
 				ISimulatorConfiguration simulatorConfiguration = this.newSimulatorConfiguration(simulator, conversion, timeStep,length);
-				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), new ArrayList<String>(), new ArrayList<Parameter>(),
+				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), watchedVariables, parameters,
 						(SimulatorConfiguration) simulatorConfiguration);
 				experiment.getAspectConfigurations().add(aspectConfiguration);
 			}

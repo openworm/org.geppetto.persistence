@@ -238,6 +238,26 @@ public class DBManagerTest
 				originalExperiment.getAspectConfigurations().get(0).getSimulatorConfiguration().getTimestep();
 		Assert.assertEquals(oldStep, newStep, 0);
 
+		String oldWatchedVariable =
+				originalExperiment.getAspectConfigurations().get(0).getWatchedVariables().get(0);
+		
+		String newWatchedVariable =
+				experiment.getAspectConfigurations().get(0).getWatchedVariables().get(0);
+		Assert.assertEquals(oldWatchedVariable,newWatchedVariable);
+		
+		String oldWatchedVariable2 =
+				originalExperiment.getAspectConfigurations().get(0).getWatchedVariables().get(1);
+		
+		String newWatchedVariable2 =
+				experiment.getAspectConfigurations().get(0).getWatchedVariables().get(1);
+		Assert.assertEquals(oldWatchedVariable2,newWatchedVariable2);
+		
+		int oldWatchedVariableSize =
+				originalExperiment.getAspectConfigurations().get(0).getWatchedVariables().size();
+		
+		int newWatchedVariableSize =
+				experiment.getAspectConfigurations().get(0).getWatchedVariables().size();
+		Assert.assertEquals(oldWatchedVariableSize,newWatchedVariableSize);
 		
 		dataManager.deleteExperiment(experiment);
 		
