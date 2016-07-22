@@ -239,10 +239,11 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				String conversion = a.getSimulatorConfiguration().getConversionServiceId();
 				float length = a.getSimulatorConfiguration().getLength();
 				float timeStep = a.getSimulatorConfiguration().getTimestep();
+				Map<String,String> parameters = a.getSimulatorConfiguration().getParameters();
 				List<String> watchedVariables = a.getWatchedVariables();
-				List<Parameter> parameters = a.getModelParameter();
-				ISimulatorConfiguration simulatorConfiguration = this.newSimulatorConfiguration(simulator, conversion, timeStep,length);
-				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), watchedVariables, parameters,
+				List<Parameter> modelParameters = a.getModelParameter();
+				ISimulatorConfiguration simulatorConfiguration = this.newSimulatorConfiguration(simulator, conversion, timeStep,length,parameters);
+				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), watchedVariables, modelParameters,
 						(SimulatorConfiguration) simulatorConfiguration);
 				experiment.getAspectConfigurations().add(aspectConfiguration);
 			}
@@ -472,9 +473,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	}
 
 	@Override
-	public ISimulatorConfiguration newSimulatorConfiguration(String simulator, String conversionService, float timestep, float length)
+	public ISimulatorConfiguration newSimulatorConfiguration(String simulator, String conversionService, float timestep, float length, Map<String,String> parameters)
 	{
-		return new SimulatorConfiguration(simulator, conversionService, timestep, length, new HashMap<String, String>());
+		return new SimulatorConfiguration(simulator, conversionService, timestep, length, parameters);
 	}
 
 	@Override

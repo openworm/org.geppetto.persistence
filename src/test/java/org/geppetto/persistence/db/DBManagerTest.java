@@ -36,6 +36,7 @@ package org.geppetto.persistence.db;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.geppetto.core.data.model.ExperimentStatus;
@@ -166,7 +167,7 @@ public class DBManagerTest
 		IExperiment experiment = dataManager.newExperiment("E", "D", project);
 		Assert.assertNotNull(experiment.getName());
 		String instancePath = "entity.aspect";
-		ISimulatorConfiguration simulatorConfiguration = dataManager.newSimulatorConfiguration("", "", 0l, 0l);
+		ISimulatorConfiguration simulatorConfiguration = dataManager.newSimulatorConfiguration("", "", 0l, 0l,new HashMap<String,String>());
 		IAspectConfiguration aspectConfiguration = dataManager.newAspectConfiguration(experiment, instancePath, simulatorConfiguration);
 		Assert.assertNotNull(experiment.getName());
 		Assert.assertTrue(experiment.getAspectConfigurations().contains(aspectConfiguration));
@@ -214,7 +215,7 @@ public class DBManagerTest
 		//retrieve project
 		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
 		IExperiment originalExperiment = db.findEntityById(Experiment.class, 1l);
-		ISimulatorConfiguration simulatorConfiguration = dataManager.newSimulatorConfiguration("", "", 0l, 0l);
+		ISimulatorConfiguration simulatorConfiguration = dataManager.newSimulatorConfiguration("", "", 0l, 0l,new HashMap<String,String>());
 		IAspectConfiguration aspectConfiguration = dataManager.newAspectConfiguration(originalExperiment, "instancePath", simulatorConfiguration);
 		int experimentsSize = project.getExperiments().size(); 
 		originalExperiment = db.findEntityById(Experiment.class, 1l);
@@ -258,6 +259,13 @@ public class DBManagerTest
 		int newWatchedVariableSize =
 				experiment.getAspectConfigurations().get(0).getWatchedVariables().size();
 		Assert.assertEquals(oldWatchedVariableSize,newWatchedVariableSize);
+		
+		int oldSimParamsSize =
+				originalExperiment.getAspectConfigurations().get(0).getSimulatorConfiguration().getParameters().size();
+		
+		int newSimParamsSize =
+				experiment.getAspectConfigurations().get(0).getSimulatorConfiguration().getParameters().size();
+		Assert.assertEquals(oldSimParamsSize,newSimParamsSize);
 		
 		dataManager.deleteExperiment(experiment);
 		
