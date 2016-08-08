@@ -67,7 +67,8 @@ public class DBTestData
 {
 
 	private DBManager dbManager;
-	private User user;
+	private User user, anonymous;
+	private User user2;
 
 	public DBTestData()
 	{
@@ -80,10 +81,25 @@ public class DBTestData
 		privileges.add(UserPrivileges.DOWNLOAD);
 		privileges.add(UserPrivileges.DROPBOX_INTEGRATION);
 		privileges.add(UserPrivileges.RUN_EXPERIMENT);
+
 		IUserGroup group = new UserGroup("guest", privileges, value, value * 2);
 		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>(), group);
 		dbManager.storeEntity(group);
 		dbManager.storeEntity(user);
+		
+		List<UserPrivileges> guest2Privileges = new ArrayList<UserPrivileges>();
+		guest2Privileges.add(UserPrivileges.READ_PROJECT);
+		IUserGroup groupUser2 = new UserGroup("guest2", guest2Privileges, value, value * 2);
+		user2 = new User("guest2", "guest", "Guest user 2", new ArrayList<GeppettoProject>(), groupUser2);
+		dbManager.storeEntity(groupUser2);
+		dbManager.storeEntity(user2);
+		
+		List<UserPrivileges> privilegesAnonymous = new ArrayList<UserPrivileges>();
+		privilegesAnonymous.add(UserPrivileges.READ_PROJECT);
+		IUserGroup anonymousGroup = new UserGroup("anonymous", privilegesAnonymous, value, value * 2);
+		anonymous = new User("anonymous", "guest", "Anonymous", new ArrayList<GeppettoProject>(), anonymousGroup);
+		dbManager.storeEntity(anonymousGroup);
+		dbManager.storeEntity(anonymous);
 	}
 
 	public static PersistenceManagerFactory getPersistenceManagerFactory()
@@ -185,7 +201,9 @@ public class DBTestData
 	{
 		String path = "http://org.geppetto.bucket.s3.amazonaws.com/projects/"+id+"/";
 		user = dbManager.findUserByLogin("guest1");
+		user2 = dbManager.findUserByLogin("guest2");
 		List<GeppettoProject> projects = user.getGeppettoProjects();
+		List<GeppettoProject> projectsUser2 = user.getGeppettoProjects();
 
 		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
 		GeppettoProject project = new GeppettoProject(name, geppettoModel);
@@ -236,8 +254,9 @@ public class DBTestData
 		experiments.add(exp3);
 		project.setExperiments(experiments);
 		projects.add(project);
-
+		projectsUser2.add(project);
 		dbManager.storeEntity(user);
+		dbManager.storeEntity(user2);
 
 	}
 
