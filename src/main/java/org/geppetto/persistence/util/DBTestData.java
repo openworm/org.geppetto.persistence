@@ -68,7 +68,7 @@ public class DBTestData
 
 	private DBManager dbManager;
 	private User user, anonymous;
-	private User user2;
+	private User user2, user3;
 
 	public DBTestData()
 	{
@@ -93,6 +93,14 @@ public class DBTestData
 		user2 = new User("guest2", "guest", "Guest user 2", new ArrayList<GeppettoProject>(), groupUser2);
 		dbManager.storeEntity(groupUser2);
 		dbManager.storeEntity(user2);
+		
+		List<UserPrivileges> guest3Privileges = new ArrayList<UserPrivileges>();
+		guest3Privileges.add(UserPrivileges.READ_PROJECT);
+		guest3Privileges.add(UserPrivileges.WRITE_PROJECT);
+		IUserGroup groupUser3 = new UserGroup("guest3", guest3Privileges, value, value * 2);
+		user3 = new User("guest3", "guest", "Guest user 3", new ArrayList<GeppettoProject>(), groupUser3);
+		dbManager.storeEntity(groupUser3);
+		dbManager.storeEntity(user3);
 		
 		List<UserPrivileges> privilegesAnonymous = new ArrayList<UserPrivileges>();
 		privilegesAnonymous.add(UserPrivileges.READ_PROJECT);
