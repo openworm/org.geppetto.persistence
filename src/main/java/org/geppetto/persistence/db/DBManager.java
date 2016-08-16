@@ -103,6 +103,7 @@ public class DBManager
 		catch(Exception e)
 		{
 			_logger.warn("Could not insert data", e);
+			throw e;
 		}
 		finally
 		{
