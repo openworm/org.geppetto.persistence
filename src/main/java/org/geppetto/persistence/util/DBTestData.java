@@ -328,8 +328,8 @@ public class DBTestData
 		testDBCreator.buildACNet2DemoProject("ACNet2 1",5);
 		testDBCreator.buildACNet2DemoProject("ACNet2 2",5);
 		testDBCreator.buildACNet2DemoProject("ACNet2 3",5);
-		testDBCreator.buildHHCellOpenCortex246CellsDemoProject("Balanced_246cells_26593conns.net", 6);
-		testDBCreator.buildHHCellOpenCortex240CellsDemoProject("Balanced_240cells_29299conns.net", 7);
+		testDBCreator.buildHHCellOpenCortex246CellsDemoProject("Balanced_246cells_26593conns.net", 10);
+		testDBCreator.buildHHCellOpenCortex240CellsDemoProject("Balanced_240cells_29299conns.net", 15);
 	}
 
 }
