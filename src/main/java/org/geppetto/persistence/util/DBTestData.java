@@ -289,7 +289,6 @@ public class DBTestData
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
 		project.setExperiments(experiments);
-		project.setActiveExperimentId(exp1.getId());
 		
 		projects.add(project);
 		dbManager.storeEntity(user);
@@ -313,7 +312,6 @@ public class DBTestData
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
 		project.setExperiments(experiments);
-		project.setActiveExperimentId(exp1.getId());
 		
 		projects.add(project);
 		dbManager.storeEntity(user);
