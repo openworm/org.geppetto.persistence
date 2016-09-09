@@ -316,6 +316,28 @@ public class DBTestData
 		projects.add(project);
 		dbManager.storeEntity(user);
 	}
+	
+	private void twoCell(String name, int id)
+	{
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
+		user = dbManager.findUserByLogin("guest1");
+		List<GeppettoProject> projects = user.getGeppettoProjects();
+
+		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
+		GeppettoProject project = new GeppettoProject(name, geppettoModel);
+
+		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
+		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
+		sc1.getParameters().put("target", "TwoCell");
+		aspectConfigurations1.add(new AspectConfiguration("TwoCell", null, null, sc1));
+		Experiment exp1 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		List<Experiment> experiments = new ArrayList<>();
+		experiments.add(exp1);
+		project.setExperiments(experiments);
+		
+		projects.add(project);
+		dbManager.storeEntity(user);
+	}
 
 	public static void main(String[] args)
 	{
@@ -328,6 +350,7 @@ public class DBTestData
 		testDBCreator.buildACNet2DemoProject("ACNet2 3",5);
 		testDBCreator.buildHHCellOpenCortex246CellsDemoProject("Balanced_246cells_26593conns.net", 10);
 		testDBCreator.buildHHCellOpenCortex240CellsDemoProject("Balanced_240cells_29299conns.net", 15);
+		testDBCreator.twoCell("twocell", 20);
 	}
 
 }
