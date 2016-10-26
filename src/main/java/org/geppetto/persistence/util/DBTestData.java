@@ -67,7 +67,8 @@ public class DBTestData
 {
 
 	private DBManager dbManager;
-	private User user;
+	private User user, anonymous;
+	private User user2, user3;
 
 	public DBTestData()
 	{
@@ -80,10 +81,33 @@ public class DBTestData
 		privileges.add(UserPrivileges.DOWNLOAD);
 		privileges.add(UserPrivileges.DROPBOX_INTEGRATION);
 		privileges.add(UserPrivileges.RUN_EXPERIMENT);
+
 		IUserGroup group = new UserGroup("guest", privileges, value, value * 2);
 		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>(), group);
 		dbManager.storeEntity(group);
 		dbManager.storeEntity(user);
+		
+		List<UserPrivileges> guest2Privileges = new ArrayList<UserPrivileges>();
+		guest2Privileges.add(UserPrivileges.READ_PROJECT);
+		IUserGroup groupUser2 = new UserGroup("guest2", guest2Privileges, value, value * 2);
+		user2 = new User("guest2", "guest", "Guest user 2", new ArrayList<GeppettoProject>(), groupUser2);
+		dbManager.storeEntity(groupUser2);
+		dbManager.storeEntity(user2);
+		
+		List<UserPrivileges> guest3Privileges = new ArrayList<UserPrivileges>();
+		guest3Privileges.add(UserPrivileges.READ_PROJECT);
+		guest3Privileges.add(UserPrivileges.WRITE_PROJECT);
+		IUserGroup groupUser3 = new UserGroup("guest3", guest3Privileges, value, value * 2);
+		user3 = new User("guest3", "guest", "Guest user 3", new ArrayList<GeppettoProject>(), groupUser3);
+		dbManager.storeEntity(groupUser3);
+		dbManager.storeEntity(user3);
+		
+		List<UserPrivileges> privilegesAnonymous = new ArrayList<UserPrivileges>();
+		privilegesAnonymous.add(UserPrivileges.READ_PROJECT);
+		IUserGroup anonymousGroup = new UserGroup("anonymous", privilegesAnonymous, value, value * 2);
+		anonymous = new User("anonymous", "guest", "Anonymous", new ArrayList<GeppettoProject>(), anonymousGroup);
+		dbManager.storeEntity(anonymousGroup);
+		dbManager.storeEntity(anonymous);
 	}
 
 	public static PersistenceManagerFactory getPersistenceManagerFactory()
@@ -185,7 +209,11 @@ public class DBTestData
 	{
 		String path = "http://org.geppetto.bucket.s3.amazonaws.com/projects/"+id+"/";
 		user = dbManager.findUserByLogin("guest1");
+		user2 = dbManager.findUserByLogin("guest2");
+		user3 = dbManager.findUserByLogin("guest3");
 		List<GeppettoProject> projects = user.getGeppettoProjects();
+		List<GeppettoProject> projectsUser2 = user2.getGeppettoProjects();
+		List<GeppettoProject> projectsUser3 = user3.getGeppettoProjects();
 
 		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
 		GeppettoProject project = new GeppettoProject(name, geppettoModel);
@@ -236,9 +264,79 @@ public class DBTestData
 		experiments.add(exp3);
 		project.setExperiments(experiments);
 		projects.add(project);
-
+		projectsUser2.add(project);
+		projectsUser3.add(project);
 		dbManager.storeEntity(user);
+		dbManager.storeEntity(user2);
+		dbManager.storeEntity(user3);
+	}
+	
+	private void buildHHCellOpenCortex246CellsDemoProject(String name, int id)
+	{
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
+		user = dbManager.findUserByLogin("guest1");
+		List<GeppettoProject> projects = user.getGeppettoProjects();
 
+		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
+		GeppettoProject project = new GeppettoProject(name, geppettoModel);
+
+		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
+		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
+		sc1.getParameters().put("target", "Balanced_246cells_26593conns");
+		aspectConfigurations1.add(new AspectConfiguration("Balanced_246cells_26593conns", null, null, sc1));
+		Experiment exp1 = new Experiment(aspectConfigurations1, "Balanced_246cells_26593conns - net", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		exp1.setScript(path+"script.js");
+		List<Experiment> experiments = new ArrayList<>();
+		experiments.add(exp1);
+		project.setExperiments(experiments);
+		
+		projects.add(project);
+		dbManager.storeEntity(user);
+	}
+	
+	private void buildHHCellOpenCortex240CellsDemoProject(String name, int id)
+	{
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
+		user = dbManager.findUserByLogin("guest1");
+		List<GeppettoProject> projects = user.getGeppettoProjects();
+
+		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
+		GeppettoProject project = new GeppettoProject(name, geppettoModel);
+
+		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
+		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
+		sc1.getParameters().put("target", "Balanced_240cells_29299conns");
+		aspectConfigurations1.add(new AspectConfiguration("Balanced_240cells_29299conns", null, null, sc1));
+		Experiment exp1 = new Experiment(aspectConfigurations1, "Balanced_240cells_29299conns - net", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		exp1.setScript(path+"script.js");
+		List<Experiment> experiments = new ArrayList<>();
+		experiments.add(exp1);
+		project.setExperiments(experiments);
+		
+		projects.add(project);
+		dbManager.storeEntity(user);
+	}
+	
+	private void twoCell(String name, int id)
+	{
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
+		user = dbManager.findUserByLogin("guest1");
+		List<GeppettoProject> projects = user.getGeppettoProjects();
+
+		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
+		GeppettoProject project = new GeppettoProject(name, geppettoModel);
+
+		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
+		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
+		sc1.getParameters().put("target", "TwoCell");
+		aspectConfigurations1.add(new AspectConfiguration("TwoCell", null, null, sc1));
+		Experiment exp1 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		List<Experiment> experiments = new ArrayList<>();
+		experiments.add(exp1);
+		project.setExperiments(experiments);
+		
+		projects.add(project);
+		dbManager.storeEntity(user);
 	}
 
 	public static void main(String[] args)
@@ -250,6 +348,9 @@ public class DBTestData
 		testDBCreator.buildACNet2DemoProject("ACNet2 1",5);
 		testDBCreator.buildACNet2DemoProject("ACNet2 2",5);
 		testDBCreator.buildACNet2DemoProject("ACNet2 3",5);
+		testDBCreator.buildHHCellOpenCortex246CellsDemoProject("Balanced_246cells_26593conns.net", 10);
+		testDBCreator.buildHHCellOpenCortex240CellsDemoProject("Balanced_240cells_29299conns.net", 15);
+		testDBCreator.twoCell("twocell", 20);
 	}
 
 }

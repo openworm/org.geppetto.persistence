@@ -46,6 +46,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.geppetto.core.common.GeppettoAccessException;
+import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.data.IGeppettoDataManager;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
@@ -287,39 +289,43 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#addGeppettoProject(org.geppetto.core.data.model.IGeppettoProject, org.geppetto.core.data.model.IUser)
 	 */
 	@Override
-	public void addGeppettoProject(IGeppettoProject project, IUser user)
+	public void addGeppettoProject(IGeppettoProject project, IUser user) throws GeppettoExecutionException
 	{
-		long oldId = project.getId();
-		long oldActiveExperimentId = project.getActiveExperimentId();
-		String activeExperimentName = null;
-		if(oldActiveExperimentId != -1)
-		{
-			for(IExperiment e : project.getExperiments())
+		try{
+			long oldId = project.getId();
+			long oldActiveExperimentId = project.getActiveExperimentId();
+			String activeExperimentName = null;
+			if(oldActiveExperimentId != -1)
 			{
-				if(e.getId() == oldActiveExperimentId)
+				for(IExperiment e : project.getExperiments())
 				{
-					activeExperimentName = e.getName();
-					break;
+					if(e.getId() == oldActiveExperimentId)
+					{
+						activeExperimentName = e.getName();
+						break;
+					}
 				}
 			}
-		}
-		project.setVolatile(false);
-		dbManager.storeEntity(project);
-		((User) user).getGeppettoProjects().add((GeppettoProject) project);
-		dbManager.storeEntity(user);
-		if(activeExperimentName != null)
-		{
-			for(IExperiment e : project.getExperiments())
+			project.setVolatile(false);
+			dbManager.storeEntity(project);
+			((User) user).getGeppettoProjects().add((GeppettoProject) project);
+			dbManager.storeEntity(user);
+			if(activeExperimentName != null)
 			{
-				if(e.getName().equals(activeExperimentName))
+				for(IExperiment e : project.getExperiments())
 				{
-					project.setActiveExperimentId(e.getId());
-					break;
+					if(e.getName().equals(activeExperimentName))
+					{
+						project.setActiveExperimentId(e.getId());
+						break;
+					}
 				}
 			}
+			projects.remove(oldId);
+			projects.put(project.getId(), (GeppettoProject) project);
+		}catch(Exception e){
+			throw new GeppettoExecutionException(e);
 		}
-		projects.remove(oldId);
-		projects.put(project.getId(), (GeppettoProject) project);
 	}
 
 	/*

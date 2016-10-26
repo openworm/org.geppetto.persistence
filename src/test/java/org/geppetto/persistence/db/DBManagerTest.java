@@ -85,6 +85,20 @@ public class DBManagerTest
 		Assert.assertTrue(user.getUserGroup() != null);
 		Assert.assertTrue(user.getUserGroup().getPrivileges().size() == 5);
 		Assert.assertTrue(user.getUserGroup().getPrivileges().get(0) == UserPrivileges.READ_PROJECT);
+		
+		user = db.findUserByLogin("guest2");
+		
+		Assert.assertTrue(user != null);
+		Assert.assertTrue(user.getUserGroup() != null);
+		Assert.assertTrue(user.getUserGroup().getPrivileges().size() == 1);
+		Assert.assertTrue(user.getUserGroup().getPrivileges().get(0) == UserPrivileges.READ_PROJECT);
+		
+		user = db.findUserByLogin("anonymous");
+		
+		Assert.assertTrue(user != null);
+		Assert.assertTrue(user.getUserGroup() != null);
+		Assert.assertTrue(user.getUserGroup().getPrivileges().size() == 1);
+		Assert.assertTrue(user.getUserGroup().getPrivileges().get(0) == UserPrivileges.READ_PROJECT);
 	}
 	
 	@Test
