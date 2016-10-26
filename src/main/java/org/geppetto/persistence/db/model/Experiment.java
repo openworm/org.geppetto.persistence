@@ -63,6 +63,9 @@ public class Experiment implements Serializable, IExperiment
 	private List<AspectConfiguration> aspectConfigurations;
 
 	private String name;
+	
+	@Column(length = 2000)
+	private String details;
 
 	@Column(length = 1000)
 	private String description;
@@ -202,6 +205,14 @@ public class Experiment implements Serializable, IExperiment
 	public void setEndDate(Date endDate)
 	{
 		this.endDate = endDate;
+	}
+	
+	public void setDetails(String details){
+		this.details = details;
+	}
+	
+	public String getDetails(){
+		return this.details;
 	}
 
 	/*
