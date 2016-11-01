@@ -64,7 +64,7 @@ public class Experiment implements Serializable, IExperiment
 
 	private String name;
 	
-	@Column(length = 2000)
+	@Column(length = 10000)
 	private String details;
 
 	@Column(length = 1000)
