@@ -73,6 +73,8 @@ public class Experiment implements Serializable, IExperiment
 	private Date creationDate;
 
 	private Date lastModified;
+	
+	private Date lastRan;
 
 	private ExperimentStatus status;
 
@@ -263,4 +265,14 @@ public class Experiment implements Serializable, IExperiment
 		this.script = script;
 	}
 
+	@Override
+	public Date getLastRan() {
+		return this.lastRan;
+	}
+
+	@Override
+	public void updateLastRan()
+	{
+		lastRan = new Date();
+	}
 }

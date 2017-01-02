@@ -37,11 +37,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
@@ -68,10 +71,15 @@ public class DBTestData
 
 	private DBManager dbManager;
 	private User user, anonymous;
-	private User user2, user3;
+	private User user2, user3, admin;
 
-	public DBTestData()
+	public DBTestData() throws ParseException
 	{
+		SimpleDateFormat formatDate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		formatDate.setTimeZone(TimeZone.getTimeZone("GMT"));
+		SimpleDateFormat formatDate2 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		String date = formatDate.format(new Date());
+		
 		dbManager = new DBManager();
 		dbManager.setPersistenceManagerFactory(getPersistenceManagerFactory());
 		long value = 1000l * 1000 * 1000;
@@ -82,32 +90,53 @@ public class DBTestData
 		privileges.add(UserPrivileges.DROPBOX_INTEGRATION);
 		privileges.add(UserPrivileges.RUN_EXPERIMENT);
 
+		date = formatDate.format(new Date());
 		IUserGroup group = new UserGroup("guest", privileges, value, value * 2);
 		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>(), group);
+		user.setLastLoginDate(formatDate2.parse(date).toString());
 		dbManager.storeEntity(group);
 		dbManager.storeEntity(user);
 		
+		date = formatDate.format(new Date());
 		List<UserPrivileges> guest2Privileges = new ArrayList<UserPrivileges>();
 		guest2Privileges.add(UserPrivileges.READ_PROJECT);
 		IUserGroup groupUser2 = new UserGroup("guest2", guest2Privileges, value, value * 2);
 		user2 = new User("guest2", "guest", "Guest user 2", new ArrayList<GeppettoProject>(), groupUser2);
+		user2.setLastLoginDate(formatDate2.parse(date).toString());
 		dbManager.storeEntity(groupUser2);
 		dbManager.storeEntity(user2);
 		
+		date = formatDate.format(new Date());
 		List<UserPrivileges> guest3Privileges = new ArrayList<UserPrivileges>();
 		guest3Privileges.add(UserPrivileges.READ_PROJECT);
 		guest3Privileges.add(UserPrivileges.WRITE_PROJECT);
 		IUserGroup groupUser3 = new UserGroup("guest3", guest3Privileges, value, value * 2);
 		user3 = new User("guest3", "guest", "Guest user 3", new ArrayList<GeppettoProject>(), groupUser3);
+		user3.setLastLoginDate(formatDate2.parse(date).toString());
 		dbManager.storeEntity(groupUser3);
 		dbManager.storeEntity(user3);
 		
+		date = formatDate.format(new Date());
 		List<UserPrivileges> privilegesAnonymous = new ArrayList<UserPrivileges>();
 		privilegesAnonymous.add(UserPrivileges.READ_PROJECT);
 		IUserGroup anonymousGroup = new UserGroup("anonymous", privilegesAnonymous, value, value * 2);
 		anonymous = new User("anonymous", "guest", "Anonymous", new ArrayList<GeppettoProject>(), anonymousGroup);
+		anonymous.setLastLoginDate(formatDate2.parse(date).toString());
 		dbManager.storeEntity(anonymousGroup);
 		dbManager.storeEntity(anonymous);
+		
+		date = formatDate.format(new Date());
+		List<UserPrivileges> adminPrivileges = new ArrayList<UserPrivileges>();
+		adminPrivileges.add(UserPrivileges.READ_PROJECT);
+		adminPrivileges.add(UserPrivileges.WRITE_PROJECT);
+		adminPrivileges.add(UserPrivileges.RUN_EXPERIMENT);
+		adminPrivileges.add(UserPrivileges.DOWNLOAD);
+		adminPrivileges.add(UserPrivileges.ADMIN);
+		IUserGroup adminGroup = new UserGroup("admin", adminPrivileges, value, value * 2);
+		admin = new User("admin", "admin", "Admin User", new ArrayList<GeppettoProject>(), adminGroup);
+		admin.setLastLoginDate(formatDate2.parse(date).toString());
+		dbManager.storeEntity(adminGroup);
+		dbManager.storeEntity(admin);
 	}
 
 	public static PersistenceManagerFactory getPersistenceManagerFactory()
@@ -178,7 +207,7 @@ public class DBTestData
 		sc2.getParameters().put("target", "network_ACnet2");
 		aspectConfigurations2.add(new AspectConfiguration("acnet2", watchedVariables2, null, sc2));
 		Experiment exp2 = new Experiment(aspectConfigurations2, "Experiment to configure", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
-
+		
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
 		List<String> watchedVariables3 = new ArrayList<>();
 		watchedVariables3.add("acnet2.pyramidals_48[0].soma_0.v");
@@ -338,19 +367,67 @@ public class DBTestData
 		projects.add(project);
 		dbManager.storeEntity(user);
 	}
+	
+	private void demoProjects(String name, int id)
+	{
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
+		user3 = dbManager.findUserByLogin("guest3");
+		List<GeppettoProject> projects = user3.getGeppettoProjects();
+
+		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
+		GeppettoProject project = new GeppettoProject(name, geppettoModel);
+
+		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
+		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
+		sc1.getParameters().put("target", "TwoCell");
+		aspectConfigurations1.add(new AspectConfiguration("TwoCell", null, null, sc1));
+		Experiment exp1 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		List<Experiment> experiments = new ArrayList<>();
+		exp1.setStatus(ExperimentStatus.ERROR);
+		exp1.setDetails("Experiment Failed during run attempt");
+		experiments.add(exp1);
+		project.setExperiments(experiments);
+		
+		projects.add(project);
+		dbManager.storeEntity(user3);
+		
+		Experiment exp2 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		exp2.updateLastRan();
+		project.getExperiments().add(exp2);
+		
+		user2 = dbManager.findUserByLogin("guest2");
+		List<GeppettoProject> projects2 = user2.getGeppettoProjects();
+		projects2.add(project);
+		dbManager.storeEntity(user2);
+		
+		admin = dbManager.findUserByLogin("admin");
+		admin.getGeppettoProjects().add(project);
+		dbManager.storeEntity(admin);
+		
+		anonymous = dbManager.findUserByLogin("anonymous");
+		admin.getGeppettoProjects().add(project);
+		dbManager.storeEntity(anonymous);
+	}
 
 	public static void main(String[] args)
 	{
-		DBTestData testDBCreator = new DBTestData();
-		testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 1",1);
-		testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 2",1);
-		testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 3",1);
-		testDBCreator.buildACNet2DemoProject("ACNet2 1",5);
-		testDBCreator.buildACNet2DemoProject("ACNet2 2",5);
-		testDBCreator.buildACNet2DemoProject("ACNet2 3",5);
-		testDBCreator.buildHHCellOpenCortex246CellsDemoProject("Balanced_246cells_26593conns.net", 10);
-		testDBCreator.buildHHCellOpenCortex240CellsDemoProject("Balanced_240cells_29299conns.net", 15);
-		testDBCreator.twoCell("twocell", 20);
+		DBTestData testDBCreator;
+		try {
+			testDBCreator = new DBTestData();
+			testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 1",1);
+			testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 2",1);
+			testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 3",1);
+			testDBCreator.buildACNet2DemoProject("ACNet2 1",5);
+			testDBCreator.buildACNet2DemoProject("ACNet2 2",5);
+			testDBCreator.buildACNet2DemoProject("ACNet2 3",5);
+			testDBCreator.buildHHCellOpenCortex246CellsDemoProject("Balanced_246cells_26593conns.net", 10);
+			testDBCreator.buildHHCellOpenCortex240CellsDemoProject("Balanced_240cells_29299conns.net", 15);
+			testDBCreator.twoCell("twocell", 20);
+			testDBCreator.demoProjects("twocell", 25);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

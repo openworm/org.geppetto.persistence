@@ -75,6 +75,8 @@ public class User implements Serializable, IUser
 	@JsonIgnore
 	private String dropboxToken;
 
+	private String lastLogin;
+
 	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects, IUserGroup group)
 	{
 		super();
@@ -151,6 +153,16 @@ public class User implements Serializable, IUser
 	public void setUserGroup(UserGroup group)
 	{
 		this.userGroup = group;
+	}
+
+	@Override
+	public String getLastLogin() {
+		return this.lastLogin.toString();
+	}
+	
+	@Override
+	public void setLastLoginDate(String date){
+		this.lastLogin = date;
 	}
 
 }
