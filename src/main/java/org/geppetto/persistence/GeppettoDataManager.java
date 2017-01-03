@@ -508,4 +508,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		return new UserGroup(name, privileges, spaceAllowance, timeAllowance);
 	}
 
+	@Override
+	public String getUserStorage(String login) {
+		return dbManager.getUserStorageSize(login);
+	}
+
 }

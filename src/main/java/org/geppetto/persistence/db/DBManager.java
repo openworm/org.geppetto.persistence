@@ -33,6 +33,9 @@
 
 package org.geppetto.persistence.db;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +46,7 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.datanucleus.store.query.QueryResult;
 import org.geppetto.core.data.model.IDataEntity;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.persistence.db.model.GeppettoProject;
@@ -298,6 +302,25 @@ public class DBManager
 				return pm.detachCopy(users.get(0));
 			}
 			return null;
+		}
+		finally
+		{
+			finishRequest();
+		}
+	}
+	
+	public String getUserStorageSize(String login)
+	{
+		PersistenceManager pm = getPersistenceManager();
+		try
+		{
+			pm.getFetchPlan().setMaxFetchDepth(-1);
+			Query q = pm.newQuery("SQL", "SELECT (data_length+index_length)/power(1024,1) tablesize_kb "+
+									"FROM information_schema.tables WHERE table_schema='geppetto' and table_name='user'");
+			List<Double> d = (List<Double>) q.execute();
+			DecimalFormat decimalFormat = new DecimalFormat("#");
+		    System.out.println(decimalFormat.format(d.get(0)));
+			return decimalFormat.format(d.get(0)) + " KB";
 		}
 		finally
 		{
