@@ -368,6 +368,28 @@ public class DBTestData
 		dbManager.storeEntity(user);
 	}
 	
+	private void c302model(String name, int id)
+	{
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/admin_view/src/main/resources/"+name+"/";
+		user = dbManager.findUserByLogin("admin");
+		List<GeppettoProject> projects = user.getGeppettoProjects();
+
+		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
+		GeppettoProject project = new GeppettoProject(name, geppettoModel);
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
+		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.0001f, 0, map);
+		sc1.getParameters().put("target", "network_CElegans");
+		Experiment exp1 = new Experiment(aspectConfigurations1, "C302", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		List<Experiment> experiments = new ArrayList<>();
+		experiments.add(exp1);
+		project.setExperiments(experiments);
+		
+		projects.add(project);
+		dbManager.storeEntity(user);
+	}
+	
 	private void demoProjects(String name, int id)
 	{
 		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
@@ -424,6 +446,7 @@ public class DBTestData
 			testDBCreator.buildHHCellOpenCortex240CellsDemoProject("Balanced_240cells_29299conns.net", 15);
 			testDBCreator.twoCell("twocell", 20);
 			testDBCreator.demoProjects("twocell", 25);
+			testDBCreator.c302model("cElegansConnectome", 30);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
