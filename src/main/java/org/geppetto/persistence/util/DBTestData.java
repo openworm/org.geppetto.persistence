@@ -371,8 +371,8 @@ public class DBTestData
 	private void c302model(String name, int id)
 	{
 		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/admin_view/src/main/resources/"+name+"/";
-		user = dbManager.findUserByLogin("admin");
-		List<GeppettoProject> projects = user.getGeppettoProjects();
+		admin = dbManager.findUserByLogin("admin");
+		List<GeppettoProject> projects = admin.getGeppettoProjects();
 
 		PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
 		GeppettoProject project = new GeppettoProject(name, geppettoModel);
@@ -381,13 +381,14 @@ public class DBTestData
 		List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.0001f, 0, map);
 		sc1.getParameters().put("target", "network_CElegans");
+		aspectConfigurations1.add(new AspectConfiguration("c302", null, null, sc1));
 		Experiment exp1 = new Experiment(aspectConfigurations1, "C302", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
 		project.setExperiments(experiments);
 		
 		projects.add(project);
-		dbManager.storeEntity(user);
+		dbManager.storeEntity(admin);
 	}
 	
 	private void demoProjects(String name, int id)

@@ -50,6 +50,7 @@ import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.core.data.model.UserPrivileges;
+import org.geppetto.core.s3.S3Manager;
 import org.geppetto.persistence.GeppettoDataManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
@@ -372,5 +373,18 @@ public class DBManagerTest
 			experiment.addSimulationResult(simulationResults);
 			dataManager.saveEntity(experiment.getParentProject());
 		}
+	}
+	
+	@Test
+	public void testStorage()
+	{
+		user = db.findUserByLogin("guest2");
+		List<GeppettoProject> projects = user.getGeppettoProjects();
+		long size = 0;
+		for(GeppettoProject p: projects){
+			size += S3Manager.getInstance().getFileStorage("projects/"+p.getId()+"/");
+			System.out.println(size);
+		}
+		Assert.assertNotNull(size);
 	}
 }
