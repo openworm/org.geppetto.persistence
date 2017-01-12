@@ -40,6 +40,7 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -75,10 +76,9 @@ public class DBTestData
 
 	public DBTestData() throws ParseException
 	{
-		SimpleDateFormat formatDate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-		formatDate.setTimeZone(TimeZone.getTimeZone("GMT"));
-		SimpleDateFormat formatDate2 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		SimpleDateFormat formatDate = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy");
 		String date = formatDate.format(new Date());
+		Calendar cal = Calendar.getInstance();
 		
 		dbManager = new DBManager();
 		dbManager.setPersistenceManagerFactory(getPersistenceManagerFactory());
@@ -93,35 +93,42 @@ public class DBTestData
 		date = formatDate.format(new Date());
 		IUserGroup group = new UserGroup("guest", privileges, value, value * 2);
 		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>(), group);
-		user.setLastLoginDate(formatDate2.parse(date).toString());
+		user.setLastLoginDate(formatDate.parse(date).toString());
+		user.setLoginCount(1);
 		dbManager.storeEntity(group);
 		dbManager.storeEntity(user);
 		
+		cal.add(Calendar.DATE, -1);
 		date = formatDate.format(new Date());
 		List<UserPrivileges> guest2Privileges = new ArrayList<UserPrivileges>();
 		guest2Privileges.add(UserPrivileges.READ_PROJECT);
 		IUserGroup groupUser2 = new UserGroup("guest2", guest2Privileges, value, value * 2);
 		user2 = new User("guest2", "guest", "Guest user 2", new ArrayList<GeppettoProject>(), groupUser2);
-		user2.setLastLoginDate(formatDate2.parse(date).toString());
+		user2.setLastLoginDate(formatDate.parse(cal.getTime().toString()).toString());
+		user2.setLoginCount(1);
 		dbManager.storeEntity(groupUser2);
 		dbManager.storeEntity(user2);
-		
+
+		cal.add(Calendar.DATE, -6);
 		date = formatDate.format(new Date());
 		List<UserPrivileges> guest3Privileges = new ArrayList<UserPrivileges>();
 		guest3Privileges.add(UserPrivileges.READ_PROJECT);
 		guest3Privileges.add(UserPrivileges.WRITE_PROJECT);
 		IUserGroup groupUser3 = new UserGroup("guest3", guest3Privileges, value, value * 2);
 		user3 = new User("guest3", "guest", "Guest user 3", new ArrayList<GeppettoProject>(), groupUser3);
-		user3.setLastLoginDate(formatDate2.parse(date).toString());
+		user3.setLastLoginDate(formatDate.parse(cal.getTime().toString()).toString());
+		user3.setLoginCount(1);
 		dbManager.storeEntity(groupUser3);
 		dbManager.storeEntity(user3);
 		
+		cal.add(Calendar.DATE, -27);
 		date = formatDate.format(new Date());
 		List<UserPrivileges> privilegesAnonymous = new ArrayList<UserPrivileges>();
 		privilegesAnonymous.add(UserPrivileges.READ_PROJECT);
 		IUserGroup anonymousGroup = new UserGroup("anonymous", privilegesAnonymous, value, value * 2);
 		anonymous = new User("anonymous", "guest", "Anonymous", new ArrayList<GeppettoProject>(), anonymousGroup);
-		anonymous.setLastLoginDate(formatDate2.parse(date).toString());
+		anonymous.setLastLoginDate(formatDate.parse(cal.getTime().toString()).toString());
+		anonymous.setLoginCount(1);
 		dbManager.storeEntity(anonymousGroup);
 		dbManager.storeEntity(anonymous);
 		
@@ -134,7 +141,8 @@ public class DBTestData
 		adminPrivileges.add(UserPrivileges.ADMIN);
 		IUserGroup adminGroup = new UserGroup("admin", adminPrivileges, value, value * 2);
 		admin = new User("admin", "admin", "Admin User", new ArrayList<GeppettoProject>(), adminGroup);
-		admin.setLastLoginDate(formatDate2.parse(date).toString());
+		admin.setLastLoginDate(formatDate.parse(date).toString());
+		admin.setLoginCount(1);
 		dbManager.storeEntity(adminGroup);
 		dbManager.storeEntity(admin);
 	}
@@ -407,6 +415,7 @@ public class DBTestData
 		Experiment exp1 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 		List<Experiment> experiments = new ArrayList<>();
 		exp1.setStatus(ExperimentStatus.ERROR);
+		exp1.updateLastRan();
 		exp1.setDetails("Experiment Failed during run attempt");
 		experiments.add(exp1);
 		project.setExperiments(experiments);

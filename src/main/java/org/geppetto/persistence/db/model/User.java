@@ -77,6 +77,8 @@ public class User implements Serializable, IUser
 
 	private String lastLogin;
 
+	private int loginCount;
+
 	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects, IUserGroup group)
 	{
 		super();
@@ -165,4 +167,17 @@ public class User implements Serializable, IUser
 		this.lastLogin = date;
 	}
 
+	@Override
+	public int loginCount() {
+		return this.loginCount;
+	}
+
+	public void setLoginCount(int count){
+		this.loginCount = count;
+	}
+
+	@Override
+	public void upLoginCount() {
+		this.loginCount++;
+	}
 }
