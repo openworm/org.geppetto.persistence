@@ -157,7 +157,8 @@ public class User implements Serializable, IUser
 
 	@Override
 	public String getLastLogin() {
-		return this.lastLogin.toString();
+		
+		return this.lastLogin;
 	}
 	
 	@Override
