@@ -266,15 +266,8 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	{
 		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), group);
 		
-		SimpleDateFormat formatDate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-		formatDate.setTimeZone(TimeZone.getTimeZone("GMT"));
-		SimpleDateFormat formatDate2 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-		String date = formatDate.format(new Date());
-		try {
-			user.setLastLoginDate(formatDate2.parse(date).toString());
-		} catch (ParseException e) {
-			logger.error(e);
-		}
+		user.addLoginTimeStamp(new Date());
+
 		if(persistent)
 		{
 			dbManager.storeEntity(user);

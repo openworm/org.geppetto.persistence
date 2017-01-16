@@ -93,8 +93,7 @@ public class DBTestData
 		date = formatDate.format(new Date());
 		IUserGroup group = new UserGroup("guest", privileges, value, value * 2);
 		user = new User("guest1", "guest", "Guest user", new ArrayList<GeppettoProject>(), group);
-		user.setLastLoginDate(formatDate.parse(date).toString());
-		user.setLoginCount(1);
+		user.addLoginTimeStamp(formatDate.parse(date));
 		dbManager.storeEntity(group);
 		dbManager.storeEntity(user);
 		
@@ -104,8 +103,7 @@ public class DBTestData
 		guest2Privileges.add(UserPrivileges.READ_PROJECT);
 		IUserGroup groupUser2 = new UserGroup("guest2", guest2Privileges, value, value * 2);
 		user2 = new User("guest2", "guest", "Guest user 2", new ArrayList<GeppettoProject>(), groupUser2);
-		user2.setLastLoginDate(formatDate.parse(cal.getTime().toString()).toString());
-		user2.setLoginCount(1);
+		user2.addLoginTimeStamp(cal.getTime());
 		dbManager.storeEntity(groupUser2);
 		dbManager.storeEntity(user2);
 
@@ -116,8 +114,7 @@ public class DBTestData
 		guest3Privileges.add(UserPrivileges.WRITE_PROJECT);
 		IUserGroup groupUser3 = new UserGroup("guest3", guest3Privileges, value, value * 2);
 		user3 = new User("guest3", "guest", "Guest user 3", new ArrayList<GeppettoProject>(), groupUser3);
-		user3.setLastLoginDate(formatDate.parse(cal.getTime().toString()).toString());
-		user3.setLoginCount(1);
+		user2.addLoginTimeStamp(cal.getTime());
 		dbManager.storeEntity(groupUser3);
 		dbManager.storeEntity(user3);
 		
@@ -127,8 +124,7 @@ public class DBTestData
 		privilegesAnonymous.add(UserPrivileges.READ_PROJECT);
 		IUserGroup anonymousGroup = new UserGroup("anonymous", privilegesAnonymous, value, value * 2);
 		anonymous = new User("anonymous", "guest", "Anonymous", new ArrayList<GeppettoProject>(), anonymousGroup);
-		anonymous.setLastLoginDate(formatDate.parse(cal.getTime().toString()).toString());
-		anonymous.setLoginCount(1);
+		user2.addLoginTimeStamp(cal.getTime());
 		dbManager.storeEntity(anonymousGroup);
 		dbManager.storeEntity(anonymous);
 		
@@ -141,8 +137,7 @@ public class DBTestData
 		adminPrivileges.add(UserPrivileges.ADMIN);
 		IUserGroup adminGroup = new UserGroup("admin", adminPrivileges, value, value * 2);
 		admin = new User("admin", "admin", "Admin User", new ArrayList<GeppettoProject>(), adminGroup);
-		admin.setLastLoginDate(formatDate.parse(date).toString());
-		admin.setLoginCount(1);
+		user2.addLoginTimeStamp(cal.getTime());
 		dbManager.storeEntity(adminGroup);
 		dbManager.storeEntity(admin);
 	}
@@ -415,7 +410,7 @@ public class DBTestData
 		Experiment exp1 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
 		List<Experiment> experiments = new ArrayList<>();
 		exp1.setStatus(ExperimentStatus.ERROR);
-		exp1.updateLastRan();
+		exp1.updateEndDate();
 		exp1.setDetails("Experiment Failed during run attempt");
 		experiments.add(exp1);
 		project.setExperiments(experiments);
@@ -424,7 +419,7 @@ public class DBTestData
 		dbManager.storeEntity(user3);
 		
 		Experiment exp2 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
-		exp2.updateLastRan();
+		exp2.updateEndDate();
 		project.getExperiments().add(exp2);
 		
 		user2 = dbManager.findUserByLogin("guest2");

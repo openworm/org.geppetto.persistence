@@ -34,6 +34,8 @@
 package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -75,9 +77,9 @@ public class User implements Serializable, IUser
 	@JsonIgnore
 	private String dropboxToken;
 
-	private String lastLogin;
-
-	private int loginCount;
+	@Join
+	@Persistent(defaultFetchGroup = "true")
+	private List<Date> loginTimeStamps = new ArrayList<Date>();
 
 	public User(String login, String password, String name, List<GeppettoProject> geppettoProjects, IUserGroup group)
 	{
@@ -157,28 +159,14 @@ public class User implements Serializable, IUser
 		this.userGroup = group;
 	}
 
+
 	@Override
-	public String getLastLogin() {
-		
-		return this.lastLogin;
-	}
-	
-	@Override
-	public void setLastLoginDate(String date){
-		this.lastLogin = date;
+	public List<Date> getLoginTimeStamps() {
+		return this.loginTimeStamps;
 	}
 
 	@Override
-	public int loginCount() {
-		return this.loginCount;
-	}
-
-	public void setLoginCount(int count){
-		this.loginCount = count;
-	}
-
-	@Override
-	public void upLoginCount() {
-		this.loginCount++;
+	public void addLoginTimeStamp(Date date) {
+		this.loginTimeStamps.add(date);		
 	}
 }
