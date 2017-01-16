@@ -500,4 +500,12 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	{
 		return new UserGroup(name, privileges, spaceAllowance, timeAllowance);
 	}
+
+	@Override
+	public void makeGeppettoProjectPublic(long projectId,boolean isPublic) throws GeppettoExecutionException {
+		
+		GeppettoProject project = this.getGeppettoProjectById(projectId);
+		project.setPublic(isPublic);
+		dbManager.storeEntity(project);
+	}
 }
