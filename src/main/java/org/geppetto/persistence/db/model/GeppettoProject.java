@@ -66,6 +66,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private PersistedData geppettoModel;
 	private boolean isPublic = false;
+	private boolean isReadOnly = false;
 	
 	private transient boolean volatileProject;
 
@@ -155,6 +156,16 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	
 	public void setPublic(boolean mode){
 		this.isPublic = mode;
+	}
+	
+	@Override
+	public void setReadOnly(boolean mode){
+		this.isReadOnly = mode;
+	}
+
+	@Override
+	public boolean isReadOnly() {
+		return this.isReadOnly;
 	}
 
 }
