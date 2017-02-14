@@ -65,7 +65,9 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	@Column(name = "persisteddata_id")
 	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private PersistedData geppettoModel;
-
+	private boolean isPublic = false;
+	private boolean isReadOnly = false;
+	
 	private transient boolean volatileProject;
 
 	public GeppettoProject(String name, PersistedData geppettoModel)
@@ -147,4 +149,12 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.activeExperimentId = experimentId;
 	}
 
+	@Override
+	public boolean isPublic() {
+		return this.isPublic;
+	}
+	
+	public void setPublic(boolean mode){
+		this.isPublic = mode;
+	}
 }

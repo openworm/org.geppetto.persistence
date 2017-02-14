@@ -34,6 +34,8 @@ package org.geppetto.persistence;
 
 import java.io.Reader;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -41,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.SerializationUtils;
@@ -263,6 +266,8 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	{
 		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), group);
 		
+		user.addLoginTimeStamp(new Date());
+
 		if(persistent)
 		{
 			dbManager.storeEntity(user);
@@ -496,4 +501,11 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		return new UserGroup(name, privileges, spaceAllowance, timeAllowance);
 	}
 
+	@Override
+	public void makeGeppettoProjectPublic(long projectId,boolean isPublic) throws GeppettoExecutionException {
+		
+		GeppettoProject project = this.getGeppettoProjectById(projectId);
+		project.setPublic(isPublic);
+		dbManager.storeEntity(project);
+	}
 }

@@ -73,6 +73,8 @@ public class Experiment implements Serializable, IExperiment
 	private Date creationDate;
 
 	private Date lastModified;
+	
+	private Date lastRan;
 
 	private ExperimentStatus status;
 
@@ -88,6 +90,8 @@ public class Experiment implements Serializable, IExperiment
 
 	private String script;
 
+	private boolean isPublic = false;
+	
 	public Experiment(List<AspectConfiguration> aspectConfigurations, String name, String description, Date creationDate, Date lastModified, ExperimentStatus status,
 			List<SimulationResult> simulationResults, Date startDate, Date endDate, IGeppettoProject project)
 	{
@@ -263,4 +267,23 @@ public class Experiment implements Serializable, IExperiment
 		this.script = script;
 	}
 
+
+	@Override
+	public void updateStartDate() {
+		this.startDate = new Date();
+	}
+
+	@Override
+	public void updateEndDate() {
+		this.startDate = new Date();
+	}
+
+	@Override
+	public boolean isPublic() {
+		return this.isPublic;
+	}
+	
+	public void setIsPublic(boolean mode){
+		this.isPublic = mode;
+	}
 }
