@@ -48,6 +48,7 @@ import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.core.data.model.ISimulationResult;
+import org.geppetto.core.data.model.local.LocalView;
 
 @PersistenceCapable(detachable = "true")
 public class Experiment implements Serializable, IExperiment
@@ -91,6 +92,9 @@ public class Experiment implements Serializable, IExperiment
 	private String script;
 
 	private boolean isPublic = false;
+	
+	@Persistent(defaultFetchGroup = "true")
+	private View view;
 	
 	public Experiment(List<AspectConfiguration> aspectConfigurations, String name, String description, Date creationDate, Date lastModified, ExperimentStatus status,
 			List<SimulationResult> simulationResults, Date startDate, Date endDate, IGeppettoProject project)
@@ -285,5 +289,25 @@ public class Experiment implements Serializable, IExperiment
 	
 	public void setIsPublic(boolean mode){
 		this.isPublic = mode;
+	}
+	
+	@Override
+	public void setView(String view) {
+		if (this.view != null) {
+			this.view.setView(view);
+		} else {
+			this.view = new View(view);
+		}
+	}
+
+	@Override
+	public String getView() {
+		String view = "";
+		
+		if (this.view != null) {
+			view = this.view.getView();
+		}
+
+		return view;
 	}
 }

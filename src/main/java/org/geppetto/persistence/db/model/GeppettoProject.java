@@ -69,6 +69,9 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	private boolean isReadOnly = false;
 	
 	private transient boolean volatileProject;
+	
+	@Persistent(defaultFetchGroup = "true")
+	private View view;
 
 	public GeppettoProject(String name, PersistedData geppettoModel)
 	{
@@ -156,5 +159,25 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	
 	public void setPublic(boolean mode){
 		this.isPublic = mode;
+	}
+	
+	@Override
+	public void setView(String view) {
+		if (this.view != null) {
+			this.view.setView(view);
+		} else {
+			this.view = new View(view);
+		}
+	}
+
+	@Override
+	public String getView() {
+		String view = "";
+		
+		if (this.view != null) {
+			view = this.view.getView();
+		}
+
+		return view;
 	}
 }
