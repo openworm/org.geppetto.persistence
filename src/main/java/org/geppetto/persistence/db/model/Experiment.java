@@ -48,7 +48,7 @@ import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IExperiment;
 import org.geppetto.core.data.model.IGeppettoProject;
 import org.geppetto.core.data.model.ISimulationResult;
-import org.geppetto.core.data.model.local.LocalView;
+import org.geppetto.core.data.model.IView;
 
 @PersistenceCapable(detachable = "true")
 public class Experiment implements Serializable, IExperiment
@@ -292,12 +292,8 @@ public class Experiment implements Serializable, IExperiment
 	}
 	
 	@Override
-	public void setView(String view) {
-		if (this.view != null) {
-			this.view.setView(view);
-		} else {
-			this.view = new View(view);
-		}
+	public void setView(IView view) {
+		this.view = (View) view;
 	}
 
 	@Override

@@ -34,22 +34,16 @@ package org.geppetto.persistence;
 
 import java.io.Reader;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geppetto.core.common.GeppettoAccessException;
 import org.geppetto.core.common.GeppettoExecutionException;
 import org.geppetto.core.data.IGeppettoDataManager;
 import org.geppetto.core.data.model.ExperimentStatus;
@@ -62,6 +56,7 @@ import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.IUserGroup;
+import org.geppetto.core.data.model.IView;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.core.data.model.UserPrivileges;
@@ -75,6 +70,7 @@ import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
 import org.geppetto.persistence.db.model.UserGroup;
+import org.geppetto.persistence.db.model.View;
 
 import com.google.gson.Gson;
 
@@ -507,5 +503,11 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		GeppettoProject project = this.getGeppettoProjectById(projectId);
 		project.setPublic(isPublic);
 		dbManager.storeEntity(project);
+	}
+
+	@Override
+	public IView newView(String view) {
+		IView v = new View(view);
+		return v;
 	}
 }
