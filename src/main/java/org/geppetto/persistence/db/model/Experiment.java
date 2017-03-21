@@ -93,7 +93,8 @@ public class Experiment implements Serializable, IExperiment
 
 	private boolean isPublic = false;
 	
-	@Persistent(defaultFetchGroup = "true")
+	@Join
+	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
 	private View view;
 	
 	public Experiment(List<AspectConfiguration> aspectConfigurations, String name, String description, Date creationDate, Date lastModified, ExperimentStatus status,
