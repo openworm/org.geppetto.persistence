@@ -297,13 +297,7 @@ public class Experiment implements Serializable, IExperiment
 	}
 
 	@Override
-	public String getView() {
-		String view = "";
-		
-		if (this.view != null) {
-			view = this.view.getView();
-		}
-
-		return view;
+	public IView getView() {
+		return this.view;
 	}
 }
