@@ -44,6 +44,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IGeppettoProject;
+import org.geppetto.core.data.model.IView;
 
 @PersistenceCapable(detachable = "true")
 public class GeppettoProject implements Serializable, IGeppettoProject
@@ -162,22 +163,12 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	}
 	
 	@Override
-	public void setView(String view) {
-		if (this.view != null) {
-			this.view.setView(view);
-		} else {
-			this.view = new View(view);
-		}
+	public void setView(IView view) {
+		this.view = (View) view;
 	}
 
 	@Override
-	public String getView() {
-		String view = "";
-		
-		if (this.view != null) {
-			view = this.view.getView();
-		}
-
-		return view;
+	public IView getView() {
+		return this.view;
 	}
 }

@@ -98,7 +98,7 @@ public class Experiment implements Serializable, IExperiment
 	private View view;
 	
 	public Experiment(List<AspectConfiguration> aspectConfigurations, String name, String description, Date creationDate, Date lastModified, ExperimentStatus status,
-			List<SimulationResult> simulationResults, Date startDate, Date endDate, IGeppettoProject project)
+			List<SimulationResult> simulationResults, Date startDate, Date endDate, IGeppettoProject project, View view)
 	{
 		super();
 		this.aspectConfigurations = aspectConfigurations;
@@ -111,6 +111,7 @@ public class Experiment implements Serializable, IExperiment
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.project = project;
+		this.view = view;
 	}
 
 	public long getId()

@@ -22,6 +22,12 @@ public class View implements Serializable, IView {
 	@Column(length = 10000)
 	private String viewString;
 	
+	public View()
+	{
+		super();
+		this.viewString = "";
+	}
+	
 	public View(String view)
 	{
 		super();

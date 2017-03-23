@@ -58,6 +58,7 @@ import org.geppetto.persistence.db.model.GeppettoProject;
 import org.geppetto.persistence.db.model.PersistedData;
 import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.User;
+import org.geppetto.persistence.db.model.View;
 import org.geppetto.persistence.util.DBTestData;
 import org.junit.Assert;
 import org.junit.Test;
@@ -109,14 +110,14 @@ public class DBManagerTest
 		GeppettoProject project = user.getGeppettoProjects().get(0);
 		int count = project.getExperiments().size();
 		int allCount = db.getAllEntities(Experiment.class).size();
-		Experiment experiment = new Experiment(null, "test exp", "test exp", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment experiment = new Experiment(null, "test exp", "test exp", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 		project.getExperiments().add(experiment);
 		db.storeEntity(project);
 
 		project = db.findEntityById(GeppettoProject.class, project.getId());
 		Assert.assertEquals(count + 1, project.getExperiments().size());
 		Assert.assertEquals(allCount + 1, db.getAllEntities(Experiment.class).size());
-		Experiment experiment2 = new Experiment(null, "test exp", "test exp", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment experiment2 = new Experiment(null, "test exp", "test exp", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 		// standalone experiment, not added to a project
 		db.storeEntity(experiment2);
 		project = db.findEntityById(GeppettoProject.class, project.getId());

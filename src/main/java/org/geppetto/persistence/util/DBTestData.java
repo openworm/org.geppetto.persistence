@@ -66,6 +66,7 @@ import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
 import org.geppetto.persistence.db.model.UserGroup;
+import org.geppetto.persistence.db.model.View;
 
 public class DBTestData
 {
@@ -201,7 +202,7 @@ public class DBTestData
 		aspectConfigurations1.add(new AspectConfiguration("acnet2", watchedVariables, null, sc1));
 		
 		
-		Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 
 		List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
 		List<String> watchedVariables2 = new ArrayList<>();
@@ -209,7 +210,7 @@ public class DBTestData
 		SimulatorConfiguration sc2 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc2.getParameters().put("target", "network_ACnet2");
 		aspectConfigurations2.add(new AspectConfiguration("acnet2", watchedVariables2, null, sc2));
-		Experiment exp2 = new Experiment(aspectConfigurations2, "Experiment to configure", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp2 = new Experiment(aspectConfigurations2, "Experiment to configure", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 		
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
 		List<String> watchedVariables3 = new ArrayList<>();
@@ -224,7 +225,7 @@ public class DBTestData
 				.add(new SimulationResult("acnet2", new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
 		simulationResults3
 			.add(new SimulationResult("acnet2", new PersistedData(path + "rawRecording.zip", PersistedDataType.RECORDING), ResultsFormat.RAW));
-		Experiment exp3= new Experiment(aspectConfigurations3, "Experiment executed", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults3, new Date(), new Date(), project);
+		Experiment exp3= new Experiment(aspectConfigurations3, "Experiment executed", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults3, new Date(), new Date(), project, new View("{}"));
 
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
@@ -259,7 +260,7 @@ public class DBTestData
 		watchedVariables.add("hhcell.hhpop[0].bioPhys1.membraneProperties.naChans.na.h.q");
 		watchedVariables.add("hhcell.hhpop[0].bioPhys1.membraneProperties.kChans.k.n.q");
 		aspectConfigurations1.add(new AspectConfiguration("hhcell", watchedVariables, null, sc1));
-		Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp1 = new Experiment(aspectConfigurations1, "Experiment ready to execute", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 
 		List<AspectConfiguration> aspectConfigurations2 = new ArrayList<>();
 		List<String> watchedVariables2 = new ArrayList<>();
@@ -275,7 +276,7 @@ public class DBTestData
 				.add(new SimulationResult("hhcell", new PersistedData(path + "results.h5", PersistedDataType.RECORDING), ResultsFormat.GEPPETTO_RECORDING));
 		simulationResults2
 			.add(new SimulationResult("hhcell", new PersistedData(path + "rawRecording.zip", PersistedDataType.RECORDING), ResultsFormat.RAW));
-		Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project);
+		Experiment exp2 = new Experiment(aspectConfigurations2, "Executed experiment", "", new Date(), new Date(), ExperimentStatus.COMPLETED, simulationResults2, new Date(), new Date(), project, new View("{}"));
 
 		List<AspectConfiguration> aspectConfigurations3 = new ArrayList<>();
 		List<String> watchedVariables3 = new ArrayList<>();
@@ -288,7 +289,7 @@ public class DBTestData
 		SimulatorConfiguration sc3 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.00005f, 0.3f, new HashMap<String, String>());
 		sc3.getParameters().put("target", "net1");
 		aspectConfigurations3.add(new AspectConfiguration("hhcell", watchedVariables3, modelParameters3, sc3));
-		Experiment exp3 = new Experiment(aspectConfigurations3, "Higher input current", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp3 = new Experiment(aspectConfigurations3, "Higher input current", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
@@ -316,7 +317,7 @@ public class DBTestData
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
 		sc1.getParameters().put("target", "Balanced_246cells_26593conns");
 		aspectConfigurations1.add(new AspectConfiguration("Balanced_246cells_26593conns", null, null, sc1));
-		Experiment exp1 = new Experiment(aspectConfigurations1, "Balanced_246cells_26593conns - net", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp1 = new Experiment(aspectConfigurations1, "Balanced_246cells_26593conns - net", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 		exp1.setScript(path+"script.js");
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
@@ -339,7 +340,7 @@ public class DBTestData
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
 		sc1.getParameters().put("target", "Balanced_240cells_29299conns");
 		aspectConfigurations1.add(new AspectConfiguration("Balanced_240cells_29299conns", null, null, sc1));
-		Experiment exp1 = new Experiment(aspectConfigurations1, "Balanced_240cells_29299conns - net", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp1 = new Experiment(aspectConfigurations1, "Balanced_240cells_29299conns - net", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 		exp1.setScript(path+"script.js");
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
@@ -362,7 +363,7 @@ public class DBTestData
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
 		sc1.getParameters().put("target", "TwoCell");
 		aspectConfigurations1.add(new AspectConfiguration("TwoCell", null, null, sc1));
-		Experiment exp1 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp1 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
 		project.setExperiments(experiments);
@@ -385,7 +386,7 @@ public class DBTestData
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", "lemsConversion", 0.0001f, 0, map);
 		sc1.getParameters().put("target", "network_CElegans");
 		aspectConfigurations1.add(new AspectConfiguration("c302", null, null, sc1));
-		Experiment exp1 = new Experiment(aspectConfigurations1, "C302", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp1 = new Experiment(aspectConfigurations1, "C302", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 		List<Experiment> experiments = new ArrayList<>();
 		experiments.add(exp1);
 		project.setExperiments(experiments);
@@ -407,7 +408,7 @@ public class DBTestData
 		SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
 		sc1.getParameters().put("target", "TwoCell");
 		aspectConfigurations1.add(new AspectConfiguration("TwoCell", null, null, sc1));
-		Experiment exp1 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp1 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 		List<Experiment> experiments = new ArrayList<>();
 		exp1.setStatus(ExperimentStatus.ERROR);
 		exp1.updateEndDate();
@@ -418,7 +419,7 @@ public class DBTestData
 		projects.add(project);
 		dbManager.storeEntity(user3);
 		
-		Experiment exp2 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project);
+		Experiment exp2 = new Experiment(aspectConfigurations1, "TwoCell", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
 		exp2.updateEndDate();
 		project.getExperiments().add(exp2);
 		

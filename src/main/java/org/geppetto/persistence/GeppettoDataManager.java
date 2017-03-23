@@ -212,11 +212,30 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IExperiment newExperiment(String name, String description, IGeppettoProject project)
 	{
-		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
-				new Date(), project);
+		Experiment experiment = new Experiment(
+				new ArrayList<AspectConfiguration>(), 
+				name, description, 
+				new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
+				new Date(), project, new View("{}"));
 		((GeppettoProject) project).getExperiments().add(experiment);
 		dbManager.storeEntity(project);
 		return experiment;
+	}
+
+	@Override
+	public IView newView(String view, IGeppettoProject project) {
+		IView v = new View(view);
+		((GeppettoProject) project).setView(v);
+		dbManager.storeEntity(project);
+		return v;
+	}
+	
+	@Override
+	public IView newView(String view, IExperiment experiment) {
+		IView v = new View(view);
+		((IExperiment) experiment).setView(v);
+		dbManager.storeEntity(experiment);
+		return v;
 	}
 
 	/*
@@ -228,8 +247,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IExperiment cloneExperiment(String name, String description, IGeppettoProject project, IExperiment originalExperiment)
 	{	
-		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
-				new Date(), project);
+		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), 
+				name, description, new Date(), new Date(), 
+				ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
+				new Date(), project, new View("{}"));
 		((GeppettoProject) project).getExperiments().add(experiment);
 		dbManager.storeEntity(project);
 		Collection<? extends AspectConfiguration> collection = 
@@ -503,11 +524,5 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		GeppettoProject project = this.getGeppettoProjectById(projectId);
 		project.setPublic(isPublic);
 		dbManager.storeEntity(project);
-	}
-
-	@Override
-	public IView newView(String view) {
-		IView v = new View(view);
-		return v;
 	}
 }
