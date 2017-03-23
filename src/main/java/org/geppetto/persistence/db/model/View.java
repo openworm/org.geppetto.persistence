@@ -2,6 +2,7 @@ package org.geppetto.persistence.db.model;
 
 import java.io.Serializable;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -18,6 +19,7 @@ public class View implements Serializable, IView {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 	
+	@Column(length = 10000)
 	private String viewString;
 	
 	public View(String view)
