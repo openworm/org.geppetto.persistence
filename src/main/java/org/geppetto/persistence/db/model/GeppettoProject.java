@@ -71,7 +71,8 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	
 	private transient boolean volatileProject;
 	
-	@Persistent(defaultFetchGroup = "true")
+	@Join
+	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
 	private View view;
 
 	public GeppettoProject(String name, PersistedData geppettoModel)
@@ -80,7 +81,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.activeExperimentId = -1;
 		this.name = name;
 		this.geppettoModel = geppettoModel;
-
+		this.view = new View("{}");
 	}
 
 	public GeppettoProject()
