@@ -155,6 +155,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		{
 			GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, id);
 			if(project!=null){
+				if(project.getView() == null)
+				{
+					project.setView(new View(IView.EMPTY));
+				}
 				for(Experiment e : project.getExperiments())
 				{
 					if(e !=null){
