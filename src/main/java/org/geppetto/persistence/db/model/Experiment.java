@@ -281,7 +281,7 @@ public class Experiment implements Serializable, IExperiment
 
 	@Override
 	public void updateEndDate() {
-		this.startDate = new Date();
+		this.endDate = new Date();
 	}
 
 	@Override
