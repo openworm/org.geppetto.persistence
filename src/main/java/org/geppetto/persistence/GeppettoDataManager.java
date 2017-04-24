@@ -247,8 +247,12 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				Map<String,String> parameters = a.getSimulatorConfiguration().getParameters();
 				List<String> watchedVariables = a.getWatchedVariables();
 				List<Parameter> modelParameters = a.getModelParameter();
+				List<Parameter> newParameters = new ArrayList<Parameter>();
+				for(Parameter m : modelParameters){
+					newParameters.add((Parameter) this.newParameter(m.getVariable(), m.getValue()));
+				}
 				ISimulatorConfiguration simulatorConfiguration = this.newSimulatorConfiguration(simulator, conversion, timeStep,length,parameters);
-				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), watchedVariables, modelParameters,
+				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), watchedVariables, newParameters,
 						(SimulatorConfiguration) simulatorConfiguration);
 				experiment.getAspectConfigurations().add(aspectConfiguration);
 			}
