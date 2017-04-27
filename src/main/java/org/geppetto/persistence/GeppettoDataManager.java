@@ -60,6 +60,7 @@ import org.geppetto.core.data.model.IView;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.core.data.model.UserPrivileges;
+import org.geppetto.core.data.model.local.LocalExperiment;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
@@ -180,7 +181,20 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	public List<GeppettoProject> getGeppettoProjectsForUser(String login)
 	{
 		User user = dbManager.findUserByLogin(login); 
-		return user.getGeppettoProjects();
+		List<GeppettoProject> userProjects = user.getGeppettoProjects();
+
+		for(GeppettoProject p : userProjects){
+			if(p.getView()!=null){
+				p.getView().setView(null);
+			}
+			for(Experiment e : p.getExperiments()){
+				if(e.getView()!=null){
+					e.setView(null);
+				}
+			}
+		}
+
+		return userProjects;
 	}
 
 	/*

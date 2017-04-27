@@ -23,12 +23,12 @@ public class View implements Serializable, IView {
 	private long id;
 	
 	//@Column(length = 10000)
-	private JsonObject view;
+	private JsonObject viewStates;
 	
 	public View()
 	{
 		super();
-		this.view = null;
+		this.viewStates = new JsonObject();
 	}
 	
 	public View(String view)
@@ -37,20 +37,25 @@ public class View implements Serializable, IView {
 		JsonParser parser = new JsonParser();
 		if(view !=null){
 			JsonObject o = parser.parse(view).getAsJsonObject();
-			this.view = o;
+			this.viewStates = o;
 		}
+		this.viewStates = null;
 	}
 	
 	@Override
 	public JsonObject getView() {
-		return this.view;
+		return this.viewStates;
 	}
 
 	@Override
 	public void setView(String view) {
 		JsonParser parser = new JsonParser();
-		JsonObject o = parser.parse(view).getAsJsonObject();
-		this.view = o;
+		if(view!=null){
+			JsonObject o = parser.parse(view).getAsJsonObject();
+			this.viewStates = o;
+		}else{
+			this.viewStates=null;
+		}
 	}
 	
 	@Override
