@@ -306,7 +306,7 @@ public class DBTestData
 	
 	private void buildHHCellOpenCortex246CellsDemoProject(String name, int id)
 	{
-		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/development_actions/src/main/resources/"+name+"/";
 		user = dbManager.findUserByLogin("guest1");
 		List<GeppettoProject> projects = user.getGeppettoProjects();
 
@@ -329,7 +329,7 @@ public class DBTestData
 	
 	private void buildHHCellOpenCortex240CellsDemoProject(String name, int id)
 	{
-		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/development/src/main/resources/"+name+"/";
 		user = dbManager.findUserByLogin("guest1");
 		List<GeppettoProject> projects = user.getGeppettoProjects();
 
@@ -352,7 +352,7 @@ public class DBTestData
 	
 	private void twoCell(String name, int id)
 	{
-		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/development/src/main/resources/"+name+"/";
 		user = dbManager.findUserByLogin("guest1");
 		List<GeppettoProject> projects = user.getGeppettoProjects();
 
@@ -397,7 +397,7 @@ public class DBTestData
 	
 	private void demoProjects(String name, int id)
 	{
-		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/usability_actions/src/main/resources/"+name+"/";
+		String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/development/src/main/resources/"+name+"/";
 		user3 = dbManager.findUserByLogin("guest3");
 		List<GeppettoProject> projects = user3.getGeppettoProjects();
 
