@@ -60,7 +60,6 @@ import org.geppetto.core.data.model.IView;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.core.data.model.UserPrivileges;
-import org.geppetto.core.data.model.local.LocalExperiment;
 import org.geppetto.persistence.db.DBManager;
 import org.geppetto.persistence.db.model.AspectConfiguration;
 import org.geppetto.persistence.db.model.Experiment;
@@ -72,8 +71,10 @@ import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
 import org.geppetto.persistence.db.model.UserGroup;
 import org.geppetto.persistence.db.model.View;
+import org.geppetto.persistence.util.ViewSerializer;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class GeppettoDataManager implements IGeppettoDataManager
 {
@@ -405,7 +406,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, String json)
 	{
-		GeppettoProject project = gson.fromJson(json, GeppettoProject.class);
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(GeppettoProject.class, new ViewSerializer());
+		
+		GeppettoProject project = gsonBuilder.create().fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
 		for(Experiment e : project.getExperiments())
@@ -424,7 +428,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, Reader json)
 	{
-		GeppettoProject project = gson.fromJson(json, GeppettoProject.class);
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(GeppettoProject.class, new ViewSerializer());
+		
+		GeppettoProject project = gsonBuilder.create().fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
 		for(Experiment e : project.getExperiments())

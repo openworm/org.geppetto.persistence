@@ -10,9 +10,6 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IView;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 @PersistenceCapable(detachable = "true")
 public class View implements Serializable, IView {
 
@@ -22,40 +19,29 @@ public class View implements Serializable, IView {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 	
-	//@Column(length = 10000)
-	private JsonObject viewStates;
+	@Column(length = 10000)
+	private String viewStates;
 	
 	public View()
 	{
 		super();
-		this.viewStates = new JsonObject();
+		this.viewStates = "";
 	}
 	
 	public View(String view)
 	{
 		super();
-		JsonParser parser = new JsonParser();
-		if(view !=null){
-			JsonObject o = parser.parse(view).getAsJsonObject();
-			this.viewStates = o;
-		}
-		this.viewStates = null;
+		this.viewStates = view;
 	}
 	
 	@Override
-	public JsonObject getView() {
+	public String getView() {
 		return this.viewStates;
 	}
 
 	@Override
 	public void setView(String view) {
-		JsonParser parser = new JsonParser();
-		if(view!=null){
-			JsonObject o = parser.parse(view).getAsJsonObject();
-			this.viewStates = o;
-		}else{
-			this.viewStates=null;
-		}
+		this.viewStates = view;
 	}
 	
 	@Override
