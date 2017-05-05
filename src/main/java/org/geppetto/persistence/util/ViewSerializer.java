@@ -55,17 +55,17 @@ public class ViewSerializer implements JsonDeserializer<GeppettoProject>,JsonSer
 		for(int i =0; i<experiments.size();i++){
 			JsonObject experiment = (JsonObject) experiments.get(i);
 
-			if(experiment.has("lastModified")){
-				long lastModified =  experiment.getAsJsonPrimitive("lastModified").getAsLong();
-				String str = this.getDate(lastModified);
-				experiment.addProperty("lastModified",str);
-			}
-
-			if(experiment.has("creationDate")){
-				long lastModified =  experiment.getAsJsonPrimitive("creationDate").getAsLong();
-				String str = this.getDate(lastModified);
-				experiment.addProperty("creationDate",str);
-			}
+//			if(experiment.has("lastModified")){
+//				long lastModified =  experiment.getAsJsonPrimitive("lastModified").getAsLong();
+//				String str = this.getDate(lastModified);
+//				experiment.addProperty("lastModified",str);
+//			}
+//
+//			if(experiment.has("creationDate")){
+//				long lastModified =  experiment.getAsJsonPrimitive("creationDate").getAsLong();
+//				String str = this.getDate(lastModified);
+//				experiment.addProperty("creationDate",str);
+//			}
 
 			if(experiment.has("view")){
 				JsonObject view =  experiment.getAsJsonObject("view");
