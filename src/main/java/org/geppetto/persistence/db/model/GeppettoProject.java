@@ -81,7 +81,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.activeExperimentId = -1;
 		this.name = name;
 		this.geppettoModel = geppettoModel;
-		this.view = new View(IView.EMPTY);
+		this.view = new View(null);
 	}
 
 	public GeppettoProject()
