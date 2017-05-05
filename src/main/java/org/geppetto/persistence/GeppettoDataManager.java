@@ -45,6 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.common.GeppettoExecutionException;
+import org.geppetto.core.data.DataManagerHelper;
 import org.geppetto.core.data.IGeppettoDataManager;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
@@ -412,6 +413,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		GeppettoProject project = gsonBuilder.create().fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
+		if(project.getView()==null){
+			project.setView(new View(null));
+		}
 		for(Experiment e : project.getExperiments())
 		{
 			e.setParentProject(project);
@@ -434,6 +438,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		GeppettoProject project = gsonBuilder.create().fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
+		if(project.getView()==null){
+			project.setView(new View(null));
+		}
 		for(Experiment e : project.getExperiments())
 		{
 			e.setParentProject(project);
