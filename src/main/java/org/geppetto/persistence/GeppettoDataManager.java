@@ -160,7 +160,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 			if(project!=null){
 				if(project.getView() == null)
 				{
-					project.setView(new View(IView.EMPTY));
+					project.setView(new View(null));
 				}
 				for(Experiment e : project.getExperiments())
 				{
