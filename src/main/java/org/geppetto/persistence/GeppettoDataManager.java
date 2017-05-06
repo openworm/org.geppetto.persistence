@@ -185,17 +185,6 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		User user = dbManager.findUserByLogin(login); 
 		List<GeppettoProject> userProjects = user.getGeppettoProjects();
 
-		for(GeppettoProject p : userProjects){
-			if(p.getView()!=null){
-				p.getView().setView(null);
-			}
-			for(Experiment e : p.getExperiments()){
-				if(e.getView()!=null){
-					e.setView(null);
-				}
-			}
-		}
-
 		return userProjects;
 	}
 
