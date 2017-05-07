@@ -259,7 +259,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), 
 				name, description, new Date(), new Date(), 
 				ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
-				new Date(), project, new View("{}"));
+				new Date(), project, null);
 		((GeppettoProject) project).getExperiments().add(experiment);
 		dbManager.storeEntity(project);
 		Collection<? extends AspectConfiguration> collection = 
@@ -277,6 +277,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), watchedVariables, modelParameters,
 						(SimulatorConfiguration) simulatorConfiguration);
 				experiment.getAspectConfigurations().add(aspectConfiguration);
+				experiment.setView(new View("{}"));
 			}
 		}
 		dbManager.storeEntity(project);
