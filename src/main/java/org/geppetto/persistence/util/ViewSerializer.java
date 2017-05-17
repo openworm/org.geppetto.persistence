@@ -103,12 +103,7 @@ public class ViewSerializer implements JsonDeserializer<GeppettoProject>,JsonSer
 				}
 			}
 		}
-		GeppettoProject project = null;
-		try{
-		project = gson.create().fromJson(obj.toString(), GeppettoProject.class);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+		GeppettoProject project =  gson.create().fromJson(obj.toString(), GeppettoProject.class);
 
 		return project;
 	}
