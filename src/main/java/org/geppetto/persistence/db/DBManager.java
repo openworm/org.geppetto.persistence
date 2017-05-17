@@ -99,10 +99,18 @@ public class DBManager
 	 */
 	public synchronized <T> void storeEntity(T entity)
 	{
-		PersistenceManager pm = getPersistenceManager();		
+		PersistenceManager pm = getPersistenceManager();
+		pm.getFetchPlan().setMaxFetchDepth( -1 );
+		Transaction tx = pm.currentTransaction();
 		try
 		{
+		    tx.begin();
+
+		    // We want our object to be detached when it's been persisted
+		    pm.setDetachAllOnCommit(true);
 			pm.makePersistent(entity);
+			
+			tx.commit();
 		}
 		catch(Exception e)
 		{
@@ -113,6 +121,23 @@ public class DBManager
 		{
 			finishRequest();
 		}
+	}
+	
+	public <T> T detachEntity(T entity)
+	{
+		T detachedEntity = null;
+		PersistenceManager pm = getPersistenceManager();
+		try
+		{
+			detachedEntity = pm.detachCopy(entity);
+		}
+		catch(Exception e)
+		{
+			_logger.warn("Could not detach entity", e);
+			throw e;
+		}
+		
+		return detachedEntity;
 	}
 
 	/**

@@ -228,6 +228,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				new Date(), project, new View("{}"));
 		((GeppettoProject) project).getExperiments().add(experiment);
 		dbManager.storeEntity(project);
+		
 		return experiment;
 	}
 
@@ -380,8 +381,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public Object deleteExperiment(IExperiment experiment)
 	{
-		GeppettoProject project = 
-				dbManager.findEntityById(GeppettoProject.class, experiment.getParentProject().getId());
+		GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, experiment.getParentProject().getId());
 		Experiment e = dbManager.findEntityById(Experiment.class, experiment.getId());
 		project.getExperiments().remove(e);
 		dbManager.storeEntity(project);
