@@ -67,7 +67,6 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	@Persistent(dependent = "true", defaultFetchGroup = "true")
 	private PersistedData geppettoModel;
 	private boolean isPublic = false;
-	private boolean isReadOnly = false;
 	
 	private transient boolean volatileProject;
 	

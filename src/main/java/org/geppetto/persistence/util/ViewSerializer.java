@@ -51,21 +51,45 @@ public class ViewSerializer implements JsonDeserializer<GeppettoProject>,JsonSer
 				return date; 
 			} 
 		});
+		
+		if(obj.has("view")){
+			JsonObject view =  obj.getAsJsonObject("view");
+			if(view.has("viewStates")){
+				JsonObject jsonViewStates  = view.getAsJsonObject("viewStates");
+				view.addProperty("viewStates",jsonViewStates.toString());
+			}
+			if(view.has("id")){
+				JsonPrimitive id  = view.getAsJsonPrimitive("id");
+				view.addProperty("id",id.getAsNumber());
+			}
+		}
 		JsonArray experiments = (JsonArray) obj.get("experiments");
 		for(int i =0; i<experiments.size();i++){
 			JsonObject experiment = (JsonObject) experiments.get(i);
 
-//			if(experiment.has("lastModified")){
-//				long lastModified =  experiment.getAsJsonPrimitive("lastModified").getAsLong();
-//				String str = this.getDate(lastModified);
-//				experiment.addProperty("lastModified",str);
-//			}
-//
-//			if(experiment.has("creationDate")){
-//				long lastModified =  experiment.getAsJsonPrimitive("creationDate").getAsLong();
-//				String str = this.getDate(lastModified);
-//				experiment.addProperty("creationDate",str);
-//			}
+			if(experiment.has("lastModified")){
+				long lastModified =  experiment.getAsJsonPrimitive("lastModified").getAsLong();
+				String str = this.getDate(lastModified);
+				experiment.addProperty("lastModified",str);
+			}
+
+			if(experiment.has("creationDate")){
+				long lastModified =  experiment.getAsJsonPrimitive("creationDate").getAsLong();
+				String str = this.getDate(lastModified);
+				experiment.addProperty("creationDate",str);
+			}
+			
+			if(experiment.has("startDate")){
+				long lastModified =  experiment.getAsJsonPrimitive("startDate").getAsLong();
+				String str = this.getDate(lastModified);
+				experiment.addProperty("startDate",str);
+			}
+			
+			if(experiment.has("endDate")){
+				long lastModified =  experiment.getAsJsonPrimitive("endDate").getAsLong();
+				String str = this.getDate(lastModified);
+				experiment.addProperty("endDate",str);
+			}
 
 			if(experiment.has("view")){
 				JsonObject view =  experiment.getAsJsonObject("view");
@@ -79,7 +103,12 @@ public class ViewSerializer implements JsonDeserializer<GeppettoProject>,JsonSer
 				}
 			}
 		}
-		GeppettoProject project = gson.create().fromJson(obj.toString(), GeppettoProject.class);
+		GeppettoProject project = null;
+		try{
+		project = gson.create().fromJson(obj.toString(), GeppettoProject.class);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 		return project;
 	}
