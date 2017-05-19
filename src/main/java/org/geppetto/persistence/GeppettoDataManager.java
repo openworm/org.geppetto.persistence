@@ -34,23 +34,18 @@ package org.geppetto.persistence;
 
 import java.io.Reader;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.geppetto.core.common.GeppettoAccessException;
 import org.geppetto.core.common.GeppettoExecutionException;
+import org.geppetto.core.data.DataManagerHelper;
 import org.geppetto.core.data.IGeppettoDataManager;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
@@ -62,6 +57,7 @@ import org.geppetto.core.data.model.ISimulationResult;
 import org.geppetto.core.data.model.ISimulatorConfiguration;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.core.data.model.IUserGroup;
+import org.geppetto.core.data.model.IView;
 import org.geppetto.core.data.model.PersistedDataType;
 import org.geppetto.core.data.model.ResultsFormat;
 import org.geppetto.core.data.model.UserPrivileges;
@@ -75,8 +71,11 @@ import org.geppetto.persistence.db.model.SimulationResult;
 import org.geppetto.persistence.db.model.SimulatorConfiguration;
 import org.geppetto.persistence.db.model.User;
 import org.geppetto.persistence.db.model.UserGroup;
+import org.geppetto.persistence.db.model.View;
+import org.geppetto.persistence.util.ViewSerializer;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class GeppettoDataManager implements IGeppettoDataManager
 {
@@ -159,6 +158,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		{
 			GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, id);
 			if(project!=null){
+				if(project.getView() == null)
+				{
+					project.setView(new View(null));
+				}
 				for(Experiment e : project.getExperiments())
 				{
 					if(e !=null){
@@ -180,7 +183,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	public List<GeppettoProject> getGeppettoProjectsForUser(String login)
 	{
 		User user = dbManager.findUserByLogin(login); 
-		return user.getGeppettoProjects();
+		List<GeppettoProject> userProjects = user.getGeppettoProjects();
+
+		return userProjects;
 	}
 
 	/*
@@ -216,11 +221,31 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IExperiment newExperiment(String name, String description, IGeppettoProject project)
 	{
-		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
-				new Date(), project);
+		Experiment experiment = new Experiment(
+				new ArrayList<AspectConfiguration>(), 
+				name, description, 
+				new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
+				new Date(), project, new View("{}"));
 		((GeppettoProject) project).getExperiments().add(experiment);
 		dbManager.storeEntity(project);
+		
 		return experiment;
+	}
+
+	@Override
+	public IView newView(String view, IGeppettoProject project) {
+		IView v = new View(view);
+		((GeppettoProject) project).setView(v);
+		dbManager.storeEntity(project);
+		return v;
+	}
+	
+	@Override
+	public IView newView(String view, IExperiment experiment) {
+		IView v = new View(view);
+		((IExperiment) experiment).setView(v);
+		dbManager.storeEntity(experiment);
+		return v;
 	}
 
 	/*
@@ -232,8 +257,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IExperiment cloneExperiment(String name, String description, IGeppettoProject project, IExperiment originalExperiment)
 	{	
-		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
-				new Date(), project);
+		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), 
+				name, description, new Date(), new Date(), 
+				ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
+				new Date(), project, null);
 		((GeppettoProject) project).getExperiments().add(experiment);
 		dbManager.storeEntity(project);
 		Collection<? extends AspectConfiguration> collection = 
@@ -255,6 +282,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), watchedVariables, newParameters,
 						(SimulatorConfiguration) simulatorConfiguration);
 				experiment.getAspectConfigurations().add(aspectConfiguration);
+				experiment.setView(new View("{}"));
 			}
 		}
 		dbManager.storeEntity(project);
@@ -357,8 +385,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public Object deleteExperiment(IExperiment experiment)
 	{
-		GeppettoProject project = 
-				dbManager.findEntityById(GeppettoProject.class, experiment.getParentProject().getId());
+		GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, experiment.getParentProject().getId());
 		Experiment e = dbManager.findEntityById(Experiment.class, experiment.getId());
 		project.getExperiments().remove(e);
 		dbManager.storeEntity(project);
@@ -374,9 +401,15 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, String json)
 	{
-		GeppettoProject project = gson.fromJson(json, GeppettoProject.class);
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(GeppettoProject.class, new ViewSerializer());
+		
+		GeppettoProject project = gsonBuilder.create().fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
+		if(project.getView()==null){
+			project.setView(new View(null));
+		}
 		for(Experiment e : project.getExperiments())
 		{
 			e.setParentProject(project);
@@ -393,9 +426,15 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IGeppettoProject getProjectFromJson(Gson gson, Reader json)
 	{
-		GeppettoProject project = gson.fromJson(json, GeppettoProject.class);
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(GeppettoProject.class, new ViewSerializer());
+		
+		GeppettoProject project = gsonBuilder.create().fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
+		if(project.getView()==null){
+			project.setView(new View(null));
+		}
 		for(Experiment e : project.getExperiments())
 		{
 			e.setParentProject(project);
