@@ -38,19 +38,10 @@ public class ViewSerializer implements JsonDeserializer<GeppettoProject>,JsonSer
 		JsonObject obj = json.getAsJsonObject();
 		GsonBuilder gson = new GsonBuilder();
 		gson.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() { 
-			public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-				SimpleDateFormat format = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy",
-						Locale.ENGLISH);
-				String timeStamp = json.toString().replaceAll("^\"|\"$", "");
-				Date date = null;
-				try {
-					date =format.parse(timeStamp);
-				} catch (ParseException e) {
-					logger.error(e.getMessage());
-				}
-				return date; 
-			} 
-		});
+			   public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			      return new Date(json.getAsJsonPrimitive().getAsLong()); 
+			   } 
+			});
 		
 		if(obj.has("view")){
 			JsonObject view =  obj.getAsJsonObject("view");
@@ -69,26 +60,22 @@ public class ViewSerializer implements JsonDeserializer<GeppettoProject>,JsonSer
 
 			if(experiment.has("lastModified")){
 				long lastModified =  experiment.getAsJsonPrimitive("lastModified").getAsLong();
-				String str = this.getDate(lastModified);
-				experiment.addProperty("lastModified",str);
+				experiment.addProperty("lastModified",lastModified);
 			}
 
 			if(experiment.has("creationDate")){
 				long lastModified =  experiment.getAsJsonPrimitive("creationDate").getAsLong();
-				String str = this.getDate(lastModified);
-				experiment.addProperty("creationDate",str);
+				experiment.addProperty("creationDate",lastModified);
 			}
 			
 			if(experiment.has("startDate")){
 				long lastModified =  experiment.getAsJsonPrimitive("startDate").getAsLong();
-				String str = this.getDate(lastModified);
-				experiment.addProperty("startDate",str);
+				experiment.addProperty("startDate",lastModified);
 			}
 			
 			if(experiment.has("endDate")){
 				long lastModified =  experiment.getAsJsonPrimitive("endDate").getAsLong();
-				String str = this.getDate(lastModified);
-				experiment.addProperty("endDate",str);
+				experiment.addProperty("endDate",lastModified);
 			}
 
 			if(experiment.has("view")){
@@ -123,8 +110,7 @@ public class ViewSerializer implements JsonDeserializer<GeppettoProject>,JsonSer
 	}
 
 	public String getDate(long timeStamp){
-		Date dateOriginal = new Date(timeStamp*1000);
-		String time = dateOriginal.toString();
+		String time = new java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(new java.util.Date (timeStamp*1000));
 
 		return time;
 	}
