@@ -19,7 +19,7 @@ public class View implements Serializable, IView {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private long id;
 	
-	@Column(length = 21000)
+	@Column(length = 21000, jdbcType="CLOB")
 	private String viewStates;
 	
 	public View()

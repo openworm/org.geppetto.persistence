@@ -45,7 +45,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.geppetto.core.common.GeppettoExecutionException;
-import org.geppetto.core.data.DataManagerHelper;
 import org.geppetto.core.data.IGeppettoDataManager;
 import org.geppetto.core.data.model.ExperimentStatus;
 import org.geppetto.core.data.model.IAspectConfiguration;
@@ -135,15 +134,16 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	{
 		return dbManager.findUserByLogin(login);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getUserGroupById(long)
 	 */
 	@Override
-	public IUserGroup getUserGroupById(long id){
-		return dbManager.findEntityById(UserGroup.class, id);	
+	public IUserGroup getUserGroupById(long id)
+	{
+		return dbManager.findEntityById(UserGroup.class, id);
 	}
 
 	/*
@@ -157,14 +157,16 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		if(!projects.containsKey(id))
 		{
 			GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, id);
-			if(project!=null){
+			if(project != null)
+			{
 				if(project.getView() == null)
 				{
 					project.setView(new View(null));
 				}
 				for(Experiment e : project.getExperiments())
 				{
-					if(e !=null){
+					if(e != null)
+					{
 						e.setParentProject(project);
 					}
 				}
@@ -182,7 +184,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public List<GeppettoProject> getGeppettoProjectsForUser(String login)
 	{
-		User user = dbManager.findUserByLogin(login); 
+		User user = dbManager.findUserByLogin(login);
 		List<GeppettoProject> userProjects = user.getGeppettoProjects();
 
 		return userProjects;
@@ -221,66 +223,69 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IExperiment newExperiment(String name, String description, IGeppettoProject project)
 	{
-		Experiment experiment = new Experiment(
-				new ArrayList<AspectConfiguration>(), 
-				name, description, 
-				new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
+		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
 				new Date(), project, new View("{}"));
 		((GeppettoProject) project).getExperiments().add(experiment);
 		dbManager.storeEntity(project);
-		
+
 		return experiment;
 	}
 
 	@Override
-	public IView newView(String view, IGeppettoProject project) {
+	public IView newView(String view, IGeppettoProject project)
+	{
 		IView v = new View(view);
 		((GeppettoProject) project).setView(v);
-		dbManager.storeEntity(project);
+		if(!project.isVolatile())
+		{
+			dbManager.storeEntity(project);
+		}
 		return v;
 	}
-	
+
 	@Override
-	public IView newView(String view, IExperiment experiment) {
+	public IView newView(String view, IExperiment experiment)
+	{
 		IView v = new View(view);
 		((IExperiment) experiment).setView(v);
-		dbManager.storeEntity(experiment);
+		if(!experiment.getParentProject().isVolatile())
+		{
+			dbManager.storeEntity(experiment);
+		}
 		return v;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.geppetto.core.data.IGeppettoDataManager#cloneExperiment(java.lang.String, java.lang.String, 
-	 * 					org.geppetto.core.data.model.IGeppettoProject,org.geppetto.core.data.model.IExperiment)
+	 * @see org.geppetto.core.data.IGeppettoDataManager#cloneExperiment(java.lang.String, java.lang.String, org.geppetto.core.data.model.IGeppettoProject,org.geppetto.core.data.model.IExperiment)
 	 */
 	@Override
 	public IExperiment cloneExperiment(String name, String description, IGeppettoProject project, IExperiment originalExperiment)
-	{	
-		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), 
-				name, description, new Date(), new Date(), 
-				ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
+	{
+		Experiment experiment = new Experiment(new ArrayList<AspectConfiguration>(), name, description, new Date(), new Date(), ExperimentStatus.DESIGN, new ArrayList<SimulationResult>(), new Date(),
 				new Date(), project, null);
 		((GeppettoProject) project).getExperiments().add(experiment);
 		dbManager.storeEntity(project);
-		Collection<? extends AspectConfiguration> collection = 
-				(Collection<? extends AspectConfiguration>) originalExperiment.getAspectConfigurations();
-		for(AspectConfiguration a : collection){
-			if(a.getSimulatorConfiguration()!=null){
+		Collection<? extends AspectConfiguration> collection = (Collection<? extends AspectConfiguration>) originalExperiment.getAspectConfigurations();
+		for(AspectConfiguration a : collection)
+		{
+			if(a.getSimulatorConfiguration() != null)
+			{
 				String simulator = a.getSimulatorConfiguration().getSimulatorId();
 				String conversion = a.getSimulatorConfiguration().getConversionServiceId();
 				float length = a.getSimulatorConfiguration().getLength();
 				float timeStep = a.getSimulatorConfiguration().getTimestep();
-				Map<String,String> parameters = a.getSimulatorConfiguration().getParameters();
+				Map<String, String> parameters = a.getSimulatorConfiguration().getParameters();
 				List<String> watchedVariables = a.getWatchedVariables();
 				List<Parameter> modelParameters = a.getModelParameter();
 				List<Parameter> newParameters = new ArrayList<Parameter>();
-				for(Parameter m : modelParameters){
+				for(Parameter m : modelParameters)
+				{
 					newParameters.add((Parameter) this.newParameter(m.getVariable(), m.getValue()));
 				}
-				ISimulatorConfiguration simulatorConfiguration = this.newSimulatorConfiguration(simulator, conversion, timeStep,length,parameters);
-				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), watchedVariables, newParameters,
-						(SimulatorConfiguration) simulatorConfiguration);
+				ISimulatorConfiguration simulatorConfiguration = this.newSimulatorConfiguration(simulator, conversion, timeStep, length, parameters);
+				AspectConfiguration aspectConfiguration = new AspectConfiguration(a.getInstance(), watchedVariables, newParameters, (SimulatorConfiguration) simulatorConfiguration);
 				experiment.getAspectConfigurations().add(aspectConfiguration);
 				experiment.setView(new View("{}"));
 			}
@@ -288,6 +293,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		dbManager.storeEntity(project);
 		return experiment;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -297,25 +303,26 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	public IUser newUser(String name, String password, boolean persistent, IUserGroup group)
 	{
 		User user = new User(name, password, name, new ArrayList<GeppettoProject>(), group);
-		
+
 		user.addLoginTimeStamp(new Date());
 
 		if(persistent)
 		{
 			dbManager.storeEntity(user);
 		}
-		
+
 		return user;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.geppetto.core.data.IGeppettoDataManager#updateUser(org.geppetto.core.data.model.IUser, java.lang.String)
 	 */
 	@Override
-	public IUser updateUser(IUser user, String password){
-		((User)user).setPassword(password);
+	public IUser updateUser(IUser user, String password)
+	{
+		((User) user).setPassword(password);
 		dbManager.storeEntity(user);
 		return user;
 	}
@@ -328,7 +335,8 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public void addGeppettoProject(IGeppettoProject project, IUser user) throws GeppettoExecutionException
 	{
-		try{
+		try
+		{
 			long oldId = project.getId();
 			long oldActiveExperimentId = project.getActiveExperimentId();
 			String activeExperimentName = null;
@@ -343,7 +351,6 @@ public class GeppettoDataManager implements IGeppettoDataManager
 					}
 				}
 			}
-			project.setVolatile(false);
 			dbManager.storeEntity(project);
 			((User) user).getGeppettoProjects().add((GeppettoProject) project);
 			dbManager.storeEntity(user);
@@ -360,7 +367,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 			}
 			projects.remove(oldId);
 			projects.put(project.getId(), (GeppettoProject) project);
-		}catch(Exception e){
+		}
+		catch(Exception e)
+		{
 			throw new GeppettoExecutionException(e);
 		}
 	}
@@ -403,11 +412,12 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	{
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(GeppettoProject.class, new ViewSerializer());
-		
+
 		GeppettoProject project = gsonBuilder.create().fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
-		if(project.getView()==null){
+		if(project.getView() == null)
+		{
 			project.setView(new View(null));
 		}
 		for(Experiment e : project.getExperiments())
@@ -424,15 +434,17 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	 * @see org.geppetto.core.data.IGeppettoDataManager#getProjectFromJson(com.google.gson.Gson, java.io.Reader)
 	 */
 	@Override
-	public IGeppettoProject getProjectFromJson(Gson gson, Reader json)
+	public IGeppettoProject getProjectFromJson(Gson gson, Reader json, String baseURL)
 	{
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(GeppettoProject.class, new ViewSerializer());
-		
+
 		GeppettoProject project = gsonBuilder.create().fromJson(json, GeppettoProject.class);
 		project.setId(getRandomId());
 		project.setVolatile(true);
-		if(project.getView()==null){
+		project.setBaseURL(baseURL);
+		if(project.getView() == null)
+		{
 			project.setView(new View(null));
 		}
 		for(Experiment e : project.getExperiments())
@@ -508,7 +520,6 @@ public class GeppettoDataManager implements IGeppettoDataManager
 		return new SimulationResult(parameterPath, (PersistedData) results, format);
 	}
 
-
 	@Override
 	public IPersistedData newPersistedData(URL url, PersistedDataType type)
 	{
@@ -518,8 +529,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public IAspectConfiguration newAspectConfiguration(IExperiment experiment, String instancePath, ISimulatorConfiguration simulatorConfiguration)
 	{
-		AspectConfiguration aspectConfiguration = new AspectConfiguration(instancePath, new ArrayList<String>(), new ArrayList<Parameter>(),
-				(SimulatorConfiguration) simulatorConfiguration);
+		AspectConfiguration aspectConfiguration = new AspectConfiguration(instancePath, new ArrayList<String>(), new ArrayList<Parameter>(), (SimulatorConfiguration) simulatorConfiguration);
 		saveEntity(aspectConfiguration);
 		((Experiment) experiment).getAspectConfigurations().add(aspectConfiguration);
 		saveEntity(experiment);
@@ -527,7 +537,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	}
 
 	@Override
-	public ISimulatorConfiguration newSimulatorConfiguration(String simulator, String conversionService, float timestep, float length, Map<String,String> parameters)
+	public ISimulatorConfiguration newSimulatorConfiguration(String simulator, String conversionService, float timestep, float length, Map<String, String> parameters)
 	{
 		return new SimulatorConfiguration(simulator, conversionService, timestep, length, parameters);
 	}
@@ -545,8 +555,9 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	}
 
 	@Override
-	public void makeGeppettoProjectPublic(long projectId,boolean isPublic) throws GeppettoExecutionException {
-		
+	public void makeGeppettoProjectPublic(long projectId, boolean isPublic) throws GeppettoExecutionException
+	{
+
 		GeppettoProject project = this.getGeppettoProjectById(projectId);
 		project.setPublic(isPublic);
 		dbManager.storeEntity(project);

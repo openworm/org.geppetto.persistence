@@ -75,6 +75,8 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
 	private View view;
 
+	private transient String baseURL;
+
 	public GeppettoProject(String name, PersistedData geppettoModel)
 	{
 		super();
@@ -171,5 +173,18 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	@Override
 	public IView getView() {
 		return this.view;
+	}
+
+	@Override
+	public String getBaseURL()
+	{
+		return this.baseURL;
+	}
+
+	@Override
+	public void setBaseURL(String baseURL)
+	{
+		this.baseURL=baseURL;
+		
 	}
 }
