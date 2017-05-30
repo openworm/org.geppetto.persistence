@@ -458,19 +458,4 @@ public class DBManagerTest
 		}
 		Assert.assertNotNull(size);
 	}
-	
-	@Test
-	public void testDeleteProject()
-	{
-		user = db.findUserByLogin("guest1");
-		
-		//retrieve project
-		GeppettoProject project = db.findEntityById(GeppettoProject.class, 1l);
-		
-		dataManager.deleteGeppettoProject(1,user);
-		Assert.assertNotNull(project);
-
-		project = db.findEntityById(GeppettoProject.class, 1l);
-		Assert.assertNull(project);
-	}
 }
