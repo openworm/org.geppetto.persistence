@@ -352,7 +352,14 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				}
 			}
 			dbManager.storeEntity(project);
-			((User) user).getGeppettoProjects().add((GeppettoProject) project);
+			GeppettoProject persistedProject = dbManager.findEntityById(GeppettoProject.class, project.getId());
+			for(IExperiment persistedExp : persistedProject.getExperiments())
+			{
+				persistedExp.setParentProject(persistedProject);
+				dbManager.storeEntity(persistedExp);
+			}
+			dbManager.storeEntity(persistedProject);
+			((User) user).getGeppettoProjects().add(persistedProject);
 			dbManager.storeEntity(user);
 			if(activeExperimentName != null)
 			{
@@ -360,13 +367,13 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				{
 					if(e.getName().equals(activeExperimentName))
 					{
-						project.setActiveExperimentId(e.getId());
+						persistedProject.setActiveExperimentId(e.getId());
 						break;
 					}
 				}
 			}
 			projects.remove(oldId);
-			projects.put(project.getId(), (GeppettoProject) project);
+			projects.put(persistedProject.getId(),persistedProject);
 		}
 		catch(Exception e)
 		{
@@ -382,6 +389,10 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public Object deleteGeppettoProject(long id, IUser user)
 	{
+		GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, id);
+		for(Experiment e : project.getExperiments()){
+			this.deleteExperiment(e);
+		}
 		dbManager.deleteProject(id, user);
 		return true;
 	}
