@@ -337,6 +337,7 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	{
 		try
 		{
+			User dbUser = dbManager.findEntityById(User.class, user.getId());
 			long oldId = project.getId();
 			long oldActiveExperimentId = project.getActiveExperimentId();
 			String activeExperimentName = null;
@@ -352,21 +353,22 @@ public class GeppettoDataManager implements IGeppettoDataManager
 				}
 			}
 			dbManager.storeEntity(project);
-			((User) user).getGeppettoProjects().add((GeppettoProject) project);
-			dbManager.storeEntity(user);
+			GeppettoProject persistedProject = dbManager.findEntityById(GeppettoProject.class, project.getId());
+			(dbUser).getGeppettoProjects().add(persistedProject);
+			dbManager.storeEntity(dbUser);
 			if(activeExperimentName != null)
 			{
 				for(IExperiment e : project.getExperiments())
 				{
 					if(e.getName().equals(activeExperimentName))
 					{
-						project.setActiveExperimentId(e.getId());
+						persistedProject.setActiveExperimentId(e.getId());
 						break;
 					}
 				}
 			}
 			projects.remove(oldId);
-			projects.put(project.getId(), (GeppettoProject) project);
+			projects.put(persistedProject.getId(),persistedProject);
 		}
 		catch(Exception e)
 		{
