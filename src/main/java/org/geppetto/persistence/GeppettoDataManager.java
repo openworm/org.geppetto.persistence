@@ -389,10 +389,6 @@ public class GeppettoDataManager implements IGeppettoDataManager
 	@Override
 	public Object deleteGeppettoProject(long id, IUser user)
 	{
-		GeppettoProject project = dbManager.findEntityById(GeppettoProject.class, id);
-		for(Experiment e : project.getExperiments()){
-			this.deleteExperiment(e);
-		}
 		dbManager.deleteProject(id, user);
 		return true;
 	}
