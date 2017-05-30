@@ -33,9 +33,6 @@
 
 package org.geppetto.persistence.db;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +43,6 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.datanucleus.store.query.QueryResult;
 import org.geppetto.core.data.model.IDataEntity;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.persistence.db.model.GeppettoProject;
@@ -121,6 +117,7 @@ public class DBManager
 		{
 			finishRequest();
 		}
+
 	}
 	
 	public <T> T detachEntity(T entity)
