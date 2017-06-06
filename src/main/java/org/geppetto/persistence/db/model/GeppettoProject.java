@@ -44,6 +44,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import org.geppetto.core.data.model.IGeppettoProject;
+import org.geppetto.core.data.model.IView;
 
 @PersistenceCapable(detachable = "true")
 public class GeppettoProject implements Serializable, IGeppettoProject
@@ -69,6 +70,12 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	private boolean isReadOnly = false;
 	
 	private transient boolean volatileProject;
+	
+	@Join
+	@Persistent(dependentElement = "true", defaultFetchGroup = "true")
+	private View view;
+
+	private transient String baseURL;
 
 	public GeppettoProject(String name, PersistedData geppettoModel)
 	{
@@ -76,7 +83,7 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 		this.activeExperimentId = -1;
 		this.name = name;
 		this.geppettoModel = geppettoModel;
-
+		this.view = new View(null);
 	}
 
 	public GeppettoProject()
@@ -156,5 +163,28 @@ public class GeppettoProject implements Serializable, IGeppettoProject
 	
 	public void setPublic(boolean mode){
 		this.isPublic = mode;
+	}
+	
+	@Override
+	public void setView(IView view) {
+		this.view = (View) view;
+	}
+
+	@Override
+	public IView getView() {
+		return this.view;
+	}
+
+	@Override
+	public String getBaseURL()
+	{
+		return this.baseURL;
+	}
+
+	@Override
+	public void setBaseURL(String baseURL)
+	{
+		this.baseURL=baseURL;
+		
 	}
 }

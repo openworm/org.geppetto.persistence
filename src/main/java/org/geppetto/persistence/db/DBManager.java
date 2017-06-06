@@ -33,9 +33,6 @@
 
 package org.geppetto.persistence.db;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +43,6 @@ import javax.jdo.Transaction;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.datanucleus.store.query.QueryResult;
 import org.geppetto.core.data.model.IDataEntity;
 import org.geppetto.core.data.model.IUser;
 import org.geppetto.persistence.db.model.GeppettoProject;
@@ -99,10 +95,18 @@ public class DBManager
 	 */
 	public synchronized <T> void storeEntity(T entity)
 	{
-		PersistenceManager pm = getPersistenceManager();		
+		PersistenceManager pm = getPersistenceManager();
+		pm.getFetchPlan().setMaxFetchDepth( -1 );
+		Transaction tx = pm.currentTransaction();
 		try
 		{
+		    tx.begin();
+
+		    // We want our object to be detached when it's been persisted
+		    pm.setDetachAllOnCommit(true);
 			pm.makePersistent(entity);
+			
+			tx.commit();
 		}
 		catch(Exception e)
 		{
@@ -113,6 +117,24 @@ public class DBManager
 		{
 			finishRequest();
 		}
+
+	}
+	
+	public <T> T detachEntity(T entity)
+	{
+		T detachedEntity = null;
+		PersistenceManager pm = getPersistenceManager();
+		try
+		{
+			detachedEntity = pm.detachCopy(entity);
+		}
+		catch(Exception e)
+		{
+			_logger.warn("Could not detach entity", e);
+			throw e;
+		}
+		
+		return detachedEntity;
 	}
 
 	/**
