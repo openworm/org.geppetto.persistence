@@ -62,6 +62,7 @@ script:
       sleep 60;
       http_status=$(curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})];
     done
+  - sleep 60;
   - curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}
   - echo "Current time :$(date +"%T")"
   - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
