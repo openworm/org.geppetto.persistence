@@ -54,9 +54,13 @@ script:
   - echo $http_status;
   - http_status=$(curl -s -I $1 http://localhost:28080 | grep HTTP/1.1 | awk {'print $2'})
   - echo $http_status;
-  - http_status=$(curl -s -I $1 http://localhost:28081/dashboard | grep HTTP/1.1 | awk {'print $2'})
+  - http_status=$(curl -s -I $1 http://localhost:28081/geppetto | grep HTTP/1.1 | awk {'print $2'})
   - echo $http_status;
-  - http_status=$(curl -s -I $1 http://localhost:28080/dashboard | grep HTTP/1.1 | awk {'print $2'})
+  - http_status=$(curl -s -I $1 http://localhost:28080/geppetto | grep HTTP/1.1 | awk {'print $2'})
+  - echo $http_status;
+  - http_status=$(curl -s -I $1 http://localhost:28081/org.geppetto.frontend/geppetto | grep HTTP/1.1 | awk {'print $2'})
+  - echo $http_status;
+  - http_status=$(curl -s -I $1 http://localhost:28080/org.geppetto.frontend/geppetto | grep HTTP/1.1 | awk {'print $2'})
   - echo $http_status;
   - while [ "$http_status" == "404" ]; do
       echo "Restart run";
