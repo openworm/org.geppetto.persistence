@@ -49,7 +49,7 @@ script:
   - echo "Current time :$(date +"%T")"
   - docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
   - bash utilities/test_geppetto_server.sh
-  - sleep 100
+  - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo $http_status;
   - while [ "$http_status" == "404" ]; do
@@ -63,7 +63,7 @@ script:
       echo "Done restarting";
       echo "$http_status";
     done
-  - sleep 100;
+  - sleep 30;
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
   - tail /etc/log.log -n 100000
   - curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}
