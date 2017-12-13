@@ -45,7 +45,7 @@ script:
   - echo "Current time :$(date +"%T")"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
-  - docker build -t="geppetto_persistence" --build-arg frontendBranch=$TRAVIS_BRANCH --build-arg persistenceBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/
+  - docker build -t="geppetto_persistence" --build-arg frontendBranch=$TRAVIS_BRANCH --build-arg persistenceBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#caspers-qunit:utilities/docker/geppetto-persistence/
   - echo "Current time :$(date +"%T")"
   - docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
   - bash utilities/test_geppetto_server.sh
