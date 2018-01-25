@@ -406,12 +406,35 @@ public class DBTestData
 		dbManager.storeEntity(anonymous);
 	}
 
+        private void buildHippocampalNetDemoProject(String name)
+        {
+            String path = "https://raw.githubusercontent.com/openworm/org.geppetto.persistence/new-test-data/src/main/resources/"+name+"/";
+
+            PersistedData geppettoModel = new PersistedData(path + "GeppettoModel.xmi", PersistedDataType.GEPPETTO_PROJECT);
+            GeppettoProject project = new GeppettoProject(name, geppettoModel);
+
+            List<AspectConfiguration> aspectConfigurations1 = new ArrayList<>();
+            SimulatorConfiguration sc1 = new SimulatorConfiguration("neuronSimulator", null, 0.00005f, 0.3f, new HashMap<String, String>());
+            sc1.getParameters().put("target", "HippocampalNet");
+            aspectConfigurations1.add(new AspectConfiguration("HippocampalNet", null, null, sc1));
+            Experiment exp1 = new Experiment(aspectConfigurations1, "HippocampalNet", "", new Date(), new Date(), ExperimentStatus.DESIGN, null, new Date(), new Date(), project, new View("{}"));
+            exp1.setScript(path+"script.js");
+            List<Experiment> experiments = new ArrayList<>();
+            experiments.add(exp1);
+            project.setExperiments(experiments);
+
+            user = dbManager.findUserByLogin("guest1");
+            List<GeppettoProject> projects = user.getGeppettoProjects();
+            projects.add(project);
+            dbManager.storeEntity(user);
+        }
+
 	public static void main(String[] args)
 	{
 		DBTestData testDBCreator;
 		try {
-			testDBCreator = new DBTestData();
-			testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 1",1);
+                    testDBCreator = new DBTestData();
+                    	testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 1",1);
 			testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 2",1);
 			testDBCreator.buildHHCellDemoProject("Hodgkin-Huxley Model 3",1);
 			testDBCreator.buildACNet2DemoProject("ACNet2 1",5);
@@ -421,11 +444,10 @@ public class DBTestData
 			testDBCreator.buildHHCellOpenCortex240CellsDemoProject("Balanced_240cells_29299conns.net", 15);
 			testDBCreator.twoCell("twocell", 20);
 			testDBCreator.demoProjects("twocell", 25);
-			testDBCreator.c302model("cElegansConnectome", 30);
+                        testDBCreator.c302model("cElegansConnectome", 30);
+                        testDBCreator.buildHippocampalNetDemoProject("HippocampalNet");
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
-		
+                }
 	}
-
 }
