@@ -43,6 +43,10 @@ before_script:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
     
 script:
+  - firefox -v
+  - slimerjs -v
+  - phantomjs -v
+  - casperjs --version
   - echo "Current time :$(date +"%T")"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
