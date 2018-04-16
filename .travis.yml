@@ -75,6 +75,8 @@ script:
   - sleep 30;
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
+  - curl -sb -H "Accept: application/json" "http://localhost:28081/org.geppetto.frontend"
+  - curl -o - http://localhost:28081/org.geppetto.frontend
   - curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
@@ -84,6 +86,6 @@ script:
   - echo "Current time :$(date +"%T")"
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
   - less +F /etc/log.log -n 200
+  - sudo docker logs -t netpyne-ui_container
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
-  - sudo docker logs -t netpyne-ui_container
