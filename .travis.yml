@@ -87,6 +87,6 @@ script:
   - echo "Current time :$(date +"%T")"
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
   - less +F /etc/log.log
-  - sudo docker logs -t geppetto_persistence_container
+  - docker logs -t geppetto_persistence_container
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
