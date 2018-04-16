@@ -75,7 +75,8 @@ script:
   - sleep 30;
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
-  - curl -sb -H "Accept: application/json" "http://localhost:28081/org.geppetto.frontend"
+  - curl http://localhost:28081/org.geppetto.frontend
+  - curl -sb -H "Accept:application/json" "http://localhost:28081/org.geppetto.frontend"
   - curl -o - http://localhost:28081/org.geppetto.frontend
   - curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
