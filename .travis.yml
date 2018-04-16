@@ -59,7 +59,7 @@ script:
   - sudo docker logs -t geppetto_persistence_container
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
   - less +F /etc/log.log
-  - echo "$http_status";
+  - echo "$http_status"
   - while [ "$http_status" == "404" ]; do
       echo "Restart run";
       docker stop $(docker ps -a -q);
@@ -72,16 +72,16 @@ script:
       echo "$http_status";
     done
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
-  - echo "$http_status";
-  - sleep 30;
+  - echo "$http_status"
+  - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
-  - echo "$http_status";
+  - echo "$http_status"
   - curl http://localhost:28081/org.geppetto.frontend
   - curl -sb -H "Accept:application/json" "http://localhost:28081/org.geppetto.frontend"
   - curl -o - http://localhost:28081/org.geppetto.frontend
   - curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
-  - echo "$http_status";
+  - echo "$http_status"
   - echo "Current time :$(date +"%T")"
   - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
   - docker ps -a
