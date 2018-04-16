@@ -56,6 +56,7 @@ script:
   - bash utilities/test_geppetto_server.sh
   - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
+  - sudo docker logs -t geppetto_persistence_container
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
   - less +F /etc/log.log
   - echo "$http_status";
@@ -87,6 +88,6 @@ script:
   - echo "Current time :$(date +"%T")"
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
   - less +F /etc/log.log
-  - docker logs -t geppetto_persistence_container
+  - sudo docker logs -t geppetto_persistence_container
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
