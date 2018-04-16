@@ -70,9 +70,14 @@ script:
       echo "Done restarting";
       echo "$http_status";
     done
+  - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
   - sleep 30;
+  - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
+  - echo "$http_status";
   - curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}
+  - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
+  - echo "$http_status";
   - echo "Current time :$(date +"%T")"
   - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
   - docker ps -a
@@ -81,3 +86,4 @@ script:
   - less +F /etc/log.log -n 200
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
+  - sudo docker logs -t netpyne-ui_container
