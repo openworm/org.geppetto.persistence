@@ -70,6 +70,7 @@ script:
       echo "Done restarting";
       echo "$http_status";
     done
+  - echo "$http_status";
   - sleep 30;
   - curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}
   - echo "Current time :$(date +"%T")"
