@@ -3,6 +3,7 @@ os: linux
 sudo: required
 dist: trusty
 group: deprecated-2017Q4
+bundler_args: --retry 5
 node_js:
   - "7"
 env:
@@ -50,9 +51,9 @@ script:
   - echo "Current time :$(date +"%T")"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
-  - docker build -t="geppetto_persistence" --build-arg frontendBranch=$TRAVIS_BRANCH --build-arg persistenceBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/
+  - travis_retry docker build -t="geppetto_persistence" --build-arg frontendBranch=$TRAVIS_BRANCH --build-arg persistenceBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/
   - echo "Current time :$(date +"%T")"
-  - docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
+  - travis_retry docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
   - bash utilities/test_geppetto_server.sh
   - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
@@ -80,7 +81,7 @@ script:
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
   - echo "Current time :$(date +"%T")"
-  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
+  - travis_retry xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
   - docker ps -a
   - echo "Current time :$(date +"%T")"
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
