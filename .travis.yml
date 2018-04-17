@@ -77,7 +77,6 @@ script:
   - curl http://localhost:28081/org.geppetto.frontend
   - curl -sb -H "Accept:application/json" "http://localhost:28081/org.geppetto.frontend"
   - curl -o - http://localhost:28081/org.geppetto.frontend
-  - curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'}
   - echo "Current time :$(date +"%T")"
   - travis_retry xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
   - docker ps -a
