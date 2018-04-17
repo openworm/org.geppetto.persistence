@@ -69,8 +69,6 @@ script:
       echo "Done restarting";
       echo "$http_status";
     done
-  - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
-  - echo "$http_status"
   - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
