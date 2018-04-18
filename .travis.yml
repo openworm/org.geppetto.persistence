@@ -42,7 +42,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - export SLIMERJSLAUNCHER=/home/travis/firefox-58.0/firefox/firefox
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
-    
+bundler_args: --retry 5
 script:
   - firefox -v
   - slimerjs -v
@@ -51,7 +51,7 @@ script:
   - echo "Current time :$(date +"%T")"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
-  - travis_retry docker build -t="geppetto_persistence" --build-arg frontendBranch=$TRAVIS_BRANCH --build-arg persistenceBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/
+  - travis_retry docker build -t="geppetto_persistence" --build-arg frontendBranch=fail --build-arg persistenceBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/
   - echo "Current time :$(date +"%T")"
   - travis_retry docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
   - bash utilities/test_geppetto_server.sh
