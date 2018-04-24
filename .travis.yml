@@ -55,8 +55,8 @@ script:
   - bash utilities/test_geppetto_server.sh
   - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
-  - echo "$http_status"
-  - while [ "$http_status" == "404" ]; do
+  - echo "$http_status";
+  - while [ "$http_status" != "302" ]; do
       echo "Restart run";
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
