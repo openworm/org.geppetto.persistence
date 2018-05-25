@@ -5,15 +5,18 @@ package org.geppetto.persistence.auth;
 import org.geppetto.core.auth.IAuthService;
 import org.geppetto.core.data.model.IUser;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class GeppettoAuthentication implements IAuthService
 {
+        @Autowired
+        private String authFailureRedirectURL;
 
 	@Override
 	public String authFailureRedirect()
 	{
-		return "http://geppetto.org";
+            return authFailureRedirectURL;
 	}
 
 	@Override

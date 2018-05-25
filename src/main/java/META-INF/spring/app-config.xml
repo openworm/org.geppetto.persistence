@@ -47,5 +47,7 @@
 		</property>
 	</bean>
 
-
+        <bean id="authFailureRedirectURL" class="java.lang.String">
+          <constructor-arg value="http://geppetto.org"/>
+	</bean>
 </beans>
