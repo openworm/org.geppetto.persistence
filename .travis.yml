@@ -9,11 +9,11 @@ env:
   global:
     secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
 install:
-- git clone https://github.com/openworm/org.geppetto.model.git --quiet -b development
+- git clone https://github.com/openworm/org.geppetto.model.git --quiet -b update-virgo-test
 - cd org.geppetto.model
 - mvn install
 - cd ..
-- git clone https://github.com/openworm/org.geppetto.core.git --quiet -b development
+- git clone https://github.com/openworm/org.geppetto.core.git --quiet -b update-virgo-test
 - cd org.geppetto.core
 - mvn install
 - cd ..
@@ -49,7 +49,7 @@ script:
   - echo "Current time :$(date +"%T")"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
-  - travis_retry docker build -t="geppetto_persistence" --build-arg frontendBranch=$TRAVIS_BRANCH --build-arg persistenceBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/
+  - travis_retry docker build -t="geppetto_persistence" --build-arg frontendBranch=$TRAVIS_BRANCH --build-arg persistenceBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
   - echo "Current time :$(date +"%T")"
   - travis_retry docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence
   - bash utilities/test_geppetto_server.sh
