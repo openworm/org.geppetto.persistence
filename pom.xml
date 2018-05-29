@@ -103,19 +103,19 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.eclipse.gemini</groupId>
-			<artifactId>org.eclipse.gemini.blueprint.core</artifactId>
-			<version>1.0.2.RELEASE</version>
+    <groupId>org.eclipse.gemini.blueprint</groupId>
+    <artifactId>gemini-blueprint-core</artifactId>
+			<version>2.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.gemini</groupId>
-			<artifactId>org.eclipse.gemini.blueprint.extender</artifactId>
-			<version>1.0.2.RELEASE</version>
+    <groupId>org.eclipse.gemini.blueprint</groupId>
+    <artifactId>gemini-blueprint-extender</artifactId>
+			<version>2.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.gemini</groupId>
-			<artifactId>org.eclipse.gemini.blueprint.io</artifactId>
-			<version>1.0.2.RELEASE</version>
+    <groupId>org.eclipse.gemini.blueprint</groupId>
+        <artifactId>gemini-blueprint-io</artifactId>    
+			<version>2.0.0.RELEASE</version>
 		</dependency>
 
 		<dependency>
