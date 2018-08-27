@@ -84,7 +84,10 @@ script:
   - docker inspect geppetto_persistence
   - docker inspect geppetto_persistence_container
   - echo "Current time :$(date +"%T")"
-  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
+  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs /etc/logs
+  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
+  - cd /etc/repo && ls
+  - cd /etc/logs && ls
   - tail -n 200 /etc/log.log
   - sleep 10
   - sudo docker logs -t geppetto_persistence_container
