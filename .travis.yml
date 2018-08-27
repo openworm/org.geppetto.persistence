@@ -50,7 +50,6 @@ script:
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
   - travis_retry docker build -t="geppetto_persistence" --build-arg mainBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
-  - echo "Current time :$(date +"%T")"
   - travis_retry docker run  -t -dit --name=geppetto_persistence_container --net=host geppetto_persistence
   - bash utilities/test_geppetto_server.sh
   - sleep 30
@@ -66,14 +65,13 @@ script:
       http_status=$(curl -s -I $1 http://localhost:8080 | grep HTTP/1.1 | awk {'print $2'});
       echo "Done restarting";
       echo "$http_status";
-      sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
-      tail -n 200 /etc/log.log
+      sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc;
+      tail -n 200 /etc/log.log;
     done
   - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:8080 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
   - curl http://localhost:8080/org.geppetto.frontend
-  - echo "Current time :$(date +"%T")"
   - travis_retry xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:8080/ --engine=slimerjs
   - docker ps -a
   - echo "Current time :$(date +"%T")"
