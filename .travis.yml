@@ -50,6 +50,7 @@ script:
   - firefox -v
   - slimerjs -v
   - phantomjs -v
+  - docker --version
   - casperjs --version
   - echo "Current time :$(date +"%T")"
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
