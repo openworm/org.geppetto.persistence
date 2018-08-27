@@ -56,8 +56,10 @@ script:
   - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:8080/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
-  - while [ "$http_status" != "302" ]; do
+  - var=1;
+  - while [[ "$http_status" != "302" ] && [ $var -le 4  ]]; do
       echo "Restart run";
+      var=$((var + 1));
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
       travis_retry docker run  -t -dit --name=geppetto_persistence_container --net=host geppetto_persistence;
