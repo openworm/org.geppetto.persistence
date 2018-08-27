@@ -71,9 +71,18 @@ script:
   - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:8080 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
-  - curl http://localhost:8080/org.geppetto.frontend
-  - travis_retry xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:8080/ --engine=slimerjs
+  - curl -v http://localhost:8080/org.geppetto.frontend
+  - curl -v http://localhost:8080/
+  - curl -v http://0.0.0.0:8080/org.geppetto.frontend
+  - curl -v http://127.0.0.1:8080/org.geppetto.frontend
+  - curl -v http://172.17.0.1:8080/org.geppetto.frontend
+  - curl -v http://0.0.0.0:8080/
+  - curl -v http://127.0.0.1:8080/
+  - curl -v http://172.17.0.1:8080/
+  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:8080/ --engine=slimerjs
   - docker ps -a
+  - docker inspect geppetto_persistence
+  - docker inspect geppetto_persistence_container
   - echo "Current time :$(date +"%T")"
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
   - tail -n 200 /etc/log.log
