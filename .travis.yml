@@ -69,7 +69,7 @@ script:
       echo "Done restarting";
       echo "$http_status";
       sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc
-      less +F /etc/log.log
+      tail -n 200 /etc/log.log
     done
   - sleep 30
   - http_status=$(curl -s -I $1 http://localhost:8080 | grep HTTP/1.1 | awk {'print $2'})
