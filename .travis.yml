@@ -85,7 +85,6 @@ script:
   - curl -v http://127.0.0.1:28081/
   - curl -v http://172.17.0.1:28081/
   - docker --version
-  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
   - docker ps -a
   - docker inspect geppetto_persistence
   - docker inspect geppetto_persistence_container
