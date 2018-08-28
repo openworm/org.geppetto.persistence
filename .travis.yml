@@ -12,7 +12,7 @@ before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - sudo apt-get update
-  - sudo apt-get -y install docker-ce=18.03.1~ce-0~ubuntu
+  - sudo apt-get -y install docker-ce=17.09.0~ce-0~ubuntu
   - docker version
 install:
 - git clone https://github.com/openworm/org.geppetto.model.git --quiet -b update-virgo-test
@@ -59,7 +59,7 @@ script:
   - travis_retry docker run -t -dit --name=geppetto_persistence_container -h 0.0.0.0 -p 28081:8080 geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 30
-  - http_status=$(curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
+  - http_status=$(curl -s -I $1 http://0.0.0.0:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
   - while [ "$http_status" == "404" ]; do
       echo "Restart run";
