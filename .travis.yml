@@ -87,15 +87,13 @@ script:
   - curl -v http://172.17.0.1:28081/
   - docker --version
   - docker ps -a
-  - docker inspect geppetto_persistence
-  - docker inspect geppetto_persistence_container
-    - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://0.0.0.0:28081/ --engine=slimerjs
+  - docker inspect geppetto_persistence;
+  - docker inspect geppetto_persistence_container;
+  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://0.0.0.0:28081/ --engine=slimerjs
   - echo "Current time :$(date +"%T")"
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
-  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
-  - cd /etc/repo && ls
   - cd /etc/logs && ls
-  - tail -n 200 /etc/log.log
+  - tail -n 200 /etc/logs/log.log
   - sleep 10
   - sudo docker logs -t geppetto_persistence_container
   - docker stop $(docker ps -a -q)
