@@ -60,7 +60,7 @@ script:
       echo "Restart run";
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
-      travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 --net=dockernet geppetto_persistence;
+      travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 --net="host" geppetto_persistence;
       bash utilities/test_geppetto_server.sh;
       sleep 100;
       http_status=$(curl -s -I $1 http://192.168.0.1:8080 | grep HTTP/1.1 | awk {'print $2'});
