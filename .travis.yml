@@ -51,7 +51,7 @@ script:
   - echo "$TRAVIS_BRANCH"
   - travis_retry docker build -t="geppetto_persistence" --build-arg mainBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
   - travis_wait 200 docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 dockernet
-  - travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 --net="host" geppetto_persistence;
+  - travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 --net=dockernet geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 30
   - http_status=$(curl -s -I $1 http://192.168.0.1:8080/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
@@ -60,7 +60,7 @@ script:
       echo "Restart run";
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
-      travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 geppetto_persistence;
+      travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 --net=dockernet geppetto_persistence;
       bash utilities/test_geppetto_server.sh;
       sleep 100;
       http_status=$(curl -s -I $1 http://192.168.0.1:8080 | grep HTTP/1.1 | awk {'print $2'});
@@ -70,18 +70,12 @@ script:
       tail -n 200 /etc/log.log;
     done
   - sleep 30
-  - http_status=$(curl -s -I $1 http://localhost:8080 | grep HTTP/1.1 | awk {'print $2'})
+  - http_status=$(curl -s -I $1 http://192.168.0.1:8080 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
   - curl -v http://192.168.0.1:8080/org.geppetto.frontend
-  - curl -v http://192.168.0.1:8080/
-  - curl -v http://192.168.0.1:8080/org.geppetto.frontend
-  - curl -v http://192.168.0.1:8080/org.geppetto.frontend
-  - curl -v http://192.168.0.1:8080/org.geppetto.frontend
+  - curl -v http://192.168.0.2:8080/org.geppetto.frontend
   - curl -v http://192.168.0.1:8080/
   - curl -v http://192.168.0.2:8080/
-  - curl -v http://127.0.0.1:8080/
-  - curl -v http://localhost:8080/
-  - curl -v http://0.0.0.0:8080/
   - docker --version
   - docker ps -a
   - docker inspect geppetto_persistence;
