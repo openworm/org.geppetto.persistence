@@ -60,7 +60,7 @@ script:
       echo "Restart run";
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
-      travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 --net="host" geppetto_persistence;
+      travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 geppetto_persistence;
       bash utilities/test_geppetto_server.sh;
       sleep 100;
       http_status=$(curl -s -I $1 http://192.168.0.1:8080 | grep HTTP/1.1 | awk {'print $2'});
@@ -81,6 +81,7 @@ script:
   - curl -v http://192.168.0.2:8080/
   - curl -v http://127.0.0.1:8080/
   - curl -v http://localhost:8080/
+  - curl -v http://0.0.0.0:8080/
   - docker --version
   - docker ps -a
   - docker inspect geppetto_persistence;
