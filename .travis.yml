@@ -42,7 +42,6 @@ addons:
     - libgl1-mesa-dri
     - libglapi-mesa
     - libosmesa6
-    - conntrack
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
@@ -53,15 +52,8 @@ script:
   - slimerjs -v
   - phantomjs -v
   - docker --version
-  - dockers ps -a
-  - dockers images
-  - docker stop $(docker ps -a -q)
-  - docker rm $(docker ps -a -q)
-  - docker kill $(sudo docker ps -a -q)
-  - docker rm $(sudo docker ps -a -q)
-  - docker rmi $(sudo docker images -q)
-  - conntrack -F
-  - sleep 60
+  - docker images
+  - docker ps -a
   - casperjs --version
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
@@ -108,7 +100,3 @@ script:
   - sudo docker logs -t geppetto_persistence_container
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
-  - docker kill $(sudo docker ps -a -q)
-  - docker rm $(sudo docker ps -a -q)
-  - docker rmi $(sudo docker images -q)
-  - conntrack -F
