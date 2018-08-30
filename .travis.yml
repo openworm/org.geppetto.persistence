@@ -61,13 +61,13 @@ script:
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
   - travis_retry docker build -t="geppetto_persistence" --build-arg mainBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
-  - travis_retry docker run -t -dit --name=geppetto_persistence_container -h 0.0.0.0 -p 28081:8080 geppetto_persistence;
+  - travis_retry docker run -t -dit --name=geppetto_persistence_container -h 172.17.0.0 -p 28081:8080 geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 60
   - docker ps -a
   - docker network inspect bridge
   - netstat -nr
-  - http_status=$(curl -s -I $1 http://0.0.0.0:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
+  - http_status=$(curl -s -I $1 http://172.17.0.0:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
   - while [ "$http_status" == "404" ]; do
       echo "Restart run";
@@ -87,15 +87,15 @@ script:
   - echo "$http_status"
   - curl -v http://localhost:8080
   - curl -v http://localhost:28081/
-  - curl -v http://0.0.0.0:8080/
-  - curl -v http://0.0.0.0:28081/
+  - curl -v http://172.17.0.0:8080/
+  - curl -v http://172.17.0.0:28081/
   - curl -v http://127.0.0.1:28081/
   - curl -v http://172.17.0.1:28081/
   - docker --version
   - docker ps -a;
   - docker inspect geppetto_persistence;
   - docker inspect geppetto_persistence_container;
-  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://0.0.0.0:28081/ --engine=slimerjs
+  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://172.17.0.0:28081/ --engine=slimerjs
   - echo "Current time :$(date +"%T")"
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
