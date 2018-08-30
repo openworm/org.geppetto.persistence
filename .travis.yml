@@ -8,12 +8,6 @@ node_js:
 env:
   global:
     secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
-before_install:
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  - sudo apt-get update
-  - sudo apt-get -y install docker-ce=17.09.0~ce-0~ubuntu
-  - docker version
 install:
 - git clone https://github.com/openworm/org.geppetto.model.git --quiet -b update-virgo-test
 - cd org.geppetto.model
@@ -56,44 +50,39 @@ script:
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
   - travis_retry docker build -t="geppetto_persistence" --build-arg mainBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
-  - travis_retry docker run -t -dit --name=geppetto_persistence_container -h 0.0.0.0 -p 28081:8080 geppetto_persistence;
+  - travis_wait 200 docker network create -d bridge --subnet 192.168.0.0/24 --gateway 0.0.0.0 dockernet
+  - travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 --net=dockernet geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 30
-  - http_status=$(curl -s -I $1 http://0.0.0.0:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
+  - http_status=$(curl -s -I $1 http://0.0.0.0:8080/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
   - while [ "$http_status" == "404" ]; do
       echo "Restart run";
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
-      travis_retry docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 28081:8080 geppetto_persistence;
+      travis_wait 200 docker run -d --name geppetto_persistence_container -p 8080:8080 --net=dockernet geppetto_persistence;
       bash utilities/test_geppetto_server.sh;
       sleep 100;
-      http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'});
+      http_status=$(curl -s -I $1 http://0.0.0.0:8080 | grep HTTP/1.1 | awk {'print $2'});
       echo "Done restarting";
       echo "$http_status";
       sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc;
       tail -n 200 /etc/log.log;
     done
   - sleep 30
-  - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
+  - http_status=$(curl -s -I $1 http://0.0.0.0:8080 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
-  - curl -v http://localhost:28081/org.geppetto.frontend
-  - curl -v http://localhost:28081/
-  - curl -v http://0.0.0.0:28081/org.geppetto.frontend
-  - curl -v http://127.0.0.1:28081/org.geppetto.frontend
-  - curl -v http://172.17.0.1:28081/org.geppetto.frontend
-  - curl -v http://0.0.0.0:28081/
-  - curl -v http://127.0.0.1:28081/
-  - curl -v http://172.17.0.1:28081/
+  - curl -v http://0.0.0.0:8080/org.geppetto.frontend
+  - curl -v http://192.168.0.2:8080/org.geppetto.frontend
+  - curl -v http://0.0.0.0:8080/
+  - curl -v http://192.168.0.2:8080/
   - docker --version
   - docker ps -a
-  - docker inspect geppetto_persistence
-  - docker inspect geppetto_persistence_container
-    - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://0.0.0.0:28081/ --engine=slimerjs
+  - docker inspect geppetto_persistence;
+  - docker inspect geppetto_persistence_container;
+  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://0.0.0.0:8080/ --engine=slimerjs
   - echo "Current time :$(date +"%T")"
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
-  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
-  - cd /etc/repo && ls
   - cd /etc/logs && ls
   - tail -n 200 /etc/logs/logs/log.log
   - sleep 10
