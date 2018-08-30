@@ -95,7 +95,7 @@ script:
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
   - cd /etc/repo && ls
   - cd /etc/logs && ls
-  - tail -n 200 /etc/log.log
+  - tail -n 200 /etc/logs/logs/log.log
   - sleep 10
   - sudo docker logs -t geppetto_persistence_container
   - docker stop $(docker ps -a -q)
