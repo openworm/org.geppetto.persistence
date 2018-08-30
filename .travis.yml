@@ -12,7 +12,7 @@ before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - sudo apt-get update
-  - sudo apt-get -y install docker-ce=17.09.0~ce-0~ubuntu
+  - sudo apt-get -y install docker-ce
   - docker version
 install:
 - git clone https://github.com/openworm/org.geppetto.model.git --quiet -b update-virgo-test
@@ -97,12 +97,20 @@ script:
   - docker inspect geppetto_persistence_container;
   - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:8080/ --engine=slimerjs
   - echo "Current time :$(date +"%T")"
-  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
-  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
+  - docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
+  - docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
   - cd /etc/repo && ls
   - cd /etc/logs && ls
   - tail -n 200 /etc/logs/logs/log.log
   - sleep 10
-  - sudo docker logs -t geppetto_persistence_container
+  - docker logs -t geppetto_persistence_container
+  - docker exec -it geppetto_persistence_container /bin/bash
+  - netstat -nr
+  - curl -v http://localhost:8080
+  - curl -v http://localhost:8080/
+  - curl -v http://localhost:8080/
+  - curl -v http://localhost:8080/
+  - curl -v http://127.0.0.1:8080/
+  - curl -v http://172.17.0.1:8080/
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
