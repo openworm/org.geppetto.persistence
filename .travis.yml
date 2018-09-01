@@ -95,7 +95,6 @@ script:
   - docker ps -a;
   - docker inspect geppetto_persistence;
   - docker inspect geppetto_persistence_container;
-  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:8080/ --engine=slimerjs
   - echo "Current time :$(date +"%T")"
   - docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
   - docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
