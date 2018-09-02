@@ -67,6 +67,7 @@ script:
   - docker ps -a
   - docker network inspect bridge
   - netstat -nr
+  - netstat -tulpn
   - http_status=$(curl -s -I $1 http://localhost:8080/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
   - while [ "$http_status" == "404" ]; do
@@ -87,14 +88,16 @@ script:
   - echo "$http_status"
   - curl -v http://localhost:8080
   - curl -v http://localhost:8000/
-  - curl -v http://localhost:8000/
+  - curl -v http://0.0.0.0:8080/
   - curl -v http://localhost:8080/
-  - curl -v http://127.0.0.1:8000/
+  - curl -v http://0.0.0.0:8000/
   - curl -v http://172.17.0.1:8000/
   - docker --version
   - docker ps -a;
   - docker inspect geppetto_persistence;
   - docker inspect geppetto_persistence_container;
+  - netstat -nr
+  - netstat -tulpn
   - echo "Current time :$(date +"%T")"
   - docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
   - docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
@@ -109,9 +112,11 @@ script:
   - curl -v http://localhost:8080
   - curl -v http://localhost:8000/
   - curl -v http://172.17.0.1:8080/
-  - curl -v http://172.17.0.0:28081/
+  - curl -v http://0.0.0.0:8000/
   - curl -v http://127.0.0.1:8000/
   - curl -v http://172.17.0.1:8000/
+  - netstat -nr
+  - netstat -tulpn
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
   - cd /etc/repo && ls
