@@ -43,6 +43,7 @@ addons:
     - libglapi-mesa
     - libosmesa6
     - net-tools
+    - lsof
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
@@ -56,8 +57,10 @@ script:
   - docker images
   - docker ps -a
   - docker network inspect bridge
+  - docker-compose down
   - netstat -nr
   - netstat -tulpn
+  - lsof -i tcp:8080
   - casperjs --version
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
@@ -70,6 +73,7 @@ script:
   - docker network inspect bridge
   - netstat -nr
   - netstat -tulpn
+  - lsof -i tcp:8080
   - http_status=$(curl -s -I $1 http://127.0.0.1:8080/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
   - while [ "$http_status" == "404" ]; do
