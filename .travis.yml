@@ -15,7 +15,7 @@ before_install:
   - docker version
   - sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
   - sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
-  - sudo net.ipv6.conf.all.forwarding=1
+  - sudo sysctl -w net.ipv6.conf.all.forwarding=1
   - ip addr # for confirmation. can be skipped
 install:
 - git clone https://github.com/openworm/org.geppetto.model.git --quiet -b update-virgo-test
