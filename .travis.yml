@@ -14,6 +14,9 @@ before_install:
   - sudo apt-get update
   - sudo apt-get -y install docker-ce
   - docker version
+  - sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+  - sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+  - ip addr # for confirmation. can be skipped
 install:
 - git clone https://github.com/openworm/org.geppetto.model.git --quiet -b update-virgo-test
 - cd org.geppetto.model
@@ -57,7 +60,6 @@ script:
   - docker images
   - docker ps -a
   - docker network inspect bridge
-  - docker-compose down
   - netstat -nr
   - netstat -tulpn
   - lsof -i tcp:8080
