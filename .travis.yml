@@ -89,14 +89,17 @@ script:
   - curl -v http://127.0.0.1:8080
   - curl -v http://127.0.0.1:2375/
   - curl -v http://127.0.0.1:2375/org.geppetto.frontend
-  - curl -v http://127.0.0.1:3306/
-  - curl -v http://127.0.0.1:3306/org.geppetto.frontend
+  - curl -v http://127.0.0.1:6099/
+  - curl -v http://127.0.0.1:6099/org.geppetto.frontend
+  - curl -v http://localhost:6099/
+  - curl -v http://localhost:6099/org.geppetto.frontend
   - curl -v http://127.0.0.1:2375/
   - curl -v http://127.0.0.1:2375/org.geppetto.frontend
   - curl -v http://127.0.0.1:3306/
   - curl -v http://127.0.0.1:3306/org.geppetto.frontend
-  - curl -v http://0.0.0.0:8080/
-  - curl -v http://172.17.0.0:8080/
+  - curl -v http://0.0.0.0:8000/
+  - curl -v http://localhost:8000/
+  - curl -v http://172.17.0.0:8000/
   - curl -v http://172.17.0.0:123/
   - curl -v http://0.0.0.0:8080/
   - curl -v http://172.17.0.1:123/
