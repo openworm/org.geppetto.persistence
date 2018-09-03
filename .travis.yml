@@ -89,6 +89,8 @@ script:
   - curl -v http://127.0.0.1:8080
   - curl -v http://127.0.0.1:2375/
   - curl -v http://127.0.0.1:2375/org.geppetto.frontend
+  - curl -v http://0.0.0.0:6099/
+  - curl -v http://0.0.0.0:6099/org.geppetto.frontend
   - curl -v http://127.0.0.1:6099/
   - curl -v http://127.0.0.1:6099/org.geppetto.frontend
   - curl -v http://localhost:6099/
@@ -109,6 +111,7 @@ script:
   - docker inspect geppetto_persistence_container;
   - netstat -nr
   - netstat -tulpn
+  - docker run --help | grep ip
   - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://127.0.0.1:3306/ --engine=slimerjs
   - echo "Current time :$(date +"%T")"
   - docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
