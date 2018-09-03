@@ -62,7 +62,7 @@ script:
   - echo "$TRAVIS_BRANCH"
   - travis_retry docker build -t="geppetto_persistence" --build-arg mainBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
   - travis_wait 200 docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 dockernet
-  - travis_retry docker run -d --name geppetto_persistence_container --net=dockernet --ip 172.18.0.22 -p 8080:8080 geppetto_persistence;
+  - travis_retry docker run -d --name geppetto_persistence_container --net=dockernet --ip 192.168.0.1 -p 8080:8080 geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 60
   - docker ps -a
