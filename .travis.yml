@@ -61,7 +61,7 @@ script:
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
   - travis_retry docker build -t="geppetto_persistence" --build-arg mainBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
-  - travis_retry docker run -t -dit --net=host --name=geppetto_persistence_container -p 28081:8080 geppetto_persistence;
+  - travis_retry docker run -t -dit --name=geppetto_persistence_container -p 8000:8080 geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 60
   - docker ps -a
@@ -74,7 +74,7 @@ script:
       echo "Restart run";
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
-      travis_retry docker run  -t -dit --net=host --name=geppetto_persistence_container -p 28081:8080 geppetto_persistence;
+      travis_retry docker run  -t -dit --name=geppetto_persistence_container -h localhost -p 8080:8080 geppetto_persistence;
       bash utilities/test_geppetto_server.sh;
       sleep 100;
       http_status=$(curl -s -I $1 http://localhost:8080 | grep HTTP/1.1 | awk {'print $2'});
@@ -87,11 +87,14 @@ script:
   - http_status=$(curl -s -I $1 http://localhost:8080 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
   - curl -v http://localhost:8080
-  - curl -v http://localhost:28081/
+  - curl -v http://127.0.0.1:2375/
+  - curl -v http://127.0.0.1:3306/
+  - curl -v http://127.0.0.1:123/
   - curl -v http://0.0.0.0:8080/
-  - curl -v http://localhost:8080/
-  - curl -v http://0.0.0.0:28081/
-  - curl -v http://172.17.0.1:28081/
+  - curl -v http://172.17.0.1:8080/
+  - curl -v http://172.17.0.1:123/
+  - curl -v http://0.0.0.0:8080/
+  - curl -v http://172.17.0.1:123/
   - docker --version
   - docker ps -a;
   - docker inspect geppetto_persistence;
@@ -110,11 +113,14 @@ script:
   - http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
   - curl -v http://localhost:8080
-  - curl -v http://localhost:28081/
+  - curl -v http://127.0.0.1:2375/
+  - curl -v http://127.0.0.1:3306/
+  - curl -v http://127.0.0.1:123/
+  - curl -v http://0.0.0.0:8080/
   - curl -v http://172.17.0.1:8080/
-  - curl -v http://0.0.0.0:28081/
-  - curl -v http://127.0.0.1:28081/
-  - curl -v http://172.17.0.1:28081/
+  - curl -v http://172.17.0.1:123/
+  - curl -v http://0.0.0.0:8080/
+  - curl -v http://172.17.0.1:123/
   - netstat -nr
   - netstat -tulpn
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
