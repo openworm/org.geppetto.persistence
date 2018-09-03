@@ -15,6 +15,7 @@ before_install:
   - docker version
   - sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
   - sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+  - sudo net.ipv6.conf.all.forwarding=1
   - ip addr # for confirmation. can be skipped
 install:
 - git clone https://github.com/openworm/org.geppetto.model.git --quiet -b update-virgo-test
@@ -46,15 +47,14 @@ addons:
     - libosmesa6
     - net-tools
     - lsof
-    - nano
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - export SLIMERJSLAUNCHER=/home/travis/firefox-58.0/firefox/firefox
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 script:
-  - update-grub
-  - reboot
+  - sudo update-grub
+  - sudo reboot
   - firefox -v
   - slimerjs -v
   - phantomjs -v
