@@ -61,7 +61,8 @@ script:
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
   - echo "$TRAVIS_BRANCH"
   - travis_retry docker build -t="geppetto_persistence" --build-arg mainBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
-  - travis_retry docker run -t -dit --name=geppetto_persistence_container -p 8000:8080 geppetto_persistence;
+    travis_wait 200 docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 dockernet
+  - travis_retry docker run -d --name geppetto_persistence_container --net=dockernet --ip 172.18.0.22 -p 8080:8080 geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 60
   - docker ps -a
@@ -101,8 +102,8 @@ script:
   - curl -v http://127.0.0.1:3306/org.geppetto.frontend
   - curl -v http://0.0.0.0:8000/
   - curl -v http://localhost:8000/
-  - curl -v http://172.17.0.0:8000/
-  - curl -v http://172.17.0.0:123/
+  - curl -v http://172.18.0.22:8000/
+  - curl -v http://172.18.0.22:8080/
   - curl -v http://0.0.0.0:8080/
   - curl -v http://172.17.0.1:123/
   - docker --version
