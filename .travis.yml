@@ -53,8 +53,6 @@ before_script:
   - export SLIMERJSLAUNCHER=/home/travis/firefox-58.0/firefox/firefox
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
 script:
-  - sudo update-grub
-  - sudo reboot
   - firefox -v
   - slimerjs -v
   - phantomjs -v
