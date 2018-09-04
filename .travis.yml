@@ -67,7 +67,7 @@ script:
   - echo "$TRAVIS_BRANCH"
   - travis_retry docker build -t="geppetto_persistence" --build-arg mainBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
   - travis_wait 200 docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 dockernet
-  - travis_retry docker run -d --name geppetto_persistence_container --net=dockernet -p 0.0.0.0:8080:8080 geppetto_persistence;
+  - travis_retry docker run -d --name geppetto_persistence_container --net=dockernet -p 8080:8080 geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 60
   - docker ps -a
@@ -81,7 +81,7 @@ script:
       echo "Restart run";
       docker stop $(docker ps -a -q);
       docker rm $(docker ps -a -q);
-      travis_retry docker run  -t -dit --name=geppetto_persistence_container -h 127.0.0.1 -p 8080:8080 geppetto_persistence;
+      travis_retry docker run  -t -dit --name=geppetto_persistence_container --net=dockernet -p 8080:8080 geppetto_persistence;
       bash utilities/test_geppetto_server.sh;
       sleep 100;
       http_status=$(curl -s -I $1 http://127.0.0.1:3306 | grep HTTP/1.1 | awk {'print $2'});
@@ -112,8 +112,12 @@ script:
   - curl -v http://192.168.0.1:8080/
   - curl -v http://0.0.0.0:8080/
   - curl -v http://172.17.0.1:123/
+  - curl -v http://172.30.100.104/
+  - curl -v http://172.30.100.104:8080/
   - curl http://localhost:8080
   - curl http://127.0.0.1:8080
+  - curl -v http://127.0.0.1:5432
+  - curl -v http://127.0.0.1:5432/org.geppetto.frontend
   - docker --version
   - docker ps -a;
   - docker inspect geppetto_persistence;
@@ -122,8 +126,8 @@ script:
   - netstat -tulpn
   - docker run --help | grep ip
   - echo "Current time :$(date +"%T")"
-  - docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
-  - docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
+  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
+  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
   - cd /etc/repo && ls
   - cd /etc/logs && ls
   - tail -n 200 /etc/logs/logs/log.log
