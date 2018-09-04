@@ -54,6 +54,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - export SLIMERJSLAUNCHER=/home/travis/firefox-58.0/firefox/firefox
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
+  - sudo sh -c 'echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6'
 script:
   - firefox -v
   - slimerjs -v
