@@ -124,6 +124,7 @@ script:
   - docker ps -a;
   - docker inspect geppetto_persistence;
   - docker inspect geppetto_persistence_container;
+  - docker network inspect host
   - netstat -nr
   - netstat -tulpn
   - docker run --help | grep ip
