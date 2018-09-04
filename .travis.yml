@@ -15,7 +15,7 @@ before_install:
   - sudo apt-get -y install docker-ce
   - docker version
   - ip addr # for confirmation. can be skipped
-  - ip addr show lo | grep -q inet6 || sudo ip addr add ::1/128 dev lo
+  - sudo ip addr show lo | sudo grep -q inet6 || sudo ip addr add ::1/128 dev lo
   - echo '{"ipv6":true,"fixed-cidr-v6":"2001:db8:1::/64"}' | sudo tee /etc/docker/daemon.json
   - sudo service docker restart
 install:
