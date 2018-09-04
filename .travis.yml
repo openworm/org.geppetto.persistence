@@ -15,7 +15,6 @@ before_install:
   - sudo apt-get -y install docker-ce
   - docker version
   - ip addr # for confirmation. can be skipped
-  - sudo ip addr show lo | sudo grep -q inet6 || sudo ip addr add ::1/128 dev lo
   - echo '{"ipv6":true,"fixed-cidr-v6":"2001:db8:1::/64"}' | sudo tee /etc/docker/daemon.json
   - sudo service docker restart
 install:
@@ -131,13 +130,12 @@ script:
   - echo "Current time :$(date +"%T")"
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/repository/usr /etc/repo
-  - cd /etc/repo && ls
-  - cd /etc/logs && ls
   - tail -n 200 /etc/logs/logs/log.log
   - sleep 10
   - sudo docker logs -t geppetto_persistence_container
   - docker ps -a;
   - docker inspect geppetto_persistence;
   - docker inspect geppetto_persistence_container;
+  - xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://127.0.0.1:8080/ --engine=slimerjs
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
