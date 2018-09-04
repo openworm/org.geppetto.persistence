@@ -1,6 +1,6 @@
 language: node_js
 os: linux
-sudo: required
+sudo: false
 dist: trusty
 group: deprecated-2017Q4
 node_js:
