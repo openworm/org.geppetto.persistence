@@ -94,7 +94,6 @@ script:
   - travis_retry xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
   - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
   - tail -n 200 /etc/logs/logs/log.log
-  - sleep 10
   - sudo docker logs -t geppetto_persistence_container
   - docker ps -a;
   - docker inspect geppetto_persistence;
