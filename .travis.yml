@@ -57,7 +57,6 @@ script:
   - docker --version
   - casperjs --version
   - cd org.geppetto.frontend/src/main/webapp/js/pages/tests/casperjs
-  - echo "$TRAVIS_BRANCH"
   - travis_retry docker build -t="geppetto_persistence" --build-arg mainBranch=$TRAVIS_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#update-virgo:utilities/docker/geppetto-persistence/
   - travis_retry docker run -d --name geppetto_persistence_container -p 28081:8080 geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
