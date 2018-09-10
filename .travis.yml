@@ -63,10 +63,6 @@ script:
   - bash utilities/test_geppetto_server.sh
   - sleep 60
   - docker ps -a
-  - docker network inspect bridge
-  - netstat -nr
-  - netstat -tulpn
-  - lsof -n -i TCP
   - http_status=$(curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status";
   - while [ "$http_status" == "404" ]; do
@@ -90,7 +86,5 @@ script:
   - tail -n 200 /etc/logs/logs/log.log
   - sudo docker logs -t geppetto_persistence_container
   - docker ps -a;
-  - docker inspect geppetto_persistence;
-  - docker inspect geppetto_persistence_container;
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
