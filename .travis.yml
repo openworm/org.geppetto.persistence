@@ -1,4 +1,4 @@
-language: ruby
+language: node_js
 os: linux
 sudo: required
 dist: trusty
