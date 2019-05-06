@@ -44,7 +44,7 @@ script:
   - docker --version
   - casperjs --version
   - cd geppetto-application/tests/casperjs
-  - travis_wait 49 docker build -t="geppetto_persistence" --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#issue-travis:utilities/docker/geppetto-persistence/
+  - travis_retry 49 docker build -t="geppetto_persistence" --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#issue-travis:utilities/docker/geppetto-persistence/
   - travis_retry docker run -d --name geppetto_persistence_container -p 28081:8080 geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 60
