@@ -1,76 +1,46 @@
 language: node_js
-os: linux
 sudo: required
-dist: trusty
-group: deprecated-2017Q4
 node_js:
-  - "7"
+  - "9"
 env:
   global:
-    secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
-before_install:
-  - sudo apt-get install -y xserver-xorg-dev libxext-dev libxi-dev 
-install:
-- git clone https://github.com/openworm/geppetto-application.git
-- npm install --silent -g phantomjs 
-- npm install --silent -g casperjs 
-- npm install --silent -g slimerjs
-- npm install --silent -g gl
-- npm config set registry http://registry.npmjs.org/
-
+    - secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
+    - DOCKER_FOLDER: "https://github.com/openworm/org.geppetto.git#issue-travis:utilities/docker/geppetto-persistence/"
+    - IMAGE_NAME: geppetto_persistence
+    - CONTAINER_NAME: geppetto_persistence_container
+    - DEFAULT_BRANCH: development
+    - LANDING_PAGE: "http://localhost:8080/org.geppetto.frontend"
 services:
   - docker
-addons:
-  firefox: "58.0"
-  apt:
-    packages:
-    - mesa-utils
-    - xvfb
-    - libgl1-mesa-dri
-    - libglapi-mesa
-    - libosmesa6
-    - net-tools
-    - lsof
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - export SLIMERJSLAUNCHER=/home/travis/firefox-58.0/firefox/firefox
-  - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/
-  - sudo sh -c 'echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6'
+install:
+  - git clone -b feature/14 https://github.com/openworm/geppetto-application.git
+  - npm install jest@24.8.0 puppeteer@1.17.0 jest-puppeteer@3.9.0 babel-preset-env@1.6.0 url-join@4.0.0
 script:
-  - firefox -v
-  - slimerjs -v
-  - phantomjs -v
-  - docker --version
-  - casperjs --version
-  - cd geppetto-application/tests/casperjs
-  - travis_retry docker build -t="geppetto_persistence" --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#issue-travis:utilities/docker/geppetto-persistence/
-  - travis_retry docker run -d --name geppetto_persistence_container -p 28081:8080 geppetto_persistence;
-  - bash utilities/test_geppetto_server.sh
-  - sleep 60
-  - docker ps -a
-  - http_status=$(curl -s -I $1 http://localhost:28081/org.geppetto.frontend | grep HTTP/1.1 | awk {'print $2'})
-  - echo "$http_status";
-  - while [ "$http_status" == "404" ]; do
-      echo "Restart run";
-      docker stop $(docker ps -a -q);
-      docker rm $(docker ps -a -q);
-      travis_retry docker run  -t -dit --name=geppetto_persistence_container -p localhost:28081:8080  geppetto_persistence;
-      bash utilities/test_geppetto_server.sh;
-      sleep 100;
-      http_status=$(curl -s -I $1 http://localhost:28081 | grep HTTP/1.1 | awk {'print $2'});
-      echo "Done restarting";
-      echo "$http_status";
-      sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability/logs/log.log /etc;
-      tail -n 200 /etc/log.log;
-    done
+  - cp jest.config.js geppetto-application/__tests__
+  - cd geppetto-application/__tests__
+  - travis_retry docker build -t="geppetto_persistence" --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey $DOCKER_FOLDER
+  - travis_retry docker run  -t -dit --name=$CONTAINER_NAME -p 8080:8080 $IMAGE_NAME;
+  - bash $TRAVIS_BUILD_DIR/tests/casperjs/utilities/test_geppetto_server.sh
   - sleep 30
-  - http_status=$(curl -s -I $1 http://localhost:8080 | grep HTTP/1.1 | awk {'print $2'})
+  - http_status=$(curl -s -I $1 $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
-  - travis_retry xvfb-run -a --server-args="-screen 0 1024x768x24" casperjs test --includes=PersistenceTestsLogic.js PersistenceTests.js --host=http://localhost:28081/ --engine=slimerjs
-  - sudo docker cp geppetto_persistence_container:/home/developer/virgo/serviceability /etc/logs
-  - tail -n 200 /etc/logs/logs/log.log
-  - sudo docker logs -t geppetto_persistence_container
+  - while [ "$http_status" == "404" ]; do
+      echo "Restart run. Printing logs for debugging purposes";
+      sudo docker cp $CONTAINER_NAME:/home/developer/virgo/serviceability/logs/log.log /etc;
+      tail -n 200 /etc/log.log;
+      docker stop $(docker ps -a -q);
+      sleep 10;
+      docker rm $(docker ps -a -q);
+      sleep 10;
+      travis_retry docker run  -t -dit --name=$CONTAINER_NAME -p 8080:8080 $IMAGE_NAME;
+      bash $TRAVIS_BUILD_DIR/tests/casperjs/utilities/test_geppetto_server.sh;
+      sleep 60;
+      http_status=$(curl -s -I $1 $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'});
+      echo "Done restarting $http_status";
+    done;
+  - travis_retry npm test -- --verbose --colors
   - docker ps -a;
+  - sudo docker cp $CONTAINER_NAME:/home/developer/virgo/serviceability/logs/log.log /etc
+  - tail /etc/log.log -n 200
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
