@@ -40,7 +40,7 @@ script:
     done;
   - travis_retry npm test -- --verbose --colors
   - docker ps -a;
-  - sudo docker cp $CONTAINER_NAME:/home/developer/virgo/serviceability/logs/log.log /etc
+  - sudo docker cp $CONTAINER_NAME:/home/developer/virgo/serviceability/logs/log.log /etc 
   - tail /etc/log.log -n 200
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
