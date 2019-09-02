@@ -44,3 +44,4 @@ script:
   - tail /etc/log.log -n 200
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
+
