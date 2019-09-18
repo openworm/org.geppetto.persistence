@@ -39,6 +39,7 @@ script:
       echo "Done restarting $http_status";
     done;
   - ls
+  - npm install --save-dev -g jest@24.8.0 puppeteer@1.17.0 jest-puppeteer@3.9.0 url-join@4.0.0
   - travis_wait 35 travis_retry npm test -- --verbose --colors
   - docker ps -a;
   - sudo docker cp $CONTAINER_NAME:/home/developer/virgo/serviceability/logs/log.log /etc
