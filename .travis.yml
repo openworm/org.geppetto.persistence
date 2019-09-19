@@ -1,7 +1,7 @@
 language: node_js
 sudo: required
 node_js:
-  - "10"
+  - "9"
 env:
   global:
     - secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
@@ -14,7 +14,7 @@ services:
   - docker
 install:
   - git clone -b feature/14 https://github.com/openworm/geppetto-application.git
-  - npm install --save-dev -g jest@24.8.0 puppeteer@1.17.0 jest-puppeteer@3.9.0 url-join@4.0.0
+  - npm install --save-dev -g jest puppeteer jest-puppeteer url-join
 script:
   - cp jest.config.js geppetto-application
   - cd geppetto-application
@@ -39,7 +39,6 @@ script:
       echo "Done restarting $http_status";
     done;
   - ls
-  - npm install --save-dev -g jest@24.8.0 puppeteer@1.17.0 jest-puppeteer@3.9.0 url-join@4.0.0
   - travis_wait 35 travis_retry npm test -- --verbose --colors
   - docker ps -a;
   - sudo docker cp $CONTAINER_NAME:/home/developer/virgo/serviceability/logs/log.log /etc
