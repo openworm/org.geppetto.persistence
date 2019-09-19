@@ -14,7 +14,7 @@ services:
   - docker
 install:
   - git clone -b feature/14 https://github.com/openworm/geppetto-application.git
-  - npm install --save-dev -g jest puppeteer jest-puppeteer url-join @babel/preset-env
+  - npm install --save-dev jest puppeteer jest-puppeteer url-join @babel/preset-env
 script:
   - cp jest.config.js geppetto-application
   - cd geppetto-application
