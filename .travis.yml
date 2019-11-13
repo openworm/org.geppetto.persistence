@@ -7,7 +7,8 @@ node_js:
   - "7"
 env:
   global:
-    secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
+    - secure: dn0FPQ5IG4M/3kdwnyI78ElQ308Vc3QnKAvkWfwMFb8QxDqxQdnTo7AV1qTMtbLrDNkeEWIgi4nc7jmXNtvGTwOfhAULVh6606Qs5B+ezTdwzajbbFMI8SKQx/pnTojOMu8dx7V4lMoR/YWcojR0VC1IWVC62TGbSB1k5BDGgH0=
+    - DEFAULT_BRANCH: development
 before_install:
   - sudo apt-get install -y xserver-xorg-dev libxext-dev libxi-dev 
 install:
@@ -45,7 +46,7 @@ script:
   - docker --version
   - casperjs --version
   - cd geppetto-application/tests/casperjs
-  - travis_retry docker build -t="geppetto_persistence" --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#issue-travis:utilities/docker/geppetto-persistence/
+  - travis_retry docker build -t="geppetto_persistence" --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=$DEFAULT_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey https://github.com/openworm/org.geppetto.git#issue-travis:utilities/docker/geppetto-persistence/
   - travis_retry docker run -d --name geppetto_persistence_container -p 28081:8080 geppetto_persistence;
   - bash utilities/test_geppetto_server.sh
   - sleep 60
