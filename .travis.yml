@@ -12,7 +12,7 @@ env:
     - LANDING_PAGE: "http://localhost:8080/org.geppetto.frontend"
 services:
   - docker
-install:
+before-install:
   - git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-application.git
   - if [ $TRAVIS_BRANCH != "master" ]; then cd geppetto-application ; git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-client.git; cd .. ; fi
 script:
