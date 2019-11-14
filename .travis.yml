@@ -16,12 +16,11 @@ install:
   - git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-application.git
   - if [ $TRAVIS_BRANCH != "master" ]; then cd geppetto-application ; git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-client.git; cd ..; fi
   - npm install -g jest@24.8.0 puppeteer@1.17.0 jest-puppeteer@3.9.0 @babel/preset-env@7.4.5 url-join@4.0.0
-  - npm list -g --depth=0 | grep jest-puppeteer
-  - npm list -g --depth=0
 
 script:
   - cp jest.config.js geppetto-application
   - cd geppetto-application
+  - npm list -g --depth=0 | grep jest-puppeteer
   - travis_retry docker build -t=$IMAGE_NAME --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=$DEFAULT_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey $DOCKER_FOLDER
   - travis_retry docker run  -t -dit --name=$CONTAINER_NAME -p 8080:8080 $IMAGE_NAME;
   - bash tests/casperjs/utilities/test_geppetto_server.sh
