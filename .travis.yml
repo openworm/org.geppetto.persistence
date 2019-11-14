@@ -21,7 +21,6 @@ install:
 script:
   - cp jest.config.js geppetto-application
   - cd geppetto-application
-  - npm list --depth=0
   - travis_retry docker build -t=$IMAGE_NAME --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=$DEFAULT_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey $DOCKER_FOLDER
   - travis_retry docker run  -t -dit --name=$CONTAINER_NAME -p 8080:8080 $IMAGE_NAME;
   - bash tests/casperjs/utilities/test_geppetto_server.sh
