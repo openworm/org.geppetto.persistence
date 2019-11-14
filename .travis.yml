@@ -13,13 +13,17 @@ env:
 services:
   - docker
 before-install:
+  - pwd
+  - ls
   - git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-application.git
   - pwd
   - ls
-  - if [ $TRAVIS_BRANCH != "master" ]; then cd geppetto-application ; git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-client.git; cd .. ; fi
+  - cd geppetto-application
+  - git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-client.git
   - pwd
   - ls
   - npm list -g --depth=0
+  - cd ..
 
 script:
   - pwd
