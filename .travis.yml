@@ -13,8 +13,8 @@ env:
 services:
   - docker
 install:
-  - git clone -b feature/14 https://github.com/openworm/geppetto-application.git
-  - npm install -g jest@24.8.0 puppeteer@1.17.0 jest-puppeteer@3.9.0 @babel/preset-env@7.4.5 url-join@4.0.0
+  - git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-application.git
+  - if [ $TRAVIS_BRANCH != "master" ]; then cd geppetto-application ; git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-client.git; cd .. ; fi
 script:
   - cp jest.config.js geppetto-application
   - cd geppetto-application
