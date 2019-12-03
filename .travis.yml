@@ -12,37 +12,35 @@ env:
     - LANDING_PAGE: "http://localhost:8080/org.geppetto.frontend"
 services:
   - docker
-install:
-  - git clone -b feature/14 https://github.com/openworm/geppetto-application.git
-  - npm install -g jest@24.8.0 puppeteer@1.17.0 jest-puppeteer@3.9.0 @babel/preset-env@7.4.5 url-join@4.0.0
-script:
-  - cp jest.config.js geppetto-application
+before_install:
+  - git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-application.git
   - cd geppetto-application
+  - if [ $TRAVIS_BRANCH != "master" ]; then git clone -b $DEFAULT_BRANCH https://github.com/openworm/geppetto-client.git; fi
+script:
+  - cp ../jest.config.js .
   - travis_retry docker build -t=$IMAGE_NAME --build-arg targetBranch=$TRAVIS_BRANCH --build-arg originBranch=$TRAVIS_PULL_REQUEST_BRANCH --build-arg defaultBranch=$DEFAULT_BRANCH --build-arg aKey=$accessKey --build-arg sKey=$secretKey $DOCKER_FOLDER
-  - travis_retry docker run  -t -dit --name=$CONTAINER_NAME -p 8080:8080 $IMAGE_NAME;
-  - bash tests/casperjs/utilities/test_geppetto_server.sh
+  - travis_retry docker run  -t -dit --name=$CONTAINER_NAME -p 8080:8080 $IMAGE_NAME
+  - bash $TRAVIS_BUILD_DIR/geppetto-application/tests/casperjs/utilities/test_geppetto_server.sh
   - sleep 30
   - http_status=$(curl -s -I $1 $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'})
   - echo "$http_status"
   - while [ "$http_status" == "404" ]; do
-      echo "Restart run. Printing logs for debugging purposes";
-      sudo docker cp $CONTAINER_NAME:/home/developer/virgo/serviceability/logs/log.log /etc;
-      tail -n 200 /etc/log.log;
-      docker stop $(docker ps -a -q);
-      sleep 10;
-      docker rm $(docker ps -a -q);
-      sleep 10;
-      travis_retry docker run  -t -dit --name=$CONTAINER_NAME -p 8080:8080 $IMAGE_NAME;
-      bash tests/casperjs/utilities/test_geppetto_server.sh;
-      sleep 60;
-      http_status=$(curl -s -I $1 $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'});
-      echo "Done restarting $http_status";
+    echo "Restart run. Printing logs for debugging purposes";
+    sudo docker cp $CONTAINER_NAME:/home/developer/virgo/serviceability/logs/log.log /etc;
+    tail -n 200 /etc/log.log;
+    docker stop $(docker ps -a -q);
+    sleep 10;
+    docker rm $(docker ps -a -q);
+    sleep 10;
+    travis_retry docker run  -t -dit --name=$CONTAINER_NAME -p 8080:8080 $IMAGE_NAME;
+    bash $TRAVIS_BUILD_DIR/geppetto-application/tests/casperjs/utilities/test_geppetto_server.sh;
+    sleep 60;
+    http_status=$(curl -s -I $1 $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'});
+    echo "Done restarting $http_status";
     done;
-  - ls
   - travis_wait 35 travis_retry npm test -- --verbose --colors
   - docker ps -a;
   - sudo docker cp $CONTAINER_NAME:/home/developer/virgo/serviceability/logs/log.log /etc
   - tail /etc/log.log -n 200
   - docker stop $(docker ps -a -q)
   - docker rm $(docker ps -a -q)
-
