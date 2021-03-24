@@ -1,0 +1,63 @@
+name: org.geppetto.persistence workflow
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:  
+
+jobs:
+  geppetto-application-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # total job timeout:
+    timeout-minutes: 60
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses : actions/checkout@v2.3.4    
+      - name: Set global bariable with current branch name
+        shell: bash
+        run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+        id: git_branch
+      
+      - name : Checkout org.geppetto
+        uses : actions/checkout@v2.3.4
+        with : 
+          repository:  openworm/org.geppetto.git
+          path : ./org.geppetto
+          ref: development 
+      - name : Build org.geppetto
+        run : |
+          cd ./org.geppetto
+          git checkout ${{ steps.git_branch.outputs.branch }} || git checkout development
+          cd ..  
+        
+      - name : Checkout geppetto-application
+        uses : actions/checkout@v2.3.4
+        with : 
+          repository:  openworm/geppetto-application
+          path : ./geppetto-application
+          ref: development 
+      - name : Build geppetto-application
+        run : |
+          cd ./geppetto-application
+          git checkout ${{ steps.git_branch.outputs.branch }} || git checkout development
+          cd ..
+    
+      - name: Build image
+        run:  docker build -t=geppetto_persistence --build-arg targetBranch=${{ steps.git_branch.outputs.branch }} --build-arg originBranch=${{ steps.git_branch.outputs.branch }} --build-arg defaultBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey "https://github.com/openworm/org.geppetto.git#issue-travis:utilities/docker/geppetto-persistence/"
+
+      - name: Install Puppeteer
+        run: npm install jest@24.8.0 jest-image-snapshot@4.1.0 puppeteer@1.17.0 jest-puppeteer@4.3.0 @babel/preset-env@7.4.5 url-join@4.0.0 @babel/core@7.4.5
+      - name: Start Geppetto
+        run: docker run -d --name geppetto_persistence_container -p 28081:8080 geppetto_persistence
+      - name: Wait for Geppetto Server to be up
+        run: |  
+          export LANDING_PAGE="http://localhost:28081/org.geppetto.frontend"  
+          Test () { export http_status=$(curl -s -i $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'}); echo "Returned status \"$http_status\""; if [ "$http_status" != "200" ]; then echo "Waiting for docker to finish building..."; iterations=$((iterations+1)); if [ "$iterations" != "100" ]; then sleep 1; Test; fi; else echo "$(date) - connected successfully"; fi; }
+          Test;
+      - name: Run Tests
+        continue-on-error: true
+        run: npm test -- --verbose --colors
+      - name: Stop Geppetto server   
+        run: docker stop geppetto_container
