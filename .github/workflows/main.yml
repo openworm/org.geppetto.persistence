@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  
 
 jobs:
-  geppetto-application-tests:
+  build-and-test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # total job timeout:
@@ -45,7 +45,7 @@ jobs:
           cd ..
     
       - name: Build image
-        run:  docker build -t=geppetto_persistence --build-arg targetBranch=${{ steps.git_branch.outputs.branch }} --build-arg originBranch=${{ steps.git_branch.outputs.branch }} --build-arg defaultBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey "https://github.com/openworm/org.geppetto.git#issue-travis:utilities/docker/geppetto-persistence/"
+        run:  docker build -t=geppetto_persistence --build-arg targetBranch=${{ steps.git_branch.outputs.branch }} --build-arg originBranch=${{ steps.git_branch.outputs.branch }} --build-arg defaultBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey "https://github.com/openworm/org.geppetto.git#development:utilities/docker/geppetto-persistence/"
 
       - name: Install Puppeteer
         run: npm install jest@24.8.0 jest-image-snapshot@4.1.0 puppeteer@1.17.0 jest-puppeteer@4.3.0 @babel/preset-env@7.4.5 url-join@4.0.0 @babel/core@7.4.5
