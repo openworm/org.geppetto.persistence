@@ -25,11 +25,11 @@ jobs:
         with : 
           repository:  openworm/org.geppetto.git
           path : ./org.geppetto
-          ref: development 
+          ref: feature/636 
       - name : Build org.geppetto
         run : |
           cd ./org.geppetto
-          git checkout ${{ steps.git_branch.outputs.branch }} || git checkout development
+          git checkout ${{ steps.git_branch.outputs.branch }} || git checkout feature/636
           cd ..  
         
       - name : Checkout geppetto-application
