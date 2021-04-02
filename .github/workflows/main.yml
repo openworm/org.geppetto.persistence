@@ -60,4 +60,4 @@ jobs:
         continue-on-error: true
         run: npm test -- --verbose --colors
       - name: Stop Geppetto server   
-        run: docker stop geppetto_container
+        run: docker stop geppetto_persistence_container
