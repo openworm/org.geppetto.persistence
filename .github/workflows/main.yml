@@ -48,14 +48,13 @@ jobs:
         run:  docker build -t=geppetto_persistence --build-arg targetBranch=${{ steps.git_branch.outputs.branch }} --build-arg originBranch=${{ steps.git_branch.outputs.branch }} --build-arg defaultBranch=development --build-arg aKey=$accessKey --build-arg sKey=$secretKey "https://github.com/openworm/org.geppetto.git#feature/636:utilities/docker/geppetto-persistence/"
 
       - name: Start Geppetto
-        run: docker run -d --name geppetto_persistence_container -p 28081:8080 geppetto_persistence
+        run: docker run -d --name geppetto_persistence_container -p 8080:8080 geppetto_persistence
       - name: Wait for Geppetto Server to be up
         run: |  
-          export LANDING_PAGE="http://localhost:28081/org.geppetto.frontend"  
+          export LANDING_PAGE="http://localhost:8080/org.geppetto.frontend"  
           Test () { export http_status=$(curl -s -i $LANDING_PAGE | grep HTTP/1.1 | awk {'print $2'}); echo "Returned status \"$http_status\""; if [ "$http_status" != "200" ]; then echo "Waiting for docker to finish building..."; iterations=$((iterations+1)); if [ "$iterations" != "100" ]; then sleep 1; Test; fi; else echo "$(date) - connected successfully"; fi; }
           Test;
       - name: Install Jest
-        continue-on-error: false
         run : |
           cd ./geppetto-application
           npm install jest@24.8.0 jest-image-snapshot@4.1.0 puppeteer@1.17.0 jest-puppeteer@4.3.0 @babel/preset-env@7.4.5 url-join@4.0.0 @babel/core@7.4.5
@@ -63,7 +62,6 @@ jobs:
           cp ../jest.config.js .
           cd ..
       - name: Run Tests
-        continue-on-error: false
         run : |
           cd ./geppetto-application
           npm test -- --verbose --colors
